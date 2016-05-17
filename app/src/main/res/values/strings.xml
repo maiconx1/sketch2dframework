@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Sketch2D</string>
+    <string name="title_context_menu">Selecione uma opção</string>
+    <string name="raio">Raio</string>
+    <string name="cor">Cor</string>
+
+    <string name="settings">Settings</string>
+    <string name="edita">Editar figura</string>
+    <string name="edita_excluir">Excluir</string>
+    <string name="salvar">Salvar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="id_activity"></string>
+    <string name="id_numero"></string>
+    <string name="pontilhado">Pontilhado</string>
+    <string name="antialias">Anti Alias</string>
+    <string name="preenchido">Preenchido</string>
+    <string name="linha">Linha</string>
+    <string name="escolher">Escolher</string>
+</resources>
