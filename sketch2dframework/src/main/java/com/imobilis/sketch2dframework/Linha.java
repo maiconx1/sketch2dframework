@@ -13,6 +13,8 @@ import java.util.ArrayList;
 public class Linha extends Figura
 {
 	private boolean distancia;
+	private double modulo;
+	private float inclinacao;
 
 	public Linha(Activity activity, ArrayList<Point> pontos, boolean editavel)
 	{
@@ -22,18 +24,39 @@ public class Linha extends Figura
 		conf.setTamLinha(5);
 		setConfiguracoes(conf);
 		setDistancia(false);
+		setup();
 	}
 
 	public Linha(Activity activity, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
 	{
 		super(activity, pontos, editavel, configuracoes);
 		setDistancia(false);
+		setup();
 	}
 
 	public Linha(Activity activity, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes, boolean distancia)
 	{
 		super(activity, pontos, editavel, configuracoes);
 		setDistancia(distancia);
+		setup();
+	}
+
+	private void setup()
+	{
+		if(getPontos().size()==2)
+		{
+			float dx = getPonto(1).x - getPonto(0).x;
+			float dy = getPonto(1).y - getPonto(0).y;
+			float m =dx/dy;
+			float angle = (float)Math.atan(m);
+			angle = (float)((angle*180)/Math.PI);
+			setInclinacao(angle);
+
+			dx = Math.abs(dx);
+			dy = Math.abs(dy);
+
+			setModulo(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy,2)));
+		}
 	}
 
 	@Override
@@ -656,5 +679,25 @@ public class Linha extends Figura
 	public void setDistancia(boolean distancia)
 	{
 		this.distancia = distancia;
+	}
+
+	public double getModulo()
+	{
+		return modulo;
+	}
+
+	public void setModulo(double modulo)
+	{
+		this.modulo = modulo;
+	}
+
+	public float getInclinacao()
+	{
+		return inclinacao;
+	}
+
+	public void setInclinacao(float inclinacao)
+	{
+		this.inclinacao = inclinacao;
 	}
 }

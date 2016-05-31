@@ -374,6 +374,10 @@ public abstract class Figura extends AppCompatActivity
 											{
 												//Log.d("LALALA", "ENTROU " + p[0] + "//" + p[1]);
 												ArrayList<Point> pp = new ArrayList<>();
+												p[1].y-=50;
+												p[0].y-=50;
+												p[1].x-=50;
+												p[0].x-=50;
 												pp.add(p[0]);
 												pp.add(p[1]);
 												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 180), true);
@@ -613,6 +617,22 @@ public abstract class Figura extends AppCompatActivity
 
 		tam[0] += 2*figura.getConfiguracoes().getTamLinha();
 		tam[1] += 2*figura.getConfiguracoes().getTamLinha();
+
+		if(figura instanceof Linha)
+		{
+			boolean linha_distancia = false;
+			if(((Linha)figura).isDistancia())
+			{
+				linha_distancia = true;
+			}
+			if(linha_distancia)
+			{
+				tam[1] += 100;
+				tam[0] += 100;
+			}
+
+		}
+
 		return tam;
 	}
 
