@@ -21,21 +21,32 @@ public class Configuracoes implements Parcelable
 	private float escala;
 	private int zoom;
 	private int estilo;
+	public static int corPadrao = Color.BLACK, alphaPadrao = 255, tamLinhaPadrao = 1, estiloPadrao = Configuracoes.PREENCHIDO;
+	public static float escalaPadrao = 1;
+	public static boolean pontilhadoPadrao = false, antiAliasPadrao = true;
 
 	public static final int PREENCHIDO = 0, LINHA = 1;
 
 	/**
-	 * Cria uma configuração padrão (não pontilhado, preenchido, tamanho de linha = 1, anti alias ativado, cor preta opaca.
+	 * Cria uma configuração com os valores padrões setados.
 	 */
 	public Configuracoes()
 	{
-		setPontilhado(false);
-		setEstilo(Configuracoes.PREENCHIDO);
-		setTamLinha(1);
-		setAntiAlias(true);
-		setCor(Color.BLACK);
-		setAlpha(255);
-		setEscala(1);
+		//setPontilhado(false);
+		setPontilhado(Configuracoes.pontilhadoPadrao);
+		//setEstilo(Configuracoes.PREENCHIDO);
+		setEstilo(Configuracoes.estiloPadrao);
+		//setTamLinha(1);
+		setTamLinha(Configuracoes.tamLinhaPadrao);
+		//setAntiAlias(true);
+		setAntiAlias(Configuracoes.antiAliasPadrao);
+		//setCor(Color.BLACK);
+		setCor(Configuracoes.corPadrao);
+		//setAlpha(255);
+		setAlpha(Configuracoes.alphaPadrao);
+		//setEscala(1);
+		setEscala(Configuracoes.escalaPadrao);
+
 		setZoom(1);
 		setPaint();
 	}
@@ -92,6 +103,41 @@ public class Configuracoes implements Parcelable
 		escala = in.readFloat();
 		zoom = in.readInt();
 		estilo = in.readInt();
+	}
+
+	public static void setAlphaPadrao(int alphaPadrao)
+	{
+		Configuracoes.alphaPadrao = alphaPadrao;
+	}
+
+	public static void setTamLinhaPadrao(int tamLinhaPadrao)
+	{
+		Configuracoes.tamLinhaPadrao = tamLinhaPadrao;
+	}
+
+	public static void setEstiloPadrao(int estiloPadrao)
+	{
+		Configuracoes.estiloPadrao = estiloPadrao;
+	}
+
+	public static void setEscalaPadrao(float escalaPadrao)
+	{
+		Configuracoes.escalaPadrao = escalaPadrao;
+	}
+
+	public static void setPontilhadoPadrao(boolean pontilhadoPadrao)
+	{
+		Configuracoes.pontilhadoPadrao = pontilhadoPadrao;
+	}
+
+	public static void setAntiAliasPadrao(boolean antiAliasPadrao)
+	{
+		Configuracoes.antiAliasPadrao = antiAliasPadrao;
+	}
+
+	public static void setCorPadrao(int corPadrao)
+	{
+		Configuracoes.corPadrao = corPadrao;
 	}
 
 	public static final Creator<Configuracoes> CREATOR = new Creator<Configuracoes>()

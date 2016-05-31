@@ -31,25 +31,20 @@ public class MainActivity extends AppCompatActivity
 		return true;
 	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	private void desenhaTudo()
 	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		figuras = new ArrayList<>();
-		Sketch2D.setClasseConfiguracao(ConfActivity.class);
 		ArrayList<Point> pontos = new ArrayList<>();
 		pontos.add(new Point(600, 600));
 
-		//Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), true);
-		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, 90, true, new Configuracoes(false, Configuracoes.LINHA, 2, true, Color.BLACK, 255));
-		//Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), true, new Configuracoes(true, Configuracoes.PREENCHIDO, 5, true, Color.YELLOW, 200));
-		//Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), Sketch2D.TIPO_QUADRADO, false);
-		//Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), Sketch2D.TIPO_TRIANGULO, true);
+		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), true);
+		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), new Point(600, 600), 90, true, new Configuracoes(false, Configuracoes.LINHA, 2, true, Color.BLACK, 255));
+		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), true, new Configuracoes(true, Configuracoes.PREENCHIDO, 5, true, Color.YELLOW, 200));
+		Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), Sketch2D.TIPO_QUADRADO, false);
+		Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), Sketch2D.TIPO_TRIANGULO, true);
 
 		pontos = new ArrayList<>();
 		pontos.add(new Point(100, 100));
-		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, (float) 50.0, true, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.RED, 255));
+		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), new Point(100, 100), (float) 50.0, true, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.RED, 255));
 		pontos = new ArrayList<>();
 		pontos.add(new Point(200, 200));
 		pontos.add(new Point(250, 200));
@@ -57,10 +52,10 @@ public class MainActivity extends AppCompatActivity
 		pontos.add(new Point(250, 250));
 		pontos.add(new Point(250, 275));
 		pontos.add(new Point(200, 300));
-		//Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, false, new Configuracoes(true, Configuracoes.LINHA, 2, true, Color.BLUE, 255, 1, 1));
+		Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, false, new Configuracoes(true, Configuracoes.LINHA, 2, true, Color.BLUE, 255, 1, 1));
 		pontos = new ArrayList<>();
 		pontos.add(new Point(200, 400));
-		//Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, (float) 80.0, true, new Configuracoes(true, Configuracoes.PREENCHIDO, 10, true, Color.GREEN, 100, 1, 1));
+		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), new Point(200, 400), (float) 80.0, true, new Configuracoes(true, Configuracoes.PREENCHIDO, 10, true, Color.GREEN, 100, 1, 1));
 		pontos = new ArrayList<>();
 		pontos.add(new Point(300, 300));
 		pontos.add(new Point(350, 300));
@@ -68,12 +63,14 @@ public class MainActivity extends AppCompatActivity
 		pontos.add(new Point(350, 350));
 		pontos.add(new Point(350, 375));
 		pontos.add(new Point(300, 600));
-		//Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, true, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.RED, 255));
+		Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, true, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.RED, 255));
 		pontos = new ArrayList<>();
 		pontos.add(new Point(250, 0));
 		pontos.add(new Point(300, 200));
 		pontos.add(new Point(200, 200));
-		//Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, false);
+		Sketch2D.desenhaPoligono(this, (FrameLayout) findViewById(R.id.lnDesenho), pontos, true, new Configuracoes(false, Configuracoes.LINHA, 3, true, Color.BLACK, 255));
+
+		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), true);
 
 		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
@@ -89,13 +86,13 @@ public class MainActivity extends AppCompatActivity
 		{{
 				add(new Point(300, 100));
 				add(new Point(250, 50));
-			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.BLUE, 255));*/
+			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.BLUE, 255));
 		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
 				add(new Point(250, 50));
 				add(new Point(250, 550));
 			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.YELLOW, 255));
-		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
 				add(new Point(100, 700));
 				add(new Point(250, 450));
@@ -104,10 +101,49 @@ public class MainActivity extends AppCompatActivity
 		{{
 				add(new Point(350, 450));
 				add(new Point(200, 700));
+			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.CYAN, 255));
+
+		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		{{
+				add(new Point(350, 450));
+				add(new Point(200, 450));
+			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.GREEN, 255));
+
+		Sketch2D.desenhaLinha(this, (FrameLayout)findViewById(R.id.lnDesenho), false);*/
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		figuras = new ArrayList<>();
+		Sketch2D.setClasseConfiguracao(ConfActivity.class);
+
+		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		{{
+				add(new Point(50, 50));
+				add(new Point(50, 200));
+			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.BLACK, 255));
+
+		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		{{
+				add(new Point(250, 250));
+				add(new Point(50, 250));
+			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.BLACK, 255));
+
+		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		{{
+				add(new Point(100, 700));
+				add(new Point(250, 450));
+			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.CYAN, 255));
+		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		{{
+				add(new Point(700, 150));
+				add(new Point(700, 700));
 			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.CYAN, 255));*/
 
-		//Sketch2D.desenhaLinha(this, (FrameLayout)findViewById(R.id.lnDesenho), false);
-
+		desenhaTudo();
 		((SeekBar) findViewById(R.id.skbEscala)).setProgress(10);
 		((SeekBar)findViewById(R.id.skbEscala)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
 		{

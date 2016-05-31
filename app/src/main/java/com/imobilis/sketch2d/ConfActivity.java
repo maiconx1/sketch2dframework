@@ -71,7 +71,7 @@ public class ConfActivity extends AppCompatActivity implements NumberPicker.OnVa
 		switch(figura)
 		{
 			case ConfActivity.CIRCULO:
-				Sketch2D.desenhaCirculo(this, frm, pontos, raio, false, configuracoes);
+				Sketch2D.desenhaCirculo(this, frm, new Point(pontos.get(0)), raio, false, configuracoes);
 				break;
 			default:
 			case ConfActivity.LINHA:

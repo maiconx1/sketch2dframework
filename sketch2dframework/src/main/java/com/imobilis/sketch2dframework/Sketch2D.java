@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Sketch2D extends AppCompatActivity
 {
 	private static Singleton instance = Singleton.getInstance();
+	public static float distanciaParaLinha = 200;
 	public static final int TIPO_TRIANGULO = 0, TIPO_QUADRADO = 1, TIPO_PENTAGONO = 2, TIPO_HEXAGONO = 3;
 	public static final int EXCLUI = 0, NAO_EXCLUI = 1;
 
@@ -73,6 +74,26 @@ public class Sketch2D extends AppCompatActivity
 	}
 
 	/**
+	 * Desenha uma linha no framelayout escolhido. A linha vai do primeiro ao segundo ponto do ArrayList de pontos.
+	 * A linha é adicionada a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+	 *
+	 * @param activity Activity pai do FrameLayout onde a linha será desenhada.
+	 * @param layout FrameLayout onde a linha será desenhada.
+	 * @param pontos ArrayList com os pontos inicial e final da linha.
+	 * @param editavel Define se a linha será editável/excluível ou não.
+	 * @param configuracoes Define as configurações referentes a linha.
+	 * @param distancia Define se a linha é uma linha de distância ou não
+	 * @return retorna a linha criada.
+	 */
+	public static Linha desenhaLinha(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes, boolean distancia)
+	{
+		Linha linha = new Linha(activity, pontos, editavel, configuracoes, distancia);
+		Sketch2D.instance.addFigura(linha);
+		linha.desenha(layout, linha);
+		return linha;
+	}
+
+	/**
 	 * Desenha um círculo padrão no framelayout escolhido. O círculo centra no ponto (50, 50) e possui raio 50.
 	 * O círculo é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
 	 * O círculo é desenhado com configurações padrão (cor preta, preenchido, anti alias ativado).
@@ -115,14 +136,16 @@ public class Sketch2D extends AppCompatActivity
 	 *
 	 * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
 	 * @param layout FrameLayout onde o círculo será desenhado.
-	 * @param pontos Array com o ponto de centro do círculo.
-	 * @param raio Raio do círculo
+	 * @param ponto Point com o ponto de centro do círculo.
+	 * @param raio Raio float do círculo
 	 * @param editavel Define se o círculo será editável/excluível ou não.
 	 * @return retorna o círculo criado.
 	 */
-	public static Circulo desenhaCirculo(Activity activity, FrameLayout layout, ArrayList<Point> pontos, float raio, boolean editavel)
+	public static Circulo desenhaCirculo(Activity activity, FrameLayout layout, Point ponto, float raio, boolean editavel)
 	{
-		Circulo circulo = new Circulo(activity, pontos, raio, editavel);
+		ArrayList<Point> p = new ArrayList<>();
+		p.add(new Point(ponto.x, ponto.y));
+		Circulo circulo = new Circulo(activity, p, raio, editavel);
 		Sketch2D.instance.addFigura(circulo);
 		circulo.desenha(layout, circulo);
 		return circulo;
@@ -134,15 +157,17 @@ public class Sketch2D extends AppCompatActivity
 	 *
 	 * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
 	 * @param layout FrameLayout onde o círculo será desenhado.
-	 * @param pontos Array com o ponto de centro do círculo.
-	 * @param raio Raio do círculo
+	 * @param ponto Point com o ponto de centro do círculo.
+	 * @param raio Raio float do círculo
 	 * @param editavel Define se o círculo será editável/excluível ou não.
 	 * @param configuracoes Define as configurações referentes ao círculo.
 	 * @return retorna o círculo criado.
 	 */
-	public static Circulo desenhaCirculo(Activity activity, FrameLayout layout, ArrayList<Point> pontos, float raio, boolean editavel, Configuracoes configuracoes)
+	public static Circulo desenhaCirculo(Activity activity, FrameLayout layout, Point ponto, float raio, boolean editavel, Configuracoes configuracoes)
 	{
-		Circulo circulo = new Circulo(activity, pontos, raio, editavel, configuracoes);
+		ArrayList<Point> p = new ArrayList<>();
+		p.add(new Point(ponto.x, ponto.y));
+		Circulo circulo = new Circulo(activity, p, raio, editavel, configuracoes);
 		Sketch2D.instance.addFigura(circulo);
 		circulo.desenha(layout, circulo);
 		return circulo;
@@ -260,9 +285,17 @@ public class Sketch2D extends AppCompatActivity
 	 * @param editavel Define se o polígono será editável/excluível ou não.
 	 * @return retorna o polígono criado.
 	 */
-	public static Poligono desenhaPoligono(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel)
+	public static Figura desenhaPoligono(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel)
 	{
-		Poligono poligono = new Poligono(activity, pontos, editavel);
+		Figura poligono;
+		if(pontos.size() == 2)
+		{
+			poligono = new Linha(activity, pontos, editavel);
+		}
+		else
+		{
+			poligono = new Poligono(activity, pontos, editavel);
+		}
 		Sketch2D.instance.addFigura(poligono);
 		poligono.desenha(layout, poligono);
 		return poligono;
@@ -279,9 +312,18 @@ public class Sketch2D extends AppCompatActivity
 	 * @param configuracoes Define as configurações referentes ao polígono.
 	 * @return retorna o polígono criado.
 	 */
-	public static Poligono desenhaPoligono(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
+	public static Figura desenhaPoligono(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
 	{
-		Poligono poligono = new Poligono(activity, pontos, editavel, configuracoes);
+		//Poligono poligono = new Poligono(activity, pontos, editavel, configuracoes);
+		Figura poligono;
+		if(pontos.size() == 2)
+		{
+			poligono = new Linha(activity, pontos, editavel, configuracoes);
+		}
+		else
+		{
+			poligono = new Poligono(activity, pontos, editavel, configuracoes);
+		}
 		Sketch2D.instance.addFigura(poligono);
 		poligono.desenha(layout, poligono);
 		return poligono;
@@ -373,5 +415,45 @@ public class Sketch2D extends AppCompatActivity
 	public static void setClasseConfiguracao(Class classeConfiguracao)
 	{
 		Figura.setClasseConfiguracao(classeConfiguracao);
+	}
+
+	public static void setAlphaPadrao(int alphaPadrao)
+	{
+		Configuracoes.setAlphaPadrao(alphaPadrao);
+	}
+
+	public static void setTamLinhaPadrao(int tamLinhaPadrao)
+	{
+		Configuracoes.setTamLinhaPadrao(tamLinhaPadrao);
+	}
+
+	public static void setEstiloPadrao(int estiloPadrao)
+	{
+		Configuracoes.setEstiloPadrao(estiloPadrao);
+	}
+
+	public static void setEscalaPadrao(float escalaPadrao)
+	{
+		Configuracoes.setEscalaPadrao(escalaPadrao);
+	}
+
+	public static void setPontilhadoPadrao(boolean pontilhadoPadrao)
+	{
+		Configuracoes.setPontilhadoPadrao(pontilhadoPadrao);
+	}
+
+	public static void setAntiAliasPadrao(boolean antiAliasPadrao)
+	{
+		Configuracoes.setAntiAliasPadrao(antiAliasPadrao);
+	}
+
+	public static void setCorPadrao(int corPadrao)
+	{
+		Configuracoes.setCorPadrao(corPadrao);
+	}
+
+	public static void setDistanciaParaLinha(float distanciaParaLinha)
+	{
+		Sketch2D.distanciaParaLinha = distanciaParaLinha;
 	}
 }

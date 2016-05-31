@@ -111,12 +111,28 @@ public class Poligono extends Figura
 	}
 
 	@Override
-	public Point[] pontoMaisProximo(Figura f, float offsetX, float offsetY)
+	public ArrayList<Point[]> pontoMaisProximo(Figura f, float offsetX, float offsetY)
 	{
-		Point pontos[] = new Point[2];
-		pontos[0] = new Point(10000000, 10000000);
-		pontos[1] = new Point(10000000, 10000000);
-		return pontos;
+		ArrayList<Point[]> retorno = new ArrayList<>();
+		//Point pontos[] = new Point[2];
+		//pontos[0] = new Point(10000000, 10000000);
+		//pontos[1] = new Point(10000000, 10000000);
+		for(int i = 0;i<getPontos().size();i++)
+		{
+			ArrayList<Point> pLinha = new ArrayList<>();
+			pLinha.add(new Point(getPonto(i)));
+			if(i == getPontos().size()-1)
+			{
+				pLinha.add(new Point(getPonto(0)));
+			}
+			else
+			{
+				pLinha.add(new Point(getPonto(i+1)));
+			}
+			Linha l = new Linha(getActivity(), pLinha, false);
+			retorno.addAll(l.pontoMaisProximo(f, offsetX, offsetY));
+		}
+		return retorno;
 	}
 
 	public Path getCaminho(float initViewX, float initViewY)
