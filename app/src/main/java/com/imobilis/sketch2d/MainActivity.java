@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
 		figuras = new ArrayList<>();
 		Sketch2D.setClasseConfiguracao(ConfActivity.class);
 
-		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
 				add(new Point(50, 50));
 				add(new Point(50, 200));
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity
 				add(new Point(50, 250));
 			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.BLACK, 255));
 
-		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
 				add(new Point(100, 700));
 				add(new Point(250, 450));

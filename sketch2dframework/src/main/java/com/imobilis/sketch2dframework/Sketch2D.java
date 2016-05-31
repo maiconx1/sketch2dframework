@@ -1,6 +1,7 @@
 package com.imobilis.sketch2dframework;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
@@ -13,9 +14,15 @@ import java.util.ArrayList;
 public class Sketch2D extends AppCompatActivity
 {
 	private static Singleton instance = Singleton.getInstance();
+
 	public static float distanciaParaLinha = 200;
+	public static int corDistancia = Color.BLACK;
+	public static int qtdLinhas = 5, qtdColunas = 5, corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30;
+	public static boolean atras = false, mostraEscala = true, pontilhado = false;
+
 	public static final int TIPO_TRIANGULO = 0, TIPO_QUADRADO = 1, TIPO_PENTAGONO = 2, TIPO_HEXAGONO = 3;
 	public static final int EXCLUI = 0, NAO_EXCLUI = 1;
+
 
 	/**
 	 * Desenha uma linha padrão no framelayout escolhido. A linha vai do ponto (50, 50) ao ponto (300, 300).
@@ -455,5 +462,40 @@ public class Sketch2D extends AppCompatActivity
 	public static void setDistanciaParaLinha(float distanciaParaLinha)
 	{
 		Sketch2D.distanciaParaLinha = distanciaParaLinha;
+	}
+
+	public static void setMostraEscala(boolean mostraEscala)
+	{
+		Sketch2D.mostraEscala = mostraEscala;
+	}
+
+	public static void setAtras(boolean atras)
+	{
+		Sketch2D.atras = atras;
+	}
+
+	public static void setCorLinhas(int corLinhas)
+	{
+		Sketch2D.corLinhas = corLinhas;
+	}
+
+	public static void setQtdColunas(int qtdColunas)
+	{
+		Sketch2D.qtdColunas = qtdColunas;
+	}
+
+	public static void setQtdLinhas(int qtdLinhas)
+	{
+		Sketch2D.qtdLinhas = qtdLinhas;
+	}
+
+	public static void setCorDistancia(int corDistancia)
+	{
+		Sketch2D.corDistancia = corDistancia;
+	}
+
+	public static void setPontilhado(boolean pontilhado)
+	{
+		Sketch2D.pontilhado = pontilhado;
 	}
 }

@@ -373,18 +373,18 @@ public class SketchView extends View
 			int dy = -10;
 			int dx = 10;
 
-			Point parado = figura.getPontos().get(0);
-			Point move = figura.getPontos().get(1);
+			Point parado = figura.getPontos().get(1);
+			Point move = figura.getPontos().get(0);
 
 			canvas.save();
-			canvas.translate(50, 50); //Consertando deslocamento da linha para centro do canvas
+			canvas.translate(90, 90); //Consertando deslocamento da linha para centro do canvas
 			canvas.drawPath(((Linha) figura).getCaminho(getX(), getY()), figura.getPaint());
 
 
 			float rot  = 90 - Math.abs(angle);
 			float radangle = (float)(rot*Math.PI)/180;
 
-			if(move.y<parado.y)
+			if(move.y <= parado.y)
 			{
 				dx+= tamL * Math.cos(Math.abs(radangle));
 				if(move.x>parado.x)
@@ -424,7 +424,7 @@ public class SketchView extends View
 		}
 		if(!linha_distancia)
 		{
-			this.setBackgroundColor(Color.GRAY);
+			//this.setBackgroundColor(Color.GRAY);
 		}
 		figura.setView(this);
 	}

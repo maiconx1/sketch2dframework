@@ -44,6 +44,7 @@ public abstract class Figura extends AppCompatActivity
 	private static boolean timerAtivo = false;
 	private static Activity actTimer = null;
 	private static ArrayList<Figura> indexLinhas = new ArrayList<>();
+	private static boolean editando = false;
 	public static float xViewAnterior = 0, yViewAnterior = 0;
 	public static final int CIRCULO = 0, LINHA = 1, POLIGONO = 2;
 
@@ -325,6 +326,11 @@ public abstract class Figura extends AppCompatActivity
 				switch(event.getAction())
 				{
 					case MotionEvent.ACTION_DOWN:
+						if(editando)
+						{
+							return false;
+						}
+						setEditando(true);
 						x = event.getX();
 						y = event.getY();
 						if(!((Figura) v.getTag()).isDentro(new Point((int) x, (int) y)) || !((Figura)v.getTag()).isEditavel())
@@ -335,13 +341,13 @@ public abstract class Figura extends AppCompatActivity
 						xViewAnterior = v.getX();
 						yViewAnterior = v.getY();
 						v.getParent().bringChildToFront(v);
-						ativaTimer(((SketchView)v).getActivity(), v);
+						ativaTimer(((SketchView) v).getActivity(), v);
 						Log.d("STATUS: ", "DENTRO DA FIGURA");
 						Log.d("STATUS: ", "X inicial: " + x + "// Y inicial: " + y);
-
 						break;
 					case MotionEvent.ACTION_MOVE:
-						if(((Figura)v.getTag()).isEditavel())
+						Log.d("TETESTES", "" + event.getPointerCount());
+						if(((Figura) v.getTag()).isEditavel())
 						{
 							v.setX(v.getX() + event.getX() - x);
 							v.setY(v.getY() + event.getY() - y);
@@ -369,75 +375,16 @@ public abstract class Figura extends AppCompatActivity
 										for(Point p[] : linhas)
 										{
 											double dist = Figura.distancia2Pontos(p[0], p[1]);
-											float mul = ((Figura) v.getTag()).getConfiguracoes().getEscala()*((Figura) v.getTag()).getConfiguracoes().getZoom();
-											if(dist < Sketch2D.distanciaParaLinha*mul/*200*/)
+											float mul = ((Figura) v.getTag()).getConfiguracoes().getEscala() * ((Figura) v.getTag()).getConfiguracoes().getZoom();
+											if(dist < Sketch2D.distanciaParaLinha * mul/*200*/)
 											{
-												//Log.d("LALALA", "ENTROU " + p[0] + "//" + p[1]);
 												ArrayList<Point> pp = new ArrayList<>();
-												p[1].y-=50;
-												p[0].y-=50;
-												p[1].x-=50;
-												p[0].x-=50;
-												pp.add(p[0]);
-												pp.add(p[1]);
-												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 180), true);
+												pp.add(new Point(p[0].x - 90, p[0].y - 90));
+												pp.add(new Point(p[1].x - 90, p[1].y - 90));
+												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Sketch2D.corDistancia, 180), true);
 												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
 											}
 										}
-										/*if(f instanceof Poligono)
-										{
-											Log.d("POLIGONO DISTANCIA", "INICIO");
-											for(int j = 0;j<f.getPontos().size()-1;j++)
-											{
-												ArrayList<Point> pontos = new ArrayList<>();
-												pontos.add(f.getPontos().get(j));
-												pontos.add(f.getPontos().get(j+1));
-												Linha linha = new Linha(f.getActivity(), pontos, false);
-												Log.d("POLIGONO PONTOS", linha.getPontos() + "");
-												Point p[] = ((Figura) v.getTag()).pontoMaisProximo(linha, v.getX() - xViewAnterior, v.getY() - yViewAnterior);
-												double dist = Figura.distancia2Pontos(p[0], p[1]);
-												Log.d("POLIGONO DISTANCIA", "" + dist);
-												if(dist < 200)
-												{
-													Log.d("PERTO", "DESENHA");
-													pontos = new ArrayList<>();
-													pontos.add(p[1]);
-													pontos.add(p[0]);
-													Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pontos, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 200));
-													indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
-												}
-											}
-											ArrayList<Point> pontos = new ArrayList<>();
-											pontos.add(f.getPontos().get(f.getPontos().size()-1));
-											pontos.add(f.getPontos().get(0));
-											Linha linha = new Linha(f.getActivity(), pontos, false);
-											Point p[] = ((Figura) v.getTag()).pontoMaisProximo(linha, v.getX() - xViewAnterior, v.getY() - yViewAnterior);
-											double dist = Figura.distancia2Pontos(p[0], p[1]);
-											Log.d("POLIGONO DISTANCIA", "" + dist);
-											if(dist < 200)
-											{
-												pontos = new ArrayList<>();
-												pontos.add(p[1]);
-												pontos.add(p[0]);
-												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pontos, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 200));
-												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
-											}
-											Log.d("POLIGONO DISTANCIA", "FIM");
-										}
-										else
-										{
-											Point p[] = ((Figura) v.getTag()).pontoMaisProximo(f, v.getX() - xViewAnterior, v.getY() - yViewAnterior);
-											double dist = Figura.distancia2Pontos(p[0], p[1]);
-											Log.d("DISTANCIA", "" + dist);
-											if(dist < 200)
-											{
-												ArrayList<Point> pontos = new ArrayList<>();
-												pontos.add(p[1]);
-												pontos.add(p[0]);
-												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pontos, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 200));
-												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
-											}
-										}*/
 									}
 								}
 							}
@@ -445,7 +392,8 @@ public abstract class Figura extends AppCompatActivity
 						}
 						break;
 					case MotionEvent.ACTION_UP:
-						Log.d("STATUS: ", "UPPPP");
+						setEditando(false);
+						Log.d("TESTESTATUS: ", "UPPPP");
 						if(timerAtivo)
 						{
 							cancelaTimer();
@@ -469,6 +417,12 @@ public abstract class Figura extends AppCompatActivity
 				return true;
 			}
 		};
+	}
+
+	private static void setEditando(boolean editando)
+	{
+		Figura.editando = editando;
+		Log.d("EDITANDO", "Valor = " + (editando?"true":"false"));
 	}
 
 	public void desenha(FrameLayout layout, Figura figura)
@@ -627,8 +581,8 @@ public abstract class Figura extends AppCompatActivity
 			}
 			if(linha_distancia)
 			{
-				tam[1] += 100;
-				tam[0] += 100;
+				tam[1] += 180;
+				tam[0] += 180;
 			}
 
 		}
