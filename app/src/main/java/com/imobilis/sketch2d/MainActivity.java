@@ -143,7 +143,9 @@ public class MainActivity extends AppCompatActivity
 				add(new Point(700, 700));
 			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.CYAN, 255));*/
 
-		desenhaTudo();
+		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
+		Sketch2D.desenhaCirculo(this, (FrameLayout)findViewById(R.id.lnDesenho), true);
+		//desenhaTudo();
 		((SeekBar) findViewById(R.id.skbEscala)).setProgress(10);
 		((SeekBar)findViewById(R.id.skbEscala)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
 		{

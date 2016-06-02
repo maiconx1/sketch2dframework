@@ -326,18 +326,22 @@ public abstract class Figura extends AppCompatActivity
 				switch(event.getAction())
 				{
 					case MotionEvent.ACTION_DOWN:
+						Log.d("TESTESTATUS", "DOWNN");
 						if(editando)
 						{
 							return false;
 						}
+						Log.d("TESTESTATUS", "PÓS EDITANDO");
 						setEditando(true);
 						x = event.getX();
 						y = event.getY();
 						if(!((Figura) v.getTag()).isDentro(new Point((int) x, (int) y)) || !((Figura)v.getTag()).isEditavel())
 						{
 							Log.d("STATUS: ", "FORA DA FIGURA");
+							setEditando(false);
 							return false;
 						}
+						Log.d("TESTESTATUS", "PÓS FORA FIGURA");
 						xViewAnterior = v.getX();
 						yViewAnterior = v.getY();
 						v.getParent().bringChildToFront(v);
@@ -346,7 +350,8 @@ public abstract class Figura extends AppCompatActivity
 						Log.d("STATUS: ", "X inicial: " + x + "// Y inicial: " + y);
 						break;
 					case MotionEvent.ACTION_MOVE:
-						Log.d("TETESTES", "" + event.getPointerCount());
+						//Log.d("TETESTES", "" + event.getPointerCount());
+						Log.d("TESTESTATUS", "MOVEEE");
 						if(((Figura) v.getTag()).isEditavel())
 						{
 							v.setX(v.getX() + event.getX() - x);
@@ -391,6 +396,8 @@ public abstract class Figura extends AppCompatActivity
 							Log.d("STATUS: ", "MOVENDO - vX: " + v.getX() + "/vY: " + v.getY() + " - X: " + x + "/Y: " + y + " - MOVX: " + event.getX() + "/MOVY: " + event.getY());
 						}
 						break;
+					case MotionEvent.ACTION_CANCEL:
+						Log.d("TESTESTATUS: ", "CANCEL");
 					case MotionEvent.ACTION_UP:
 						setEditando(false);
 						Log.d("TESTESTATUS: ", "UPPPP");
@@ -401,6 +408,11 @@ public abstract class Figura extends AppCompatActivity
 						movX = 0;
 						movY = 0;
 						for(Point p : ((Figura)v.getTag()).getPontos())
+						{
+							p.x += v.getX() - xViewAnterior;
+							p.y += v.getY() - yViewAnterior;
+						}
+						for(Point p : ((Figura)v.getTag()).getPontosEscalados())
 						{
 							p.x += v.getX() - xViewAnterior;
 							p.y += v.getY() - yViewAnterior;

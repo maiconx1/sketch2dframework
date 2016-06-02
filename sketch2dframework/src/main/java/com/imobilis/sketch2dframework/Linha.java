@@ -60,6 +60,16 @@ public class Linha extends Figura
 	}
 
 	@Override
+	public Point getPonto(int index)
+	{
+		if(isDistancia() || getPontosEscalados().size() < 1)
+		{
+			return getPontos().get(index);
+		}
+		return getPontosEscalados().get(index);
+	}
+
+	@Override
 	public boolean isDentro(Point ponto)
 	{
 		float y;

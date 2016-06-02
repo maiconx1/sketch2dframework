@@ -71,6 +71,17 @@ public class Poligono extends Figura
 	}*/
 
 	@Override
+	public Point getPonto(int index)
+	{
+		//Point p;
+		//float mul = getConfiguracoes().getEscala()*getConfiguracoes().getZoom();
+		//p = new Point((int)(getPontos().get(index).x + getConfiguracoes().getTamLinha()*mul), (int)(getPontos().get(index).y + getConfiguracoes().getTamLinha()*mul));
+		//p = new Point(getPontos().get(index).x + getConfiguracoes().getTamLinha(), getPontos().get(index).y + getConfiguracoes().getTamLinha());
+		//return p;
+		return getPontosEscalados().get(index);
+	}
+
+	@Override
 	public boolean isDentro(Point ponto)
 	{
 		int cruzamentos = 0;
@@ -80,8 +91,10 @@ public class Poligono extends Figura
 		int r;
 		for(int i = 0;i<getPontosEscalados().size() - 1;i++)
 		{
-			a = getPontosEscalados().get(i);
-			b = getPontosEscalados().get(i + 1);
+			//a = getPontosEscalados().get(i);
+			//b = getPontosEscalados().get(i + 1);
+			a = getPonto(i);
+			b = getPonto(i+1);
 			r = (b.x - a.x)*(ponto.y - a.y) - (ponto.x - a.x)*(b.y - a.y);
 			if(a.y > b.y)
 			{
@@ -117,17 +130,17 @@ public class Poligono extends Figura
 		//Point pontos[] = new Point[2];
 		//pontos[0] = new Point(10000000, 10000000);
 		//pontos[1] = new Point(10000000, 10000000);
-		for(int i = 0;i<getPontos().size();i++)
+		for(int i = 0;i<getPontosEscalados().size();i++)
 		{
 			ArrayList<Point> pLinha = new ArrayList<>();
-			pLinha.add(new Point(getPonto(i)));
+			pLinha.add(new Point(getPontosEscalados().get(i)));
 			if(i == getPontos().size()-1)
 			{
-				pLinha.add(new Point(getPonto(0)));
+				pLinha.add(new Point(getPontosEscalados().get(0)));
 			}
 			else
 			{
-				pLinha.add(new Point(getPonto(i+1)));
+				pLinha.add(new Point(getPontosEscalados().get(i+1)));
 			}
 			Linha l = new Linha(getActivity(), pLinha, false);
 			retorno.addAll(l.pontoMaisProximo(f, offsetX, offsetY));
