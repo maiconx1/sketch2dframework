@@ -172,6 +172,8 @@ public class MainActivity extends AppCompatActivity
 				add(new Point(50, 250));
 			}}, true);
 
+		Sketch2D.desenhaPoligono(this, parent, Sketch2D.TIPO_TRIANGULO, true);
+
 		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
 				add(new Point(100, 700));

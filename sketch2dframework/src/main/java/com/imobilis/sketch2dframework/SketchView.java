@@ -56,6 +56,9 @@ public class SketchView extends View
 				float dy = figura.getMaiorY().y + figura.getMenorY().y;
 				dy/=2;
 
+				dx = figura.getDifs().x;
+				dy = figura.getDifs().y;
+
 				//p.y-=(figura.getMaiorY().y/2);
 
 				p.x*=mul;

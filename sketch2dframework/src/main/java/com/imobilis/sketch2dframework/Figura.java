@@ -49,6 +49,8 @@ public abstract class Figura extends AppCompatActivity
 	public static float xViewAnterior = 0, yViewAnterior = 0;
 	public static final int CIRCULO = 0, LINHA = 1, POLIGONO = 2;
 
+	private Point difs;
+
 	public Figura(Activity activity, ArrayList<Point> pontos)
 	{
 		setActivity(activity);
@@ -115,6 +117,7 @@ public abstract class Figura extends AppCompatActivity
 		}
 		setMaior(new Point(getMaiorX().x, getMaiorY().y));
 		setMenor(new Point(getMenorX().x, getMenorY().y));
+		setDifs(new Point((getMaior().x + getMenor().x)/2, (getMaior().y+getMenor().y)/2));
 	}
 
 	public void setMenorX(Point menorX)
@@ -424,6 +427,8 @@ public abstract class Figura extends AppCompatActivity
 								p.x += v.getX() - xViewAnterior;
 								p.y += v.getY() - yViewAnterior;
 							}
+
+							((Figura)v.getTag()).deslocaFigura((int)(v.getX() - xViewAnterior), (int)(v.getY() - yViewAnterior));
 							xViewAnterior = 0;
 							yViewAnterior = 0;
 							while(indexLinhas.size() > 0)
@@ -765,5 +770,20 @@ public abstract class Figura extends AppCompatActivity
 	public void setConfPadrao(boolean confPadrao)
 	{
 		this.confPadrao = confPadrao;
+	}
+
+	public Point getDifs()
+	{
+		return difs;
+	}
+
+	public void setDifs(Point difs)
+	{
+		this.difs = difs;
+	}
+
+	public void deslocaFigura(int dx, int dy)
+	{
+		setDifs(new Point(getDifs().x+dx, getDifs().y+dy));
 	}
 }
