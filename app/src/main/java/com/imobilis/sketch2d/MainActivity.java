@@ -9,6 +9,7 @@ package com.imobilis.sketch2d;
 	import android.util.Log;
 	import android.view.Menu;
 	import android.view.MenuInflater;
+	import android.view.MenuItem;
 	import android.view.MotionEvent;
 	import android.widget.FrameLayout;
 	import android.widget.SeekBar;
@@ -17,18 +18,56 @@ package com.imobilis.sketch2d;
 	import com.imobilis.sketch2dframework.Figura;
 	import com.imobilis.sketch2dframework.Singleton;
 	import com.imobilis.sketch2dframework.Sketch2D;
+	import com.imobilis.sketch2dframework.SketchParent;
 
 	import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 {
 	ArrayList<Figura> figuras;
+	SketchParent parent;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_main, menu);
+		//inflater.inflate(R.menu.menu_main, menu);
+		inflater.inflate(R.menu.menu_unidades, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case R.id.dp:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_DP);
+				Configuracoes.setCorPadrao(Color.RED);
+				Configuracoes.refresh(parent);
+				break;
+			case R.id.cm:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_CM);
+				Configuracoes.setCorPadrao(Color.GREEN);
+				Configuracoes.refresh(parent);
+				break;
+			case R.id.m:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_M);
+				Configuracoes.setCorPadrao(Color.BLACK);
+				Configuracoes.refresh(parent);
+				break;
+			case R.id.km:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_KM);
+				Configuracoes.setCorPadrao(Color.CYAN);
+				Configuracoes.refresh(parent);
+				break;
+			case R.id.inch:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_INCH);
+				Configuracoes.setCorPadrao(Color.YELLOW);
+				Configuracoes.refresh(parent);
+				break;
+		}
+		parent.invalidate();
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void desenhaTudo()
@@ -117,6 +156,7 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		parent = (SketchParent)findViewById(R.id.lnDesenho);
 		figuras = new ArrayList<>();
 		Sketch2D.setClasseConfiguracao(ConfActivity.class);
 
@@ -130,7 +170,7 @@ public class MainActivity extends AppCompatActivity
 		{{
 				add(new Point(250, 250));
 				add(new Point(50, 250));
-			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.BLACK, 255));
+			}}, true);
 
 		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
@@ -144,6 +184,9 @@ public class MainActivity extends AppCompatActivity
 			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.CYAN, 255));*/
 
 		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
+		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), true);
+		Sketch2D.desenhaCirculo(this, (FrameLayout)findViewById(R.id.lnDesenho), true, new Configuracoes());
+		Sketch2D.setEstiloPadrao(Configuracoes.PREENCHIDO);
 		Sketch2D.desenhaCirculo(this, (FrameLayout)findViewById(R.id.lnDesenho), true);
 		//desenhaTudo();
 		((SeekBar) findViewById(R.id.skbEscala)).setProgress(10);

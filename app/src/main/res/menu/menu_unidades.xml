@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/dp"
+          android:title="Pixels"
+          app:showAsAction="never"></item>
+    <item android:id="@+id/cm"
+          android:title="Centímetros"
+          app:showAsAction="never"></item>
+    <item android:id="@+id/m"
+          android:title="Metros"
+          app:showAsAction="never"></item>
+    <item android:id="@+id/km"
+          android:title="Kilômetros"
+          app:showAsAction="never"></item>
+    <item android:id="@+id/inch"
+          android:title="Polegadas"
+          app:showAsAction="never"></item>
+</menu>

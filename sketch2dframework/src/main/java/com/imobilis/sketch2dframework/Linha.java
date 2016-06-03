@@ -70,10 +70,11 @@ public class Linha extends Figura
 	}
 
 	@Override
-	public boolean isDentro(Point ponto)
+	public boolean isDentro(Point p)
 	{
 		float y;
 		Point pInicial = getPonto(0), pFinal = getPonto(1);
+		Point ponto = new Point(p);
 		ponto.x += getView().getX();
 		ponto.y += getView().getY();
 		Log.d("STATUS: ", "IS DENTRO: clickX=" + ponto.x + "//clickY=" + ponto.y + "//initX=" + pInicial.x + "//initY=" + pInicial.y + "//fimX=" + pFinal.x + "//fimY=" + pFinal.y);

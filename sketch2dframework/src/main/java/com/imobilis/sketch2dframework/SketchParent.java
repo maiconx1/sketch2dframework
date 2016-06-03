@@ -17,6 +17,8 @@ import android.widget.FrameLayout;
 public class SketchParent extends FrameLayout
 {
 	private Configuracoes conf;
+	public static int qtdLinhas = 5, qtdColunas = 5, corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30;
+	public static boolean atras = false, mostraEscala = true, pontilhado = false;
 
 	public SketchParent(Context context)
 	{
@@ -40,28 +42,48 @@ public class SketchParent extends FrameLayout
 	protected void dispatchDraw(Canvas canvas)
 	{
 		super.dispatchDraw(canvas);
-		conf = new Configuracoes(Sketch2D.pontilhado, Configuracoes.LINHA, 3, true, Sketch2D.corLinhas, Sketch2D.alphaLinhas);
-		if(!Sketch2D.atras)
+		conf = new Configuracoes(SketchParent.pontilhado, Configuracoes.LINHA, 3, true, SketchParent.corLinhas, SketchParent.alphaLinhas);
+		if(!SketchParent.atras)
 		{
-			for(int i = 0; i <= getWidth(); i += (getWidth() /  Sketch2D.qtdLinhas))
+			for(int i = 0; i <= getWidth(); i += (getWidth() /  SketchParent.qtdLinhas))
 			{
 				canvas.drawLine(i, 0, i, getHeight(), conf.getPaint());
 			}
-			for(int i = 0; i <= getHeight(); i += (getHeight() /  Sketch2D.qtdColunas))
+			for(int i = 0; i <= getHeight(); i += (getHeight() /  SketchParent.qtdColunas))
 			{
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
 		}
 
 		Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-		textPaint.setColor(Sketch2D.corLinhas);
-		textPaint.setAlpha(2*Sketch2D.alphaLinhas);
+		textPaint.setColor(SketchParent.corLinhas);
+		textPaint.setAlpha(2*SketchParent.alphaLinhas);
 		textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
 		textPaint.setTextAlign(Paint.Align.LEFT);
 
-		double tamL = getWidth()/Sketch2D.qtdLinhas;
+		double tamL = getWidth()/SketchParent.qtdLinhas;
 		DisplayMetrics dm = getResources().getDisplayMetrics();
-		String text = (tamL/dm.densityDpi)*2.5 + " cm";
+		String text;
+		switch(Sketch2D.unidade)
+		{
+			default:
+			case Sketch2D.UNIDADE_DP:
+				text = (tamL) + " dp";
+				break;
+			case Sketch2D.UNIDADE_CM:
+				text = (tamL/dm.densityDpi)*2.5 + " cm";
+				break;
+			case Sketch2D.UNIDADE_M:
+				text = (tamL/dm.densityDpi)*2.5/100 + " m";
+				break;
+			case Sketch2D.UNIDADE_KM:
+				text = (tamL/dm.densityDpi)*2.5/100/1000 + " km";
+				break;
+			case Sketch2D.UNIDADE_INCH:
+				text = (tamL/dm.densityDpi) + " inch";
+				break;
+		}
+		//text = (tamL/dm.densityDpi)*2.5 + " cm";
 		Rect bounds = new Rect();
 		textPaint.getTextBounds(text, 0, text.length(), bounds);
 		Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
@@ -72,16 +94,56 @@ public class SketchParent extends FrameLayout
 	protected void onDraw(Canvas canvas)
 	{
 		super.onDraw(canvas);
-		if(Sketch2D.atras)
+		if(SketchParent.atras)
 		{
-			for(int i = 0; i <= getWidth(); i += (getWidth() / Sketch2D.qtdLinhas))
+			for(int i = 0; i <= getWidth(); i += (getWidth() / SketchParent.qtdLinhas))
 			{
 				canvas.drawLine(i, 0, i, getHeight(), conf.getPaint());
 			}
-			for(int i = 0; i <= getHeight(); i += (getHeight() /  Sketch2D.qtdColunas))
+			for(int i = 0; i <= getHeight(); i += (getHeight() /  SketchParent.qtdColunas))
 			{
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
 		}
+	}
+
+	public static void setMostraEscala(boolean mostraEscala)
+	{
+		SketchParent.mostraEscala = mostraEscala;
+	}
+
+	public static void setAtras(boolean atras)
+	{
+		SketchParent.atras = atras;
+	}
+
+	public static void setCorLinhas(int corLinhas)
+	{
+		SketchParent.corLinhas = corLinhas;
+	}
+
+	public static void setQtdColunas(int qtdColunas)
+	{
+		SketchParent.qtdColunas = qtdColunas;
+	}
+
+	public static void setQtdLinhas(int qtdLinhas)
+	{
+		SketchParent.qtdLinhas = qtdLinhas;
+	}
+
+	public static void setPontilhado(boolean pontilhado)
+	{
+		SketchParent.pontilhado = pontilhado;
+	}
+
+	public static void setAlphaLinhas(int alphaLinhas)
+	{
+		SketchParent.alphaLinhas = alphaLinhas;
+		String hexColor = String.format("#%06X", (0xFFFFFF & SketchParent.corLinhas));
+		String hexAlpha = String.format("#%06X", (0xFF & SketchParent.alphaLinhas));
+		String hex = "#" + hexAlpha.substring(5, 7) + hexColor.substring(1, 7);
+		int cor = Color.parseColor(hex);
+		setCorLinhas(cor);
 	}
 }

@@ -82,9 +82,10 @@ public class Poligono extends Figura
 	}
 
 	@Override
-	public boolean isDentro(Point ponto)
+	public boolean isDentro(Point p)
 	{
 		int cruzamentos = 0;
+		Point ponto = new Point(p);
 		ponto.x = ponto.x + getMenor().x;
 		ponto.y = ponto.y + getMenor().y;
 		Point a, b;

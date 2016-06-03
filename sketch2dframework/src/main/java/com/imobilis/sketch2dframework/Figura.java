@@ -34,6 +34,7 @@ public abstract class Figura extends AppCompatActivity
 	private Point menorX, menorY, maiorX, maiorY, menor, maior;
 	private static Activity activity;
 	private boolean editavel;
+	boolean confPadrao = false;
 	private Configuracoes configuracoes;
 	private SketchView view;
 	private int index;
@@ -55,6 +56,7 @@ public abstract class Figura extends AppCompatActivity
 		setConfiguracoes(new Configuracoes());
 		setPaint(getConfiguracoes().getPaint());
 		calculaMenorMaior();
+		setConfPadrao(true);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, Configuracoes configuracoes)
@@ -64,6 +66,7 @@ public abstract class Figura extends AppCompatActivity
 		setConfiguracoes(configuracoes);
 		setPaint(getConfiguracoes().getPaint());
 		calculaMenorMaior();
+		setConfPadrao(false);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, boolean editavel)
@@ -74,6 +77,7 @@ public abstract class Figura extends AppCompatActivity
 		setPaint(getConfiguracoes().getPaint());
 		setEditavel(editavel);
 		calculaMenorMaior();
+		setConfPadrao(true);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
@@ -84,6 +88,7 @@ public abstract class Figura extends AppCompatActivity
 		setPaint(getConfiguracoes().getPaint());
 		setEditavel(editavel);
 		calculaMenorMaior();
+		setConfPadrao(false);
 	}
 
 	private void calculaMenorMaior()
@@ -352,7 +357,7 @@ public abstract class Figura extends AppCompatActivity
 					case MotionEvent.ACTION_MOVE:
 						//Log.d("TETESTES", "" + event.getPointerCount());
 						Log.d("TESTESTATUS", "MOVEEE");
-						if(((Figura) v.getTag()).isEditavel())
+						if(((Figura) v.getTag()).isEditavel() && event.getPointerId(0) == 0)
 						{
 							v.setX(v.getX() + event.getX() - x);
 							v.setY(v.getY() + event.getY() - y);
@@ -399,30 +404,33 @@ public abstract class Figura extends AppCompatActivity
 					case MotionEvent.ACTION_CANCEL:
 						Log.d("TESTESTATUS: ", "CANCEL");
 					case MotionEvent.ACTION_UP:
-						setEditando(false);
-						Log.d("TESTESTATUS: ", "UPPPP");
-						if(timerAtivo)
+						if(event.getPointerId(0) == 0)
 						{
-							cancelaTimer();
-						}
-						movX = 0;
-						movY = 0;
-						for(Point p : ((Figura)v.getTag()).getPontos())
-						{
-							p.x += v.getX() - xViewAnterior;
-							p.y += v.getY() - yViewAnterior;
-						}
-						for(Point p : ((Figura)v.getTag()).getPontosEscalados())
-						{
-							p.x += v.getX() - xViewAnterior;
-							p.y += v.getY() - yViewAnterior;
-						}
-						xViewAnterior = 0;
-						yViewAnterior = 0;
-						while(indexLinhas.size() > 0)
-						{
-							Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
-							indexLinhas.remove(indexLinhas.size()-1);
+							setEditando(false);
+							Log.d("TESTESTATUS: ", "UPPPP");
+							if(timerAtivo)
+							{
+								cancelaTimer();
+							}
+							movX = 0;
+							movY = 0;
+							for(Point p : ((Figura) v.getTag()).getPontos())
+							{
+								p.x += v.getX() - xViewAnterior;
+								p.y += v.getY() - yViewAnterior;
+							}
+							for(Point p : ((Figura) v.getTag()).getPontosEscalados())
+							{
+								p.x += v.getX() - xViewAnterior;
+								p.y += v.getY() - yViewAnterior;
+							}
+							xViewAnterior = 0;
+							yViewAnterior = 0;
+							while(indexLinhas.size() > 0)
+							{
+								Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
+								indexLinhas.remove(indexLinhas.size() - 1);
+							}
 						}
 						break;
 				}
@@ -747,5 +755,15 @@ public abstract class Figura extends AppCompatActivity
 	{
 		Log.d("DOIS PONTOS", "p2: " + p2 + "//p1: " + p1);
 		return Math.sqrt(Math.pow(p2.x-p1.x, 2) + Math.pow(p2.y-p1.y, 2));
+	}
+
+	public boolean isConfPadrao()
+	{
+		return confPadrao;
+	}
+
+	public void setConfPadrao(boolean confPadrao)
+	{
+		this.confPadrao = confPadrao;
 	}
 }

@@ -16,11 +16,12 @@ public class Sketch2D extends AppCompatActivity
 	private static Singleton instance = Singleton.getInstance();
 
 	public static float distanciaParaLinha = 200;
-	public static int corDistancia = Color.BLACK;
-	public static int qtdLinhas = 5, qtdColunas = 5, corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30;
-	public static boolean atras = false, mostraEscala = true, pontilhado = false;
+	public static int corDistancia = Color.BLACK, unidade = Sketch2D.UNIDADE_DP;
+
+
 
 	public static final int TIPO_TRIANGULO = 0, TIPO_QUADRADO = 1, TIPO_PENTAGONO = 2, TIPO_HEXAGONO = 3;
+	public static final int UNIDADE_DP = 0, UNIDADE_CM = 1, UNIDADE_M = 2, UNIDADE_KM = 3, UNIDADE_INCH = 4;
 	public static final int EXCLUI = 0, NAO_EXCLUI = 1;
 
 
@@ -92,7 +93,7 @@ public class Sketch2D extends AppCompatActivity
 	 * @param distancia Define se a linha é uma linha de distância ou não
 	 * @return retorna a linha criada.
 	 */
-	public static Linha desenhaLinha(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes, boolean distancia)
+	protected static Linha desenhaLinha(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes, boolean distancia)
 	{
 		Linha linha = new Linha(activity, pontos, editavel, configuracoes, distancia);
 		Sketch2D.instance.addFigura(linha);
@@ -464,38 +465,13 @@ public class Sketch2D extends AppCompatActivity
 		Sketch2D.distanciaParaLinha = distanciaParaLinha;
 	}
 
-	public static void setMostraEscala(boolean mostraEscala)
-	{
-		Sketch2D.mostraEscala = mostraEscala;
-	}
-
-	public static void setAtras(boolean atras)
-	{
-		Sketch2D.atras = atras;
-	}
-
-	public static void setCorLinhas(int corLinhas)
-	{
-		Sketch2D.corLinhas = corLinhas;
-	}
-
-	public static void setQtdColunas(int qtdColunas)
-	{
-		Sketch2D.qtdColunas = qtdColunas;
-	}
-
-	public static void setQtdLinhas(int qtdLinhas)
-	{
-		Sketch2D.qtdLinhas = qtdLinhas;
-	}
-
 	public static void setCorDistancia(int corDistancia)
 	{
 		Sketch2D.corDistancia = corDistancia;
 	}
 
-	public static void setPontilhado(boolean pontilhado)
+	public static void setUnidade(int unidade)
 	{
-		Sketch2D.pontilhado = pontilhado;
+		Sketch2D.unidade = unidade;
 	}
 }
