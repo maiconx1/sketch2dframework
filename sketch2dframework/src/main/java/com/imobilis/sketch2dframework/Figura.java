@@ -594,8 +594,8 @@ public abstract class Figura extends AppCompatActivity
 
 		}
 
-		tam[0] += 2*figura.getConfiguracoes().getTamLinha();
-		tam[1] += 2*figura.getConfiguracoes().getTamLinha();
+		tam[0] += 2*(figura.getConfiguracoes().getTamLinha()+2);
+		tam[1] += 2*(figura.getConfiguracoes().getTamLinha()+2);
 
 		if(figura instanceof Linha)
 		{
@@ -614,57 +614,6 @@ public abstract class Figura extends AppCompatActivity
 
 		return tam;
 	}
-
-	/*private static class DemoView extends View
-	{
-		Figura figura;
-		public DemoView(Activity activity, Figura figura)
-		{
-			super(activity.getBaseContext());
-			this.figura = figura;
-		}
-
-		@Override
-		protected void onDraw(Canvas canvas)
-		{
-			super.onDraw(canvas);
-			Log.d("STATUS: ", "DESENHANDO");
-			Point menorX, menorY, maiorX, maiorY;
-			maiorX = maiorY = menorX = menorY = figura.getPontos().get(0);
-			for(Point p : figura.getPontos())
-			{
-				if(p.x < menorX.x)
-				{
-					menorX = p;
-				}
-				if(p.y < menorY.y)
-				{
-					menorY = p;
-				}
-				if(p.x > maiorX.x)
-				{
-					maiorX = p;
-				}
-				if(p.y > maiorY.y)
-				{
-					maiorY = p;
-				}
-			}
-			if(figura.getClass() == Poligono.class)
-			{
-				setX(menorX.x);
-				setY(menorY.y);
-
-				canvas.drawPath(((Poligono) figura).getCaminho(getX(), getY()), figura.getPaint());
-			}
-			else if(figura.getClass() == Circulo.class)
-			{
-				setX(menorX.x - ((Circulo) figura).getRaio());
-				setY(menorY.y - ((Circulo) figura).getRaio());
-				canvas.drawCircle(figura.getPontos().get(0).x - menorX.x + ((Circulo)figura).getRaio(), figura.getPontos().get(0).y - menorY.y + ((Circulo)figura).getRaio(), ((Circulo)figura).getRaio(), figura.getPaint());
-			}
-		}
-	}*/
 
 	public void setConfiguracoes(Configuracoes configuracoes)
 	{
@@ -785,5 +734,7 @@ public abstract class Figura extends AppCompatActivity
 	public void deslocaFigura(int dx, int dy)
 	{
 		setDifs(new Point(getDifs().x+dx, getDifs().y+dy));
+		setMaior(new Point(getMaior().x + dx, getMaior().y + dy));
+		setMenor(new Point(getMenor().x + dx, getMenor().y + dy));
 	}
 }

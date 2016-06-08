@@ -1,5 +1,6 @@
 package com.imobilis.sketch2dframework;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
