@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
 				Sketch2D.setUnidade(Sketch2D.UNIDADE_DP);
 				Configuracoes.setCorPadrao(Color.RED);
 				Configuracoes.refresh(parent);
-				/*Point p = getTamanho();
+				Point p = getTamanho();
 				DisplayMetrics dm = getResources().getDisplayMetrics();
 				widthPequeno = poligono.getView().getWidth();
 				heightPequeno = poligono.getView().getHeight();
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
 
 				escalaw = widthReal/widthPequeno;
 				escalah = heightReal/heightPequeno;
-				geraMalha(poligono);*/
+				geraMalha(poligono);
 				break;
 			case R.id.cm:
 				Sketch2D.setUnidade(Sketch2D.UNIDADE_CM);
@@ -168,10 +168,15 @@ public class MainActivity extends AppCompatActivity
 		Sketch2D.desenhaLinha(this, (FrameLayout)findViewById(R.id.lnDesenho), false);
 	}
 
-	public void geraMalha(Figura poligono)
+	public int converteM2P(float metros)
 	{
 		DisplayMetrics dm = getResources().getDisplayMetrics();
-		Malha malha = new Malha(Malha.QUADRATICA, dm.densityDpi*(4.5*100/2.5), dm.densityDpi*(9*100/2.5), new Point((int)poligono.getView().getX(), (int)poligono.getView().getY()), new Point(100, 100), true);
+		return (int)(dm.densityDpi*0.025*metros);
+	}
+
+	public void geraMalha(Figura f)
+	{
+		Malha malha = new Malha(Malha.QUADRATICA, converteM2P(4.5f), converteM2P(9f), new Point((int)poligono.getView().getX(), (int)poligono.getView().getY()), new Point(100, 100), true);
 
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
@@ -179,14 +184,23 @@ public class MainActivity extends AppCompatActivity
 		int width = size.x;
 		int height = size.y;
 
+		int divW, divH;
+
+		width=f.getMaior().x-f.getMenor().x;
+		height=Math.abs(f.getMaior().y - f.getMenor().y);
+		double proporcao = width/tamReal[0];
+		divW = (int)(proporcao*4.5);
+		divH = (int)(proporcao*9);
+
 		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
 
 		ArrayList<Point> furos = new ArrayList<>();
 		furos.add(malha.getInicio());
 		Point point;
-		for(int i = 0;i<widthPequeno/malha.getDistLinha();i++)
+		Log.d("PONTOS", "WidthPequeno: " + widthPequeno + "//Dist Linhas: " + malha.getDistLinha() + "//Dist Colunas: " + malha.getDistColuna());
+		for(int i = 0;i<widthReal/malha.getDistLinha();i++)
 		{
-			for(int j = 0;j<heightPequeno/malha.getDistColuna();j++)
+			for(int j = 0;j<heightReal/malha.getDistColuna();j++)
 			{
 				point = new Point((int)(furos.get(0).x + i*malha.getDistColuna()), (int)(furos.get(0).y + j*malha.getDistLinha()));
 				Point np = new Point((int)(point.x - poligono.getView().getX()), (int)(point.y - poligono.getView().getY()));
@@ -213,7 +227,8 @@ public class MainActivity extends AppCompatActivity
 		figuras = new ArrayList<>();
 		Sketch2D.setClasseConfiguracao(ConfActivity.class);
 
-		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		//geraFiguras(getTamanho(), parent);
+		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
 				add(new Point(50, 50));
 				add(new Point(50, 200));
@@ -247,8 +262,8 @@ public class MainActivity extends AppCompatActivity
 		Sketch2D.desenhaCirculo(this, (FrameLayout)findViewById(R.id.lnDesenho), true, new Configuracoes());
 		Sketch2D.setEstiloPadrao(Configuracoes.PREENCHIDO);
 		Sketch2D.desenhaCirculo(this, (FrameLayout)findViewById(R.id.lnDesenho), true);
-		desenhaTudo();
-		((SeekBar) findViewById(R.id.skbEscala)).setProgress(10);
+		desenhaTudo();*/
+		/*((SeekBar) findViewById(R.id.skbEscala)).setProgress(10);
 		((SeekBar)findViewById(R.id.skbEscala)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
 		{
 			@Override
@@ -270,7 +285,7 @@ public class MainActivity extends AppCompatActivity
 			public void onStopTrackingTouch(SeekBar seekBar)
 			{
 			}
-		});
+		});*/
 	}
 
 	/*ArrayList<Figura> figuras;
@@ -742,6 +757,7 @@ public class MainActivity extends AppCompatActivity
 		Log.d("Main","tamanho x = "+tamx+" tamy = "+tamy+" scale = "+tela_menor/tamy);
 
 		double tam = tamx;
+		tamReal[0] = tamx;
 		if(eixoy)
 			tam = tamy;
 		int d = (int)(tela_menor/tam);
@@ -808,7 +824,7 @@ public class MainActivity extends AppCompatActivity
 	}
 
 
-
+	double tamReal[] = new double[2];
 	ArrayList<Integer> indexs;
 	char separator;
 	ArrayList<Integer> colors;
