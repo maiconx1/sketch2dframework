@@ -8,14 +8,14 @@ import android.graphics.Point;
 public class Malha
 {
 	public static final int ESTAGIADA = 0, QUADRATICA = 1;
-	private int tipo;
+	private int tipo, qtdLinha, qtdColuna;
 	private double distLinha, distColuna;
 	private Point inicio, fim;
 	private boolean direcao;
 	private double angulo, hipotenusa;
 	private double dx, dy;
 
-	public Malha(int tipo, double distLinha, double distColuna, Point inicio, Point fim, boolean direcao)
+	public Malha(int tipo, double distLinha, double distColuna, Point inicio, Point fim, boolean direcao, int qtdLinha, int qtdColuna)
 	{
 		this.tipo = tipo;
 		this.distLinha = distLinha;
@@ -23,12 +23,16 @@ public class Malha
 		this.inicio = inicio;
 		this.fim = fim;
 		this.direcao = direcao;
+		double dy = fim.y - inicio.y;
+		double dx = fim.x - inicio.x;
 		if(fim.x == inicio.x) angulo = Math.PI/2;
-		else angulo = Math.abs(Math.atan((fim.y - inicio.y)/(fim.x - inicio.x)));
+		else angulo = Math.atan(dy/dx);
 		//hipotenusa = Math.sqrt(Math.pow(fim.y - inicio.y, 2) + Math.pow(fim.x - inicio.x, 2));
 		hipotenusa = distColuna;
 		dx = hipotenusa*Math.cos(angulo);
 		dy = hipotenusa*Math.sin(angulo);
+		this.qtdLinha = qtdLinha;
+		this.qtdColuna = qtdColuna;
 	}
 
 	public double getDx()
@@ -109,5 +113,45 @@ public class Malha
 	public void setDirecao(boolean direcao)
 	{
 		this.direcao = direcao;
+	}
+
+	public int getQtdLinha()
+	{
+		return qtdLinha;
+	}
+
+	public void setQtdLinha(int qtdLinha)
+	{
+		this.qtdLinha = qtdLinha;
+	}
+
+	public int getQtdColuna()
+	{
+		return qtdColuna;
+	}
+
+	public void setQtdColuna(int qtdColuna)
+	{
+		this.qtdColuna = qtdColuna;
+	}
+
+	public double getAngulo()
+	{
+		return angulo;
+	}
+
+	public void setAngulo(double angulo)
+	{
+		this.angulo = angulo;
+	}
+
+	public double getHipotenusa()
+	{
+		return hipotenusa;
+	}
+
+	public void setHipotenusa(double hipotenusa)
+	{
+		this.hipotenusa = hipotenusa;
 	}
 }

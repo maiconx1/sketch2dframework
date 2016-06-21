@@ -45,6 +45,9 @@ public class NovaMain extends AppCompatActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		Point fim = new Point(647,610);
+		Point inicio = new Point(350,744);
+		Malha malha = new Malha(Malha.QUADRATICA, divW, divH, inicio, fim, true, 7, 5);
 		switch(item.getItemId())
 		{
 			case R.id.dp:
@@ -63,15 +66,14 @@ public class NovaMain extends AppCompatActivity
 
 				//escalaw = widthReal/widthPequeno;
 				//escalah = heightReal/heightPequeno;
-				Malha malha = new Malha(Malha.QUADRATICA, divW, divH, new Point(0, 0), new Point(100, 100), true);
 				//tria(poligono, malha);
-				tria(poligono, Malha.ESTAGIADA);
+				tria(poligono, Malha.ESTAGIADA, malha);
 				break;
 			case R.id.cm:
 				Sketch2D.setUnidade(Sketch2D.UNIDADE_CM);
 				Configuracoes.setCorPadrao(Color.GREEN);
 				Configuracoes.refresh(parent);
-				tria(poligono, Malha.QUADRATICA);
+				tria(poligono, Malha.QUADRATICA, malha);
 				break;
 			case R.id.m:
 				Sketch2D.setUnidade(Sketch2D.UNIDADE_M);
@@ -114,7 +116,7 @@ public class NovaMain extends AppCompatActivity
 		Configuracoes.setCorPadrao(Color.BLACK);
 	}*/
 
-	public void tria(Figura f, int tipo)
+	public void tria(Figura f, int tipo, Malha malha)
 	{
 		//Point ini = new Point(f.getPontos().get(2).x,f.getPontos().get(0).y);
 		Point ini = new Point(f.getMenor().x,f.getMenor().y);
@@ -125,8 +127,10 @@ public class NovaMain extends AppCompatActivity
 		Point inicio = new Point(350,744);
 
 		ArrayList<Point> ps = new ArrayList<>();
-		ps.add(inicio);
-		ps.add(fim);
+		//ps.add(inicio);
+		//ps.add(fim);
+		ps.add(malha.getInicio());
+		ps.add(malha.getFim());
 		double delx = (fim.x - inicio.x);
 		double dely = (fim.y - inicio.y);
 		double angulo = Math.atan(dely/delx);
@@ -149,7 +153,41 @@ public class NovaMain extends AppCompatActivity
 		int somay=0;
 		int dif=(f.getMaior().y - f.getMenor().y);
 		//int tipo = Malha.ESTAGIADA;
-		for(int i=1;i<poligono.getView().getHeight()/divH;i++)
+		int xini, yini;
+
+		for(int i = 0;i<poligono.getView().getHeight()/divH;i++)
+		{
+			xini = (int)(inicio.x + i*malha.getDistColuna()*Math.sin(malha.getAngulo()));
+			yini = (int)(inicio.y - i*malha.getDistColuna()*Math.cos(malha.getAngulo()));
+			for(int j = 0;j<poligono.getView().getWidth()/divW;j++)
+			{
+				Log.d("ANGULO", "--" + malha.getAngulo());
+				Point p, pv;
+				switch(tipo)
+				{
+					case Malha.ESTAGIADA:
+						if(i%2 != 0)
+						{
+							p = new Point((int) ((xini + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))) + (malha.getDistLinha()/2)*Math.cos((malha.getAngulo()))), (int) ((yini + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))) + (malha.getDistLinha() / 2) * Math.sin((malha.getAngulo()))));
+						}
+						else
+						{
+							p = new Point((int) (xini + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))), (int) (yini + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))));
+						}
+						break;
+					default:
+					case Malha.QUADRATICA:
+						p = new Point((int)(xini + j*(malha.getDistLinha()*Math.cos(malha.getAngulo()))), (int)(yini + j*(malha.getDistLinha()*Math.sin(malha.getAngulo()))));
+						break;
+				}
+				pv = new Point(p);
+				pv.x -= poligono.getView().getX();
+				pv.y -= poligono.getView().getY();
+				if(poligono.isDentro(pv))
+					Sketch2D.desenhaCirculo(this,parent,p,10,false);
+			}
+		}
+		/*for(int i=1;i<poligono.getView().getHeight()/divH;i++)
 		{
 			somay=0;
 
@@ -192,7 +230,7 @@ public class NovaMain extends AppCompatActivity
 			}
 
 			somax+=10;
-		}
+		}*/
 		Configuracoes.setCorPadrao(Color.BLACK);
 	}
 

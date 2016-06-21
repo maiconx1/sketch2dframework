@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity
 
 	public void geraMalha(Figura f)
 	{
-		Malha malha = new Malha(Malha.QUADRATICA, converteM2P(4.5f), converteM2P(9f), new Point((int)poligono.getView().getX(), (int)poligono.getView().getY()), new Point(100, 100), true);
+		Malha malha = new Malha(Malha.QUADRATICA, converteM2P(4.5f), converteM2P(9f), new Point((int)poligono.getView().getX(), (int)poligono.getView().getY()), new Point(100, 100), true, 7, 5);
 
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
