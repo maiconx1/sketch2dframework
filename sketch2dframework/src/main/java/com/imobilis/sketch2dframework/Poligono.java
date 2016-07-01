@@ -39,6 +39,7 @@ public class Poligono extends Figura
 	{
 		int cruzamentos = 0;
 		Point ponto = new Point(p);
+		if(p.y < 0 || p.x < 0 || p.y > getView().getHeight() || p.x > getView().getWidth()) return false;
 		ponto.x = ponto.x + getMenor().x;
 		ponto.y = ponto.y + getMenor().y;
 		Point a, b;
@@ -73,7 +74,7 @@ public class Poligono extends Figura
 		{
 			cruzamentos++;
 		}
-		Log.d("TESTEISDENTRO", "A: " + a + "//B: " + b + "//PONTO: " + ponto + "//R: " + r);
+		Log.d("TESTEISDENTRO", "A: " + a + "//B: " + b + "//PONTO: " + ponto + "//R: " + r + "//CRUZAMENTOS: " + cruzamentos);
 		return cruzamentos % 2 == 0;
 	}
 

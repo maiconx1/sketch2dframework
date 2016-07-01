@@ -9,7 +9,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.imobilis.sketch2dframework.Configuracoes;
 import com.imobilis.sketch2dframework.Figura;
@@ -26,6 +31,15 @@ import java.util.ArrayList;
 public class NovaMain extends AppCompatActivity
 {
 	SketchParent parent;
+	ArrayList<Figura> furos;
+	Point pInicial, pFinal;
+	Figura fInicial, fFinal;
+	float altura;
+	int tipo;
+	Malha malha;
+	Figura linha;
+	int estado = ESTADO_INICIAL;
+	public static final int ESTADO_INICIAL = 0, ESTADO_PRIMEIRO = 1, ESTADO_SEGUNDO = 2;
 
 	@Override
 	protected void onCreate(Bundle bundle)
@@ -33,47 +47,139 @@ public class NovaMain extends AppCompatActivity
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_main);
 		parent = (SketchParent)findViewById(R.id.lnDesenho);
+		furos = new ArrayList<>();
+		altura = 0;
+		tipo = 0;
+		linha = null;
+		fInicial = null;
+		fFinal = null;
+
+		((SeekBar) findViewById(R.id.seekBar)).setProgress(10);
+		((SeekBar)findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+		{
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+			{
+				altura = 10 + ((float) progress) * 3;
+				atualizaMalha();
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar)
+			{
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar)
+			{
+			}
+		});
+		parent.setOnTouchListener(new View.OnTouchListener()
+		{
+			@Override
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				/*switch(estado)
+				{
+					case ESTADO_INICIAL:
+						pInicial = new Point((int)event.getX(), (int)event.getY());
+						//((TextView)findViewById(R.id.txtSelecione)).setText("Selecione o segundo ponto!");
+						estado = ESTADO_PRIMEIRO;
+						fInicial = Sketch2D.desenhaCirculo(NovaMain.this, parent, pInicial, 10, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.BLACK, 255));
+						break;
+					case ESTADO_PRIMEIRO:
+						pFinal = new Point((int)event.getX(), (int)event.getY());
+						findViewById(R.id.txtSelecione).setVisibility(View.GONE);
+						estado = ESTADO_SEGUNDO;
+						fFinal = Sketch2D.desenhaCirculo(NovaMain.this, parent, pFinal, 10, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.BLACK, 255));
+						break;
+					default:
+					case ESTADO_SEGUNDO:
+						break;
+				}*/
+				switch(event.getAction())
+				{
+					case MotionEvent.ACTION_DOWN:
+						if(estado == ESTADO_INICIAL)
+						{
+							pInicial = new Point((int) event.getX(), (int) event.getY());
+							estado = ESTADO_PRIMEIRO;
+							fInicial = Sketch2D.desenhaCirculo(NovaMain.this, parent, pInicial, 10, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.BLACK, 255));
+							return true;
+						}
+						break;
+					case MotionEvent.ACTION_MOVE:
+						if(estado == ESTADO_PRIMEIRO)
+						{
+							if(linha != null)
+							{
+								Sketch2D.removeDesenho(linha);
+							}
+							ArrayList<Point> l = new ArrayList<>();
+							l.add(fInicial.getPonto(0));
+							l.add(new Point((int) event.getX(), (int) event.getY()));
+							Sketch2D.setTamLinhaPadrao(1);
+							Sketch2D.setCorPadrao(Color.BLACK);
+							linha = Sketch2D.desenhaLinha(NovaMain.this, parent, l, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255));
+							return true;
+						}
+						break;
+					case MotionEvent.ACTION_UP:
+						pFinal = new Point((int)event.getX(), (int)event.getY());
+						estado = ESTADO_SEGUNDO;
+						fFinal = Sketch2D.desenhaCirculo(NovaMain.this, parent, pFinal, 10, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.BLACK, 255));
+						tria(poligono, malha);
+						return true;
+						//break;
+				}
+				return false;
+			}
+		});
 	}
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		MenuInflater inflater = getMenuInflater();
 		//inflater.inflate(R.menu.menu_main, menu);
 		inflater.inflate(R.menu.menu_unidades, menu);
 		return true;
 	}
 
+	void atualizaMalha()
+	{
+		if(estado == ESTADO_SEGUNDO)
+		{
+
+
+
+			parent.invalidate();
+		}
+		else
+		{
+			Toast.makeText(getBaseContext(), "Selecione o primeiro e segundo ponto primeiro!!", Toast.LENGTH_LONG).show();
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		Point fim = new Point(647,610);
-		Point inicio = new Point(350,744);
-		Malha malha = new Malha(Malha.QUADRATICA, divW, divH, inicio, fim, true, 7, 5);
 		switch(item.getItemId())
 		{
 			case R.id.dp:
+				tipo = Malha.QUADRATICA;
 				Sketch2D.setUnidade(Sketch2D.UNIDADE_DP);
 				Configuracoes.setCorPadrao(Color.RED);
 				Configuracoes.refresh(parent);
-				Point p = getTamanho();
-				DisplayMetrics dm = getResources().getDisplayMetrics();
-				widthPequeno = poligono.getView().getWidth();
-				heightPequeno = poligono.getView().getHeight();
-
-				widthPequeno = (widthPequeno/dm.densityDpi)*2.5/100;
-				heightPequeno = (heightPequeno/dm.densityDpi)*2.5/100;
-
-				Log.d("ESCALA", "Width Real= " + widthReal + "m//Width pequeno = " + widthPequeno + "m//Escala width = " + widthPequeno/widthReal + " ////// Height real = " + heightReal + "m//Height pequeno = " + heightPequeno + "m//Escala height =  " + heightPequeno / heightReal);
-
-				//escalaw = widthReal/widthPequeno;
-				//escalah = heightReal/heightPequeno;
-				//tria(poligono, malha);
-				tria(poligono, Malha.ESTAGIADA, malha);
+				atualizaMalha();
 				break;
 			case R.id.cm:
+				tipo = Malha.ESTAGIADA;
 				Sketch2D.setUnidade(Sketch2D.UNIDADE_CM);
 				Configuracoes.setCorPadrao(Color.GREEN);
 				Configuracoes.refresh(parent);
-				tria(poligono, Malha.QUADRATICA, malha);
+				atualizaMalha();
+				//tria(poligono, Malha.QUADRATICA, malha);
+
 				break;
 			case R.id.m:
 				Sketch2D.setUnidade(Sketch2D.UNIDADE_M);
@@ -97,141 +203,106 @@ public class NovaMain extends AppCompatActivity
 
 	int height, width;
 
-	/*public void tria(Figura f, Malha malha)
+	public void tria(Figura f, Malha malha)
 	{
-		//Point ini = new Point(f.getPontos().get(2).x,f.getPontos().get(0).y);
-		Point ini = new Point(f.getMenor().x,f.getMenor().y);
-		Configuracoes.setCorPadrao(Color.RED);
-		Configuracoes.setEstiloPadrao(Configuracoes.LINHA);
-		for(int i=2;i<height/malha.getDx();i++)
+		if(linha != null)
 		{
-			for(int j =2;j<width/malha.getDy();j++)
-			{
-				Point pt = new Point((int)(j*malha.getDx()),(int)(i*malha.getDy()));
-				Point p = new Point(ini.x+pt.x,ini.y+pt.y);
-				if(f.isDentro(pt))
-					Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), p, 4, true);
-			}
+			Sketch2D.removeDesenho(linha);
 		}
-		Configuracoes.setCorPadrao(Color.BLACK);
-	}*/
-
-	public void tria(Figura f, int tipo, Malha malha)
-	{
-		//Point ini = new Point(f.getPontos().get(2).x,f.getPontos().get(0).y);
-		Point ini = new Point(f.getMenor().x,f.getMenor().y);
-
-		//Point fim = new Point(f.getMaior().x,f.getMaior().y-300);
-		//Point inicio = new Point(0,f.getMaior().y);
-		Point fim = new Point(647,615);
-		Point inicio = new Point(350,744);
-
-		ArrayList<Point> ps = new ArrayList<>();
-		//ps.add(inicio);
-		//ps.add(fim);
-		ps.add(malha.getInicio());
-		ps.add(malha.getFim());
-		double delx = (fim.x - inicio.x);
-		double dely = (fim.y - inicio.y);
-		double angulo = Math.atan(dely/delx);
-		angulo = Math.abs(angulo);
-		double hipotenusa = Math.sqrt(Math.pow(fim.y - inicio.y, 2) + Math.pow(fim.x - inicio.x, 2));
-		double dx = divH*Math.cos(angulo);
-		double dy = divW*Math.sin(angulo);
-
-		Log.d("PONTOSD","delx = "+delx+" dely = "+dely+" div ="+ dely/delx+"divH = "+divH+" divW = "+divW);
-		Log.d("PONTOSD", "dx = " + dx + " hip = " + hipotenusa + " angle = " + angulo + "fim = " + fim.toString() + " inicio = " + inicio.toString());
-
-
-		Sketch2D.setTamLinhaPadrao(1);
-		Sketch2D.desenhaLinha(this, parent, ps, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255));
-		Configuracoes.setCorPadrao(Color.RED);
-		Configuracoes.setEstiloPadrao(Configuracoes.LINHA);
-		//dy=0;
-		int mult=0;
-		int somax=0;
-		int somay=0;
-		int dif=(f.getMaior().y - f.getMenor().y);
-		//int tipo = Malha.ESTAGIADA;
-		int xini, yini;
-
-		for(int i = 0;i<poligono.getView().getHeight()/divH;i++)
+		for(Figura fig : furos)
 		{
-			xini = (int)(inicio.x + i*malha.getDistColuna()*Math.sin(malha.getAngulo()));
-			yini = (int)(inicio.y - i*malha.getDistColuna()*Math.cos(malha.getAngulo()));
-			for(int j = 0;j<poligono.getView().getWidth()/divW;j++)
-			{
-				Log.d("ANGULO", "--" + malha.getAngulo());
-				Point p, pv;
-				switch(tipo)
-				{
-					case Malha.ESTAGIADA:
-						if(i%2 != 0)
-						{
-							p = new Point((int) ((xini + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))) + (malha.getDistLinha()/2)*Math.cos((malha.getAngulo()))), (int) ((yini + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))) + (malha.getDistLinha() / 2) * Math.sin((malha.getAngulo()))));
-						}
-						else
-						{
-							p = new Point((int) (xini + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))), (int) (yini + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))));
-						}
-						break;
-					default:
-					case Malha.QUADRATICA:
-						p = new Point((int)(xini + j*(malha.getDistLinha()*Math.cos(malha.getAngulo()))), (int)(yini + j*(malha.getDistLinha()*Math.sin(malha.getAngulo()))));
-						break;
-				}
-				pv = new Point(p);
-				pv.x -= poligono.getView().getX();
-				pv.y -= poligono.getView().getY();
-				if(poligono.isDentro(pv))
-					Sketch2D.desenhaCirculo(this,parent,p,10,false);
-			}
+			Sketch2D.removeDesenho(fig);
 		}
-		/*for(int i=1;i<poligono.getView().getHeight()/divH;i++)
+		if(estado == ESTADO_SEGUNDO)
 		{
-			somay=0;
-
-			for(int j =1;j<poligono.getView().getWidth()/divW;j++)
+			int width=f.getMaior().x-f.getMenor().x;
+			double proporcao = width/tamReal[0];
+			int divW = (int)(proporcao*9);
+			int divH = (int)(proporcao*4.5);
+			if(fInicial != null)
 			{
-				int ys;
-				int xs;
-				switch(tipo)
+				Sketch2D.removeDesenho(fInicial);
+			}
+			if(fFinal != null)
+			{
+				Sketch2D.removeDesenho(fFinal);
+			}
+			malha = new Malha(Malha.ESTAGIADA, divW, divH, pInicial, pFinal, true, 15, 5);
+			furos = new ArrayList<>();
+
+			ArrayList<Point> ps = new ArrayList<>();
+			ps.add(malha.getInicio());
+			ps.add(malha.getFim());
+
+			Sketch2D.setTamLinhaPadrao(1);
+			linha = Sketch2D.desenhaLinha(this, parent, ps, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255));
+
+			Configuracoes.setEstiloPadrao(Configuracoes.LINHA);
+			int xini, yini;
+			Point inicio = new Point(0, 0);
+			for(int i = 0; i <= f.getView().getHeight() / divH; i++)
+			{
+				if(i > 0)
 				{
-					case Malha.ESTAGIADA:
-						if(i%2 == 0)
-						{
-							xs = j*divW+somax;
-							ys = (i*divH)+somay+mult*(int)dy;
-						}
-						else
-						{
-							xs = j*divW+somax + divW/2;
-							ys = (i*divH)+somay+mult*(int)dy -divH/2;
-						}
-						break;
-					case Malha.QUADRATICA:
-					default:
-						xs = j*divW+somax;
-						ys = (i*divH)+somay+mult*(int)dy;
-						break;
-				}
-				//int ys = (i*divH)+soma;
-				Point pt = new Point(xs,ys);
-				Point p = new Point(ini.x+xs,ini.y+ys);
-				if(f.isDentro(pt))
-				{
-					if(pt.y>0)
+					xini = (int) (inicio.x + i * malha.getDistColuna() * Math.sin(malha.getAngulo()));
+					yini = (int) (inicio.y - i * malha.getDistColuna() * Math.cos(malha.getAngulo()));
+					for(int j = 0; j < f.getView().getWidth() / divW; j++)
 					{
-						Sketch2D.desenhaCirculo(this,parent,p,4,false);
+						Log.d("ANGULO", "--" + malha.getAngulo());
+						Point p, pv;
+						switch(malha.getTipo())
+						{
+							case Malha.ESTAGIADA:
+								if(i % 2 != 0)
+								{
+									p = new Point((int) ((xini + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))) + (malha.getDistLinha() / 2) * Math.cos((malha.getAngulo()))), (int) ((yini + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))) + (malha.getDistLinha() / 2) * Math.sin((malha.getAngulo()))));
+								}
+								else
+								{
+									p = new Point((int) (xini + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))), (int) (yini + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))));
+								}
+								break;
+							default:
+							case Malha.QUADRATICA:
+								p = new Point((int) (xini + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))), (int) (yini + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))));
+								break;
+						}
+						pv = new Point(p);
+						pv.x -= f.getView().getX();
+						pv.y -= f.getView().getY();
+						if(f.isDentro(pv))
+							furos.add(Sketch2D.desenhaCirculo(this, parent, p, 10, false));
 					}
 				}
-
-				somay-=dy;
+				else
+				{
+					xini = (int) (malha.getInicio().x + i * malha.getDistColuna() * Math.sin(malha.getAngulo()));
+					yini = (int) (malha.getInicio().y - i * malha.getDistColuna() * Math.cos(malha.getAngulo()));
+					for(int j = 0; j < f.getView().getWidth() / divW; j++)
+					{
+						Log.d("ANGULO", "--" + malha.getAngulo());
+						Point p, pv, p1;
+						p = new Point((int) (xini + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))), (int) (yini + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))));
+						inicio.x = xini - (int)(proporcao*malha.getAltura()*Math.sin(malha.getAnguloPerfuracao())*Math.sin(malha.getAngulo()));
+						inicio.y = yini + (int)(proporcao*malha.getAltura()*Math.sin(malha.getAnguloPerfuracao())*Math.cos(malha.getAngulo()));
+						pv = new Point(p);
+						pv.x -= f.getView().getX();
+						pv.y -= f.getView().getY();
+						p1 = new Point((int)(inicio.x + j * (malha.getDistLinha() * Math.cos(malha.getAngulo()))), (int)(inicio.y + j * (malha.getDistLinha() * Math.sin(malha.getAngulo()))));
+						if(f.isDentro(pv))
+						{
+							furos.add(Sketch2D.desenhaCirculo(this, parent, p, 10, false));
+							furos.add(Sketch2D.desenhaCirculo(this, parent, p1, 10, false, new Configuracoes(true, Configuracoes.LINHA, 1, true, Color.BLACK, 180)));
+							ArrayList<Point> arr = new ArrayList<>();
+							arr.add(p);
+							arr.add(p1);
+							Sketch2D.desenhaLinha(this, parent, arr, false, new Configuracoes(true, Configuracoes.LINHA, 1, true, Color.BLACK, 180));
+						}
+					}
+				}
 			}
-
-			somax+=10;
-		}*/
-		Configuracoes.setCorPadrao(Color.BLACK);
+			Configuracoes.setCorPadrao(Color.BLACK);
+		}
 	}
 
 	int divW, divH;
@@ -243,11 +314,6 @@ public class NovaMain extends AppCompatActivity
 		Log.d("ON RESUME: ", "QUANTIDADE DE FIGURAS: " + Singleton.getInstance().getFiguras().size());
 		FrameLayout ln = (FrameLayout) findViewById(R.id.lnDesenho);
 		Figura f = geraFiguras(getTamanho(), ln);
-		width=f.getMaior().x-f.getMenor().x;
-		height=Math.abs(f.getMaior().y - f.getMenor().y);
-		double proporcao = width/tamReal[0];
-		divW = (int)(proporcao*9);
-		divH = (int)(proporcao*4.5);
 		//geraMalha(poligono);
 	}
 	public Point getTamanho()

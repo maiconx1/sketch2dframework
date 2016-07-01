@@ -8,14 +8,14 @@ import android.graphics.Point;
 public class Malha
 {
 	public static final int ESTAGIADA = 0, QUADRATICA = 1;
-	private int tipo, qtdLinha, qtdColuna;
+	private int tipo;
 	private double distLinha, distColuna;
 	private Point inicio, fim;
 	private boolean direcao;
-	private double angulo, hipotenusa;
+	private double angulo, hipotenusa, anguloPerfuracao, altura;
 	private double dx, dy;
 
-	public Malha(int tipo, double distLinha, double distColuna, Point inicio, Point fim, boolean direcao, int qtdLinha, int qtdColuna)
+	public Malha(int tipo, double distLinha, double distColuna, Point inicio, Point fim, boolean direcao, double anguloPerfuracao, double altura)
 	{
 		this.tipo = tipo;
 		this.distLinha = distLinha;
@@ -23,16 +23,15 @@ public class Malha
 		this.inicio = inicio;
 		this.fim = fim;
 		this.direcao = direcao;
+		this.anguloPerfuracao = anguloPerfuracao;
+		this.altura = altura;
 		double dy = fim.y - inicio.y;
 		double dx = fim.x - inicio.x;
 		if(fim.x == inicio.x) angulo = Math.PI/2;
 		else angulo = Math.atan(dy/dx);
-		//hipotenusa = Math.sqrt(Math.pow(fim.y - inicio.y, 2) + Math.pow(fim.x - inicio.x, 2));
 		hipotenusa = distColuna;
-		dx = hipotenusa*Math.cos(angulo);
-		dy = hipotenusa*Math.sin(angulo);
-		this.qtdLinha = qtdLinha;
-		this.qtdColuna = qtdColuna;
+		//dx = hipotenusa*Math.cos(angulo);
+		//dy = hipotenusa*Math.sin(angulo);
 	}
 
 	public double getDx()
@@ -115,26 +114,6 @@ public class Malha
 		this.direcao = direcao;
 	}
 
-	public int getQtdLinha()
-	{
-		return qtdLinha;
-	}
-
-	public void setQtdLinha(int qtdLinha)
-	{
-		this.qtdLinha = qtdLinha;
-	}
-
-	public int getQtdColuna()
-	{
-		return qtdColuna;
-	}
-
-	public void setQtdColuna(int qtdColuna)
-	{
-		this.qtdColuna = qtdColuna;
-	}
-
 	public double getAngulo()
 	{
 		return angulo;
@@ -153,5 +132,25 @@ public class Malha
 	public void setHipotenusa(double hipotenusa)
 	{
 		this.hipotenusa = hipotenusa;
+	}
+
+	public double getAnguloPerfuracao()
+	{
+		return anguloPerfuracao;
+	}
+
+	public void setAnguloPerfuracao(double anguloPerfuracao)
+	{
+		this.anguloPerfuracao = anguloPerfuracao;
+	}
+
+	public double getAltura()
+	{
+		return altura;
+	}
+
+	public void setAltura(double altura)
+	{
+		this.altura = altura;
 	}
 }
