@@ -186,6 +186,11 @@ public abstract class Figura extends AppCompatActivity
 		return p;
 	}
 
+	public void setPonto(int index, Point ponto)
+	{
+		pontos.set(index, ponto);
+	}
+
 	public void setPontos(ArrayList<Point> pontos)
 	{
 		this.pontos = pontos;

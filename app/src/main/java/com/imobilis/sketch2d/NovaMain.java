@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.imobilis.sketch2dframework.Configuracoes;
 import com.imobilis.sketch2dframework.Figura;
 import com.imobilis.sketch2dframework.Linha;
+import com.imobilis.sketch2dframework.Poligono;
 import com.imobilis.sketch2dframework.Singleton;
 import com.imobilis.sketch2dframework.Sketch2D;
 import com.imobilis.sketch2dframework.SketchParent;
@@ -40,6 +41,9 @@ public class NovaMain extends AppCompatActivity
 	Figura linha;
 	int estado = ESTADO_INICIAL;
 	public static final int ESTADO_INICIAL = 0, ESTADO_PRIMEIRO = 1, ESTADO_SEGUNDO = 2;
+	Figura figura;
+	int offset = 10;
+	Poligono pOffset = null;
 
 	@Override
 	protected void onCreate(Bundle bundle)
@@ -61,7 +65,10 @@ public class NovaMain extends AppCompatActivity
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
 			{
 				altura = 10 + ((float) progress) * 3;
+				offset = progress;
 				atualizaMalha();
+				//criaOffset((Poligono)poligono, offset);
+				testeOffset();
 			}
 
 			@Override
@@ -74,29 +81,11 @@ public class NovaMain extends AppCompatActivity
 			{
 			}
 		});
-		parent.setOnTouchListener(new View.OnTouchListener()
+		/*parent.setOnTouchListener(new View.OnTouchListener()
 		{
 			@Override
 			public boolean onTouch(View v, MotionEvent event)
 			{
-				/*switch(estado)
-				{
-					case ESTADO_INICIAL:
-						pInicial = new Point((int)event.getX(), (int)event.getY());
-						//((TextView)findViewById(R.id.txtSelecione)).setText("Selecione o segundo ponto!");
-						estado = ESTADO_PRIMEIRO;
-						fInicial = Sketch2D.desenhaCirculo(NovaMain.this, parent, pInicial, 10, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.BLACK, 255));
-						break;
-					case ESTADO_PRIMEIRO:
-						pFinal = new Point((int)event.getX(), (int)event.getY());
-						findViewById(R.id.txtSelecione).setVisibility(View.GONE);
-						estado = ESTADO_SEGUNDO;
-						fFinal = Sketch2D.desenhaCirculo(NovaMain.this, parent, pFinal, 10, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.BLACK, 255));
-						break;
-					default:
-					case ESTADO_SEGUNDO:
-						break;
-				}*/
 				switch(event.getAction())
 				{
 					case MotionEvent.ACTION_DOWN:
@@ -130,11 +119,10 @@ public class NovaMain extends AppCompatActivity
 						fFinal = Sketch2D.desenhaCirculo(NovaMain.this, parent, pFinal, 10, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.BLACK, 255));
 						tria(poligono, malha);
 						return true;
-						//break;
 				}
 				return false;
 			}
-		});
+		});*/
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -149,9 +137,6 @@ public class NovaMain extends AppCompatActivity
 	{
 		if(estado == ESTADO_SEGUNDO)
 		{
-
-
-
 			parent.invalidate();
 		}
 		else
@@ -195,10 +180,62 @@ public class NovaMain extends AppCompatActivity
 				Sketch2D.setUnidade(Sketch2D.UNIDADE_INCH);
 				Configuracoes.setCorPadrao(Color.YELLOW);
 				Configuracoes.refresh(parent);
+				//criaOffset((Poligono) figura, 10);
+				testeOffset();
 				break;
 		}
 		parent.invalidate();
 		return super.onOptionsItemSelected(item);
+	}
+
+	public Linha deslocaPonto(Point p0, Point p1, int offset)
+	{
+		ArrayList<Point> pontos = new ArrayList<>();
+		pontos.add(new Point(p0));
+		pontos.add(new Point(p1));
+		double dify = p0.y - p1.y, difx = p0.x - p1.x;
+		double angulo = Math.atan(dify/difx);
+		if(p0.x < p1.x)
+		{
+			pontos.get(0).x += offset * Math.sin(angulo);
+			pontos.get(1).x += offset * Math.sin(angulo);
+			pontos.get(0).y -= offset * Math.cos(angulo);
+			pontos.get(1).y -= offset * Math.cos(angulo);
+		}
+		else
+		{
+			pontos.get(0).x -= offset * Math.sin(angulo);
+			pontos.get(1).x -= offset * Math.sin(angulo);
+			pontos.get(0).y += offset * Math.cos(angulo);
+			pontos.get(1).y += offset * Math.cos(angulo);
+		}
+		Linha linha = new Linha(this, pontos, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.RED, 255));
+		Log.d("DESLOCAMENTO", p0 + "//" + p1 + "//" + pontos);
+		return linha;
+	}
+
+	public void testeOffset()
+	{
+		if(pOffset != null)
+		{
+			Sketch2D.removeDesenho(pOffset);
+		}
+		ArrayList<Linha> linhas = ((Poligono)figura).explode();
+		ArrayList<Point> pOffset = new ArrayList<>();
+		for(int i = 0;i<linhas.size();i++)
+		{
+			int index = (i == linhas.size()-1?0:i+1);
+			Point p0 = linhas.get((i==0?linhas.size()-1:i-1)).getPonto(0), p1 = linhas.get(i).getPonto(0), p2 = linhas.get(index).getPonto(0);
+			//Log.d("LINHAS", linhas.get((i==0?linhas.size()-1:i-1)).getPontos() + "//" + linhas.get(i).getPontos() + "//" + linhas.get(index).getPontos());
+			Log.d("LINHAS", linhas.get(i).getPontos() + "");
+			Linha linha1 = deslocaPonto(p0, p1, offset), linha2 = deslocaPonto(p1, p2, offset);
+			//Sketch2D.desenhaLinha(this, parent, linha1.getPontos(), false, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.RED, 255));
+			Point intersecao = linha1.pontoIntersecao(linha2);
+			pOffset.add(intersecao);
+		}
+		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
+		Sketch2D.setCorPadrao(Color.BLACK);
+		this.pOffset = (Poligono)Sketch2D.desenhaPoligono(this, parent, pOffset, false);
 	}
 
 	int height, width;
@@ -240,7 +277,18 @@ public class NovaMain extends AppCompatActivity
 			Configuracoes.setEstiloPadrao(Configuracoes.LINHA);
 			int xini, yini;
 			Point inicio = new Point(0, 0);
-			for(int i = 0; i <= f.getView().getHeight() / divH; i++)
+			for(int i =0;i<100;i++)
+			{
+				for(int j = 0;j<40;j++)
+				{
+					Point p = new Point(i*10, j*8);
+					if(f.isDentro(p))
+					{
+						Sketch2D.desenhaCirculo(this, parent, new Point(p.x + f.getMenor().x, p.y + f.getMenor().y), 1, false);
+					}
+				}
+			}
+			/*for(int i = 0; i <= f.getView().getHeight() / divH; i++)
 			{
 				if(i > 0)
 				{
@@ -300,12 +348,123 @@ public class NovaMain extends AppCompatActivity
 						}
 					}
 				}
-			}
+			}*/
 			Configuracoes.setCorPadrao(Color.BLACK);
 		}
 	}
 
 	int divW, divH;
+
+	public void criaOffset(Poligono f, float dist)
+	{
+		ArrayList<Point> pontosOffSet = new ArrayList<>();
+		/*for(int i = 1;i<=f.getPontos().size();i++)
+		{
+			int index = i, indexAnterior = i-1;
+			if(i == f.getPontos().size())
+			{
+				index = 0;
+			}
+			Point ponto = f.getPontos().get(index);
+			Point pAnterior = f.getPontos().get(indexAnterior);
+			Point novo = new Point(pAnterior);
+			double dify = ponto.y - pAnterior.y, difx = ponto.x - pAnterior.x;
+			double angulo = Math.atan(dify/difx);
+			if(ponto.x < pAnterior.x)
+			{
+				novo.y += dist*Math.cos(angulo);
+				if(ponto.y > pAnterior.y)
+				{
+					novo.x -= dist*Math.sin(angulo);
+				}
+				else if(ponto.y < pAnterior.y)
+				{
+					novo.x += dist*Math.sin(angulo);
+				}
+			}
+			else
+			{
+				novo.y -= dist*Math.cos(angulo);
+				if(ponto.y > pAnterior.y)
+				{
+					novo.x += dist*Math.sin(angulo);
+				}
+				else if(ponto.y < pAnterior.y)
+				{
+					novo.x -= dist*Math.sin(angulo);
+				}
+			}
+			//Log.d("PONTOSOFFSET", novo + "");
+			Log.d("ANGULO", angulo + "");
+			pontosOffSet.add(novo);
+		}*/
+		for(Point p : f.getPontos())
+		{
+			pontosOffSet.add(new Point(p));
+		}
+		for(int i = 0;i<f.getPontos().size();i++)
+		{
+			int index = i+1, iAnterior = i;
+			if(index == f.getPontos().size())
+			{
+				index = 0;
+			}
+			Point ponto = f.getPontos().get(index);
+			Point pAnterior = f.getPontos().get(iAnterior);
+			Point novo = new Point(pAnterior);
+			if(ponto.x < pAnterior.x)
+			{
+				pontosOffSet.get(index).y += dist;
+				pontosOffSet.get(iAnterior).y += dist;
+				if(ponto.y > pAnterior.y)
+				{
+					novo.x -= dist;
+				}
+				else if(ponto.y < pAnterior.y)
+				{
+					novo.x += dist;
+				}
+			}
+			else
+			{
+				novo.y -= dist;
+				if(ponto.y > pAnterior.y)
+				{
+					novo.x += dist;
+				}
+				else if(ponto.y < pAnterior.y)
+				{
+					novo.x -= dist;
+				}
+			}
+		}
+		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
+		Sketch2D.setTamLinhaPadrao(3);
+		//Sketch2D.desenhaPoligono(NovaMain.this, parent, pontosOffSet, false);
+		ArrayList<Integer> colors = new ArrayList<>();
+		colors.add(Color.RED);
+		colors.add(Color.GRAY);
+		colors.add(Color.GREEN);
+		colors.add(Color.YELLOW);
+		colors.add(Color.BLACK);
+		colors.add(Color.BLUE);
+		colors.add(Color.CYAN);
+		for(int i = 0;i<pontosOffSet.size()-1;i++)
+		{
+			ArrayList<Point> p = new ArrayList<>();
+			p.add(new Point(pontosOffSet.get(i)));
+			Log.d("PONTOS", "Pontox: " + pontosOffSet.get(i));
+			if(i == pontosOffSet.size()-2)
+			{
+				p.add(new Point(pontosOffSet.get(0)));
+			}
+			else
+			{
+				p.add(new Point(pontosOffSet.get(i + 1)));
+			}
+			Sketch2D.desenhaLinha(this, parent, p, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, colors.get(i%7), 255));
+		}
+	}
 
 	@Override
 	public void onResume()
@@ -313,7 +472,7 @@ public class NovaMain extends AppCompatActivity
 		super.onResume();
 		Log.d("ON RESUME: ", "QUANTIDADE DE FIGURAS: " + Singleton.getInstance().getFiguras().size());
 		FrameLayout ln = (FrameLayout) findViewById(R.id.lnDesenho);
-		Figura f = geraFiguras(getTamanho(), ln);
+		figura = geraFiguras(getTamanho(), ln);
 		//geraMalha(poligono);
 	}
 	public Point getTamanho()
@@ -433,12 +592,12 @@ public class NovaMain extends AppCompatActivity
 			poligono = Sketch2D.desenhaPoligono(this, ln, allPoints.get(0), false, c);
 		}
 
-		for(int i = 0;i<allPoints.get(0).size()-1;i++)
+		for(int i = 0;i<allPoints.get(0).size();i++)
 		{
 			ArrayList<Point> p = new ArrayList<>();
 			p.add(new Point(allPoints.get(0).get(i)));
 			Log.d("PONTOS", "Pontox: " + allPoints.get(0).get(i));
-			if(i == allPoints.get(0).size()-2)
+			if(i == allPoints.get(0).size()-1)
 			{
 				p.add(new Point(allPoints.get(0).get(0)));
 			}
@@ -464,7 +623,7 @@ public class NovaMain extends AppCompatActivity
 		int sub=0;
 		colors = new ArrayList<>();
 		indexs = new ArrayList<>();
-		separator=';';
+		/*separator=';';
 		ArrayList<String> strings = new ArrayList<>();
 		strings.add("a;669871.854121;7803644.542408 ");
 		strings.add("a;669867.348095;7803642.443725 ");
@@ -482,7 +641,49 @@ public class NovaMain extends AppCompatActivity
 		strings.add("a;669918.567666;7803688.258446 ");
 		strings.add("a;669899.413408;7803670.888306 ");
 		strings.add("a;669886.898728;7803660.675813 ");
-		strings.add("a;669871.854121;7803644.542408 ");
+		strings.add("a;669871.854121;7803644.542408 ");*/
+
+		separator=',';
+		ArrayList<String> strings = new ArrayList<>();
+		//strings.add("75,670317.318,7803189.819,908.896,boundary");
+		strings.add("76,670316.533,7803191.076,908.863,boundary");
+		strings.add("77,670311.299,7803183.229,908.669,boundary");
+		strings.add("78,670316.941,7803176.041,908.710,boundary");
+		//strings.add("79,670323.185,7803170.247,908.741,boundary");
+		strings.add("80,670323.169,7803170.205,908.735,boundary");
+		strings.add("81,670330.062,7803172.314,908.706,boundary");
+		strings.add("82,670335.862,7803169.936,908.854,boundary");
+		strings.add("83,670341.369,7803166.857,909.223,boundary");
+		strings.add("84,670347.693,7803158.624,909.272,boundary");
+		strings.add("85,670352.682,7803149.369,909.136,boundary");
+		strings.add("86,670357.418,7803140.145,908.959,boundary");
+		strings.add("87,670363.066,7803131.579,908.925,boundary");
+		strings.add("88,670369.919,7803126.295,908.896,boundary");
+		strings.add("89,670374.398,7803117.303,908.920,boundary");
+		strings.add("90,670378.372,7803103.659,908.296,boundary");
+		strings.add("91,670384.097,7803109.072,908.562,boundary");
+		strings.add("92,670389.074,7803111.095,908.612,boundary");
+		strings.add("93,670396.625,7803109.465,908.299,boundary");
+		strings.add("94,670412.386,7803113.140,908.372,boundary");
+		strings.add("95,670409.885,7803122.427,908.408,boundary");
+		strings.add("96,670419.723,7803129.956,908.403,boundary");
+		strings.add("97,670435.952,7803143.318,908.485,boundary");
+		strings.add("98,670432.872,7803153.688,908.379,boundary");
+		strings.add("99,670420.630,7803164.804,908.377,boundary");
+		strings.add("100,670410.513,7803163.256,908.134,boundary");
+		strings.add("101,670399.392,7803153.604,908.228,boundary");
+		//TODO: CORRIGIR ESCALA (tirar o comentário - as duas linhas seguintes são praticamente o mesmo ponto)
+		//strings.add("102,670384.881,7803162.663,908.642,boundary");
+		strings.add("103,670384.871,7803162.699,908.646,boundary");
+		strings.add("104,670368.242,7803205.794,909.139,boundary");
+		strings.add("105,670326.056,7803192.921,909.195,boundary");
+		strings.add("106,670324.598,7803200.939,909.135,boundary");
+		strings.add("107,670314.745,7803199.850,908.851,boundary");
+		//strings.add("108,670316.570,7803190.829,908.902,boundary");
+		/*strings.add("100, 100, 100, 100, 100");
+		strings.add("101, 200, 100, 100, 100");
+		strings.add("102, 200, 200, 100, 100");
+		strings.add("103, 100, 200, 100, 100");*/
 
 		indexs.add(strings.size()-sub);
 		sub=strings.size();

@@ -711,4 +711,34 @@ public class Linha extends Figura
 	{
 		this.inclinacao = inclinacao;
 	}
+
+	public Point pontoIntersecao(Linha linha)
+	{
+		Point ponto = new Point();
+		float numerador = getPonto(1).x * (linha.getPonto(1).x * linha.getPonto(0).y - linha.getPonto(0).x * linha.getPonto(1).y - getPonto(0).y * linha.getPonto(1).x + getPonto(0).y * linha.getPonto(0).x) + getPonto(0).x * (linha.getPonto(0).x * linha.getPonto(1).y - linha.getPonto(1).x * linha.getPonto(0).y + getPonto(1).y * linha.getPonto(1).x - getPonto(1).y * linha.getPonto(0).x);
+		float denominador = getPonto(1).y * (linha.getPonto(1).x - linha.getPonto(0).x) + getPonto(0).y * (linha.getPonto(0).x - linha.getPonto(1).x) + linha.getPonto(0).y * (getPonto(1).x - getPonto(0).x) + linha.getPonto(1).y * (getPonto(0).x - getPonto(1).x);
+		Log.d("INTERSECAOPONTOS", getPontos() + "//" + linha.getPontos() + "//NUMERADOR = " + numerador + "//DEMONIMADOR = " + denominador + "//PONTOX = " + numerador/denominador);
+		ponto.x = Math.round(numerador / denominador);
+		numerador = linha.getPonto(1).x * linha.getPonto(0).y - linha.getPonto(0).x * linha.getPonto(1).y + ponto.x * (linha.getPonto(1).y - linha.getPonto(0).y);
+		denominador = linha.getPonto(1).x - linha.getPonto(0).x;
+		ponto.y = Math.round(numerador / denominador);
+		if(getPonto(0).x == getPonto(1).x)
+		{
+			ponto.x = getPonto(0).x;
+		}
+		else if(linha.getPonto(0).x == linha.getPonto(1).x)
+		{
+			ponto.x = linha.getPonto(0).x;
+		}
+		if(getPonto(0).y == getPonto(1).y)
+		{
+			ponto.y = getPonto(0).y;
+		}
+		else if(linha.getPonto(0).y == linha.getPonto(1).y)
+		{
+			ponto.y = linha.getPonto(0).y;
+		}
+		Log.d("INTERSECAO", ponto + "");
+		return ponto;
+	}
 }
