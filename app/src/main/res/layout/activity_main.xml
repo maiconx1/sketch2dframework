@@ -17,7 +17,13 @@
         android:layout_height="match_parent"
         android:layout_weight="0.1"
         android:id="@+id/lnDesenho">
-
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_edita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
     </com.imobilis.sketch2dframework.SketchParent>
 
     <SeekBar
