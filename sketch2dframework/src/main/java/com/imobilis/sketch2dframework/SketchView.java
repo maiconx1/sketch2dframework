@@ -196,12 +196,13 @@ public class SketchView extends View
 			}
 
 			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-			textPaint.setColor(Color.BLACK);
-			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics()));
+			textPaint.setColor(Sketch2D.corTextoDistancia);
+			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, Sketch2D.tamanhoTextoDistancia, getResources().getDisplayMetrics()));
 			textPaint.setTextAlign(Paint.Align.LEFT);
 
 			double tamL = ((Linha) figura).getModulo();
-			String text = ""+(int)tamL+" dp";
+			//String text = ""+(int)tamL+" dp";
+			String text = ""+(int)(tamL*Sketch2D.proporcao)+" m";
 			Rect bounds = new Rect();
 			textPaint.getTextBounds(""+text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
@@ -258,6 +259,7 @@ public class SketchView extends View
 				canvas.rotate(rot);
 				canvas.drawText("" + text, dx, dy, textPaint);
 			}
+
 			canvas.restore();
 		}
 		if(!linha_distancia)

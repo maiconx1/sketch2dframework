@@ -44,6 +44,7 @@ public class NovaMain extends AppCompatActivity
 	Figura figura;
 	int offset = 10;
 	Poligono pOffset = null;
+	ArrayList<Figura> lDeslocadas = null;
 
 	@Override
 	protected void onCreate(Bundle bundle)
@@ -123,6 +124,8 @@ public class NovaMain extends AppCompatActivity
 				return false;
 			}
 		});*/
+		SketchParent.setQtdColunas(50);
+		parent.invalidate();
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -141,7 +144,7 @@ public class NovaMain extends AppCompatActivity
 		}
 		else
 		{
-			Toast.makeText(getBaseContext(), "Selecione o primeiro e segundo ponto primeiro!!", Toast.LENGTH_LONG).show();
+			//Toast.makeText(getBaseContext(), "Selecione o primeiro e segundo ponto primeiro!!", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -216,6 +219,14 @@ public class NovaMain extends AppCompatActivity
 
 	public void testeOffset()
 	{
+		if(lDeslocadas != null)
+		{
+			for(Figura f : lDeslocadas)
+			{
+				Sketch2D.removeDesenho(f);
+			}
+		}
+		lDeslocadas = new ArrayList<>();
 		if(pOffset != null)
 		{
 			Sketch2D.removeDesenho(pOffset);
@@ -229,13 +240,18 @@ public class NovaMain extends AppCompatActivity
 			//Log.d("LINHAS", linhas.get((i==0?linhas.size()-1:i-1)).getPontos() + "//" + linhas.get(i).getPontos() + "//" + linhas.get(index).getPontos());
 			Log.d("LINHAS", linhas.get(i).getPontos() + "");
 			Linha linha1 = deslocaPonto(p0, p1, offset), linha2 = deslocaPonto(p1, p2, offset);
-			//Sketch2D.desenhaLinha(this, parent, linha1.getPontos(), false, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.RED, 255));
+			lDeslocadas.add(Sketch2D.desenhaLinha(this, parent, linha1.getPontos(), false, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.RED, 255)));
 			Point intersecao = linha1.pontoIntersecao(linha2);
+			Log.d("INTERSECAO GERADA: ", intersecao + "");
 			pOffset.add(intersecao);
 		}
 		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
 		Sketch2D.setCorPadrao(Color.BLACK);
 		this.pOffset = (Poligono)Sketch2D.desenhaPoligono(this, parent, pOffset, false);
+		for(Point p : pOffset)
+		{
+			Log.d("PONTOSOFFSET", p + "");
+		}
 	}
 
 	int height, width;
@@ -646,7 +662,7 @@ public class NovaMain extends AppCompatActivity
 		separator=',';
 		ArrayList<String> strings = new ArrayList<>();
 		//strings.add("75,670317.318,7803189.819,908.896,boundary");
-		strings.add("76,670316.533,7803191.076,908.863,boundary");
+		/*strings.add("76,670316.533,7803191.076,908.863,boundary");
 		strings.add("77,670311.299,7803183.229,908.669,boundary");
 		strings.add("78,670316.941,7803176.041,908.710,boundary");
 		//strings.add("79,670323.185,7803170.247,908.741,boundary");
@@ -678,12 +694,25 @@ public class NovaMain extends AppCompatActivity
 		strings.add("104,670368.242,7803205.794,909.139,boundary");
 		strings.add("105,670326.056,7803192.921,909.195,boundary");
 		strings.add("106,670324.598,7803200.939,909.135,boundary");
-		strings.add("107,670314.745,7803199.850,908.851,boundary");
+		strings.add("107,670314.745,7803199.850,908.851,boundary");*/
 		//strings.add("108,670316.570,7803190.829,908.902,boundary");
 		/*strings.add("100, 100, 100, 100, 100");
 		strings.add("101, 200, 100, 100, 100");
 		strings.add("102, 200, 200, 100, 100");
 		strings.add("103, 100, 200, 100, 100");*/
+
+		//OFFSET BUGADO
+		/*strings.add("100, 105, 101, 100, 100");
+		strings.add("100, 153, 52, 100, 100");
+		strings.add("101, 204, 106, 100, 100");
+		strings.add("102, 208, 207, 100, 100");
+		strings.add("103, 109, 200, 100, 100");*/
+
+		strings.add("100, 100, 100, 100, 100");
+		strings.add("100, 150, 50, 100, 100");
+		strings.add("101, 205, 100, 100, 100");
+		strings.add("102, 200, 200, 100, 100");
+		strings.add("103, 109, 200, 100, 100");
 
 		indexs.add(strings.size()-sub);
 		sub=strings.size();

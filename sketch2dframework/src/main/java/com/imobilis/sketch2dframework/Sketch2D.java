@@ -24,6 +24,10 @@ public class Sketch2D extends AppCompatActivity
 	public static final int UNIDADE_DP = 0, UNIDADE_CM = 1, UNIDADE_M = 2, UNIDADE_KM = 3, UNIDADE_INCH = 4;
 	public static final int EXCLUI = 0, NAO_EXCLUI = 1;
 
+	public static int corTextoDistancia = Color.RED, tamanhoTextoDistancia=40;
+
+	public static int proporcao=1;
+
 
 	/**
 	 * Desenha uma linha padrão no framelayout escolhido. A linha vai do ponto (50, 50) ao ponto (300, 300).

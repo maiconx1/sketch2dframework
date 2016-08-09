@@ -130,6 +130,7 @@ public class Poligono extends Figura
 		for(int i = 1;i<getPontos().size();i++)
 		{
 			caminho.lineTo(getX(i) - initViewX, getY(i) - initViewY);
+			Log.d("PONTOSOFFSETDESENHADO", getX(i) + "//" + getY(i) + "/////////" + (getX(i) - initViewX) + "//" + (getY(i) - initViewY));
 		}
 		caminho.lineTo(getX(0) - initViewX, getY(0) - initViewY);
 		return caminho;
