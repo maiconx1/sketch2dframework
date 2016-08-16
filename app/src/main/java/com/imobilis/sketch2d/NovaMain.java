@@ -59,7 +59,10 @@ public class NovaMain extends AppCompatActivity
 		fInicial = null;
 		fFinal = null;
 
-		((SeekBar) findViewById(R.id.seekBar)).setProgress(10);
+		SketchParent.setMostraEscala(true);
+		parent.invalidate();
+
+				((SeekBar) findViewById(R.id.seekBar)).setProgress(10);
 		((SeekBar)findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
 		{
 			@Override
@@ -710,7 +713,7 @@ public class NovaMain extends AppCompatActivity
 
 		strings.add("100, 100, 100, 100, 100");
 		strings.add("100, 150, 50, 100, 100");
-		strings.add("101, 205, 100, 100, 100");
+		strings.add("101, 200, 100, 100, 100");
 		strings.add("102, 200, 200, 100, 100");
 		strings.add("103, 109, 200, 100, 100");
 

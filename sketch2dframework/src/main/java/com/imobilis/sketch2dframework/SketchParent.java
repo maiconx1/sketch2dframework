@@ -42,6 +42,8 @@ public class SketchParent extends FrameLayout
 	protected void dispatchDraw(Canvas canvas)
 	{
 		super.dispatchDraw(canvas);
+		if(!mostraEscala) return;
+
 		conf = new Configuracoes(SketchParent.pontilhado, Configuracoes.LINHA, 3, true, SketchParent.corLinhas, SketchParent.alphaLinhas);
 		if(!SketchParent.atras)
 		{
@@ -54,47 +56,46 @@ public class SketchParent extends FrameLayout
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
 		}
-		if(mostraEscala)
+		Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+		textPaint.setColor(SketchParent.corLinhas);
+		textPaint.setAlpha(2*SketchParent.alphaLinhas);
+		textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
+		textPaint.setTextAlign(Paint.Align.LEFT);
+		double tamL = getWidth() / SketchParent.qtdLinhas;
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		String text;
+		switch(Sketch2D.unidade)
 		{
-			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-			textPaint.setColor(SketchParent.corLinhas);
-			textPaint.setAlpha(2*SketchParent.alphaLinhas);
-			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
-			textPaint.setTextAlign(Paint.Align.LEFT);
-			double tamL = getWidth() / SketchParent.qtdLinhas;
-			DisplayMetrics dm = getResources().getDisplayMetrics();
-			String text;
-			switch(Sketch2D.unidade)
-			{
-				default:
-				case Sketch2D.UNIDADE_DP:
-					text = (tamL) + " dp";
-					break;
-				case Sketch2D.UNIDADE_CM:
-					text = (tamL / dm.densityDpi) * 2.5 + " cm";
-					break;
-				case Sketch2D.UNIDADE_M:
-					text = (tamL / dm.densityDpi) * 2.5 / 100 + " m";
-					break;
-				case Sketch2D.UNIDADE_KM:
-					text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
-					break;
-				case Sketch2D.UNIDADE_INCH:
-					text = (tamL / dm.densityDpi) + " inch";
-					break;
-			}
-			//text = (tamL/dm.densityDpi)*2.5 + " cm";
-			Rect bounds = new Rect();
-			textPaint.getTextBounds(text, 0, text.length(), bounds);
-			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
-			canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
+			default:
+			case Sketch2D.UNIDADE_DP:
+				text = (tamL) + " dp";
+				break;
+			case Sketch2D.UNIDADE_CM:
+				text = (tamL / dm.densityDpi) * 2.5 + " cm";
+				break;
+			case Sketch2D.UNIDADE_M:
+				text = (tamL / dm.densityDpi) * 2.5 / 100 + " m";
+				break;
+			case Sketch2D.UNIDADE_KM:
+				text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
+				break;
+			case Sketch2D.UNIDADE_INCH:
+				text = (tamL / dm.densityDpi) + " inch";
+				break;
 		}
+		//text = (tamL/dm.densityDpi)*2.5 + " cm";
+		Rect bounds = new Rect();
+		textPaint.getTextBounds(text, 0, text.length(), bounds);
+		Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
+		canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
 		super.onDraw(canvas);
+		if(!mostraEscala) return;
+
 		if(SketchParent.atras)
 		{
 			for(int i = 0; i <= getWidth(); i += (getWidth() / SketchParent.qtdLinhas))
@@ -106,41 +107,38 @@ public class SketchParent extends FrameLayout
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
 		}
-		if(mostraEscala)
+		Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+		textPaint.setColor(SketchParent.corLinhas);
+		textPaint.setAlpha(2*SketchParent.alphaLinhas);
+		textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
+		textPaint.setTextAlign(Paint.Align.LEFT);
+		double tamL = getWidth() / SketchParent.qtdLinhas;
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		String text;
+		switch(Sketch2D.unidade)
 		{
-			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-			textPaint.setColor(SketchParent.corLinhas);
-			textPaint.setAlpha(2*SketchParent.alphaLinhas);
-			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
-			textPaint.setTextAlign(Paint.Align.LEFT);
-			double tamL = getWidth() / SketchParent.qtdLinhas;
-			DisplayMetrics dm = getResources().getDisplayMetrics();
-			String text;
-			switch(Sketch2D.unidade)
-			{
-				default:
-				case Sketch2D.UNIDADE_DP:
-					text = (tamL) + " dp";
-					break;
-				case Sketch2D.UNIDADE_CM:
-					text = (tamL / dm.densityDpi) * 2.5 + " cm";
-					break;
-				case Sketch2D.UNIDADE_M:
-					text = (tamL*Sketch2D.proporcao) + " m";
-					break;
-				case Sketch2D.UNIDADE_KM:
-					text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
-					break;
-				case Sketch2D.UNIDADE_INCH:
-					text = (tamL / dm.densityDpi) + " inch";
-					break;
-			}
-			//text = (tamL/dm.densityDpi)*2.5 + " cm";
-			Rect bounds = new Rect();
-			textPaint.getTextBounds(text, 0, text.length(), bounds);
-			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
-			canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
+			default:
+			case Sketch2D.UNIDADE_DP:
+				text = (tamL) + " dp";
+				break;
+			case Sketch2D.UNIDADE_CM:
+				text = (tamL / dm.densityDpi) * 2.5 + " cm";
+				break;
+			case Sketch2D.UNIDADE_M:
+				text = (tamL*Sketch2D.proporcao) + " m";
+				break;
+			case Sketch2D.UNIDADE_KM:
+				text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
+				break;
+			case Sketch2D.UNIDADE_INCH:
+				text = (tamL / dm.densityDpi) + " inch";
+				break;
 		}
+		//text = (tamL/dm.densityDpi)*2.5 + " cm";
+		Rect bounds = new Rect();
+		textPaint.getTextBounds(text, 0, text.length(), bounds);
+		Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
+		canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
 	}
 
 	public static void setMostraEscala(boolean mostraEscala)

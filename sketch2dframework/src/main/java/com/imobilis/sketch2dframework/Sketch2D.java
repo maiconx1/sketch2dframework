@@ -26,7 +26,7 @@ public class Sketch2D extends AppCompatActivity
 
 	public static int corTextoDistancia = Color.RED, tamanhoTextoDistancia=40;
 
-	public static int proporcao=1;
+	public static double proporcao=1;
 
 
 	/**
@@ -477,5 +477,15 @@ public class Sketch2D extends AppCompatActivity
 	public static void setUnidade(int unidade)
 	{
 		Sketch2D.unidade = unidade;
+	}
+
+	public static double getProporcao()
+	{
+		return proporcao;
+	}
+
+	public static void setProporcao(double proporcao)
+	{
+		Sketch2D.proporcao = proporcao;
 	}
 }

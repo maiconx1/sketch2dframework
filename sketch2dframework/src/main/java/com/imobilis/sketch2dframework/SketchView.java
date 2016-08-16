@@ -202,7 +202,7 @@ public class SketchView extends View
 
 			double tamL = ((Linha) figura).getModulo();
 			//String text = ""+(int)tamL+" dp";
-			String text = ""+(int)(tamL*Sketch2D.proporcao)+" m";
+			String text = ""+(int)(tamL/Sketch2D.proporcao)+" m";
 			Rect bounds = new Rect();
 			textPaint.getTextBounds(""+text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));

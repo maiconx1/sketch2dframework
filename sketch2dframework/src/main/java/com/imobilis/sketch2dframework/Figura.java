@@ -38,6 +38,8 @@ public abstract class Figura extends AppCompatActivity
 	private Configuracoes configuracoes;
 	private SketchView view;
 	private int index;
+	private boolean menuAtivo;
+
 	public static float x = 0, y = 0, movX = 0, movY = 0;
 	private static Timer timerAtual;
 	private static TimerTask task;
@@ -59,6 +61,7 @@ public abstract class Figura extends AppCompatActivity
 		setPaint(getConfiguracoes().getPaint());
 		calculaMenorMaior();
 		setConfPadrao(true);
+		setMenuAtivo(true);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, Configuracoes configuracoes)
@@ -69,6 +72,7 @@ public abstract class Figura extends AppCompatActivity
 		setPaint(getConfiguracoes().getPaint());
 		calculaMenorMaior();
 		setConfPadrao(false);
+		setMenuAtivo(true);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, boolean editavel)
@@ -80,6 +84,7 @@ public abstract class Figura extends AppCompatActivity
 		setEditavel(editavel);
 		calculaMenorMaior();
 		setConfPadrao(true);
+		setMenuAtivo(true);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
@@ -91,6 +96,17 @@ public abstract class Figura extends AppCompatActivity
 		setEditavel(editavel);
 		calculaMenorMaior();
 		setConfPadrao(false);
+		setMenuAtivo(true);
+	}
+
+	public boolean isMenuAtivo()
+	{
+		return menuAtivo;
+	}
+
+	public void setMenuAtivo(boolean menuAtivo)
+	{
+		this.menuAtivo = menuAtivo;
 	}
 
 	private void calculaMenorMaior()
@@ -358,7 +374,10 @@ public abstract class Figura extends AppCompatActivity
 						xViewAnterior = v.getX();
 						yViewAnterior = v.getY();
 						v.getParent().bringChildToFront(v);
-						ativaTimer(((SketchView) v).getActivity(), v);
+						if(((Figura)v.getTag()).isMenuAtivo())
+						{
+							ativaTimer(((SketchView) v).getActivity(), v);
+						}
 						Log.d("STATUS: ", "DENTRO DA FIGURA");
 						Log.d("STATUS: ", "X inicial: " + x + "// Y inicial: " + y);
 						break;
