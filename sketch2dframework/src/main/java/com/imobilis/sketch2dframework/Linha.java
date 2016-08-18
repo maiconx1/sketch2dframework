@@ -730,10 +730,14 @@ public class Linha extends Figura
 		double resultX = numerador/denominador;
 		ponto.x = (int)Math.round(resultX);
 
+		if(getPonto(1).x == linha.getPonto(0).x) ponto.x = getPonto(1).x;
+
 		numerador = linha.getPonto(1).x * linha.getPonto(0).y - linha.getPonto(0).x * linha.getPonto(1).y + resultX * (linha.getPonto(1).y - linha.getPonto(0).y);
 		denominador = linha.getPonto(1).x - linha.getPonto(0).x;
 		Log.d("INTERSECAOPONTOS Y", getPontos() + "//" + linha.getPontos() + "//NUMERADOR = " + numerador + "//DEMONIMADOR = " + denominador + "//PONTOY = " + numerador/denominador);
 		ponto.y = (int)Math.round(numerador / denominador);
+
+		if(getPonto(1).y == linha.getPonto(0).y) ponto.y = getPonto(1).y;
 
 		if(getPonto(0).x == getPonto(1).x)
 		{
@@ -753,8 +757,22 @@ public class Linha extends Figura
 		{
 			ponto.y = linha.getPonto(0).y;
 		}
-		Log.d("INTERSECAO", ponto + "");
+
+		if(angulo(linha) < 0.06)
+		{
+			ponto.x = getPonto(1).x;
+			ponto.y = getPonto(1).y;
+		}
+
+		Log.d("INTERSECAO", ponto + "// Angulo: " + angulo(linha));
 		return ponto;
+	}
+
+	private double angulo(Linha linha)
+	{
+		double angulo;
+		angulo = Math.atan(Math.abs(((getEquacao().m/getEquacao().a)-(linha.getEquacao().m/linha.getEquacao().a)/(1+(getEquacao().m/getEquacao().a)*(linha.getEquacao().m/linha.getEquacao().a)))));
+		return angulo;
 	}
 
 	class Equacao

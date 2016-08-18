@@ -11,6 +11,8 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.FrameLayout;
 
+import java.text.DecimalFormat;
+
 /**
  * Criado por Maicon em 31/05/2016.
  */
@@ -74,7 +76,8 @@ public class SketchParent extends FrameLayout
 				text = (tamL / dm.densityDpi) * 2.5 + " cm";
 				break;
 			case Sketch2D.UNIDADE_M:
-				text = (tamL / dm.densityDpi) * 2.5 / 100 + " m";
+				//text = (tamL / dm.densityDpi) * 2.5 / 100 + " m";
+				text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format((tamL/Sketch2D.proporcao))+" m";
 				break;
 			case Sketch2D.UNIDADE_KM:
 				text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
@@ -125,7 +128,8 @@ public class SketchParent extends FrameLayout
 				text = (tamL / dm.densityDpi) * 2.5 + " cm";
 				break;
 			case Sketch2D.UNIDADE_M:
-				text = (tamL*Sketch2D.proporcao) + " m";
+				//text = (tamL*Sketch2D.proporcao) + " m";
+				text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format((tamL/Sketch2D.proporcao))+" m";
 				break;
 			case Sketch2D.UNIDADE_KM:
 				text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -202,7 +203,8 @@ public class SketchView extends View
 
 			double tamL = ((Linha) figura).getModulo();
 			//String text = ""+(int)tamL+" dp";
-			String text = ""+(int)(tamL/Sketch2D.proporcao)+" m";
+			//String text = ""+(int)(tamL/Sketch2D.proporcao)+" m";
+			String text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(tamL/Sketch2D.proporcao)+" m";
 			Rect bounds = new Rect();
 			textPaint.getTextBounds(""+text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));

@@ -28,6 +28,9 @@ public class Sketch2D extends AppCompatActivity
 
 	public static double proporcao=1;
 
+	public static int textoDistancia_apos_virgula=2;
+	public static String casasPosVirgula="##";
+
 
 	/**
 	 * Desenha uma linha padrão no framelayout escolhido. A linha vai do ponto (50, 50) ao ponto (300, 300).
@@ -487,5 +490,11 @@ public class Sketch2D extends AppCompatActivity
 	public static void setProporcao(double proporcao)
 	{
 		Sketch2D.proporcao = proporcao;
+	}
+
+	public static void setTextoDistancia_apos_virgula(int qtd)
+	{
+		Sketch2D.textoDistancia_apos_virgula=qtd;
+		Sketch2D.casasPosVirgula = new String(new char[Sketch2D.textoDistancia_apos_virgula]).replace("\0","#");
 	}
 }

@@ -555,15 +555,18 @@ public class NovaMain extends AppCompatActivity
 		//TODO: REMOVER SE DER ERRADO
 		double dx = center.x-(tamx*scale/2.0);
 		double dy = center.y -(tamy*scale/2.0);
+		Log.d("MENORX", menorx + "");
 
 		for(ArrayList<float[]> ps : todosPontos)
 		{
 			pontos = new ArrayList<>();
-			for(float[] p: ps)
+			for(int i = 0;i<ps.size();i++)
 			{
+				float[] p = ps.get(i);
 				float difx =(float)(p[0]-menorx);
 				float dify = (float)((p[1]-maiory)*(-1.0));
 				float[] difs = new float[2];
+				Log.d("Valores","x= " + p[0] + " difx = "+difx+" dify = "+dify + " menorx = " + menorx);
 				difs[0]=difx;
 				difs[1]=dify;
 				p=difs;
@@ -574,7 +577,7 @@ public class NovaMain extends AppCompatActivity
 				difx+=dx;
 				dify+=dy;
 
-				Log.d("Valores","difx = "+difx+" dify = "+dify);
+				Log.d("Valores","x= " + p[0] + " difx = "+difx+" dify = "+dify);
 
 				if(difx>mxdif)
 					mxdif=difx;
@@ -587,7 +590,18 @@ public class NovaMain extends AppCompatActivity
 				int multx=1;
 				float multy=1f;
 				Point aux = new Point((int)(difx*mult*multx),(int)(dify*mult*multy));
-				pontos.add(aux);
+				if(pontos.size() > 0)
+				{
+					if(!(pontos.get(pontos.size()-1).x == aux.x) && !(pontos.get(pontos.size()-1).y == aux.y))
+					{
+						Log.d("AUX", aux + "");
+						pontos.add(aux);
+					}
+				}
+				else
+				{
+					pontos.add(aux);
+				}
 			}
 
 			allPoints.add(pontos);
@@ -711,11 +725,52 @@ public class NovaMain extends AppCompatActivity
 		strings.add("102, 208, 207, 100, 100");
 		strings.add("103, 109, 200, 100, 100");*/
 
-		strings.add("100, 100, 100, 100, 100");
+		/*strings.add("100, 100, 100, 100, 100");
 		strings.add("100, 150, 50, 100, 100");
 		strings.add("101, 200, 100, 100, 100");
 		strings.add("102, 200, 200, 100, 100");
-		strings.add("103, 109, 200, 100, 100");
+		strings.add("103, 109, 200, 100, 100");*/
+
+
+		strings.add("62,670360.236,7803785.472,919.392,11.00");
+		strings.add("63,670354.942,7803785.350,919.399,11.00");
+		strings.add("64,670348.331,7803785.332,919.579,11.00");
+		strings.add("65,670348.670,7803779.874,919.531,11.00");
+		strings.add("66,670350.204,7803770.948,919.437,11.00");
+		strings.add("67,670353.010,7803769.202,919.459,11.00");
+		strings.add("68,670357.011,7803768.121,919.435,11.00");
+		strings.add("69,670367.237,7803765.403,918.818,11.00");
+		strings.add("70,670374.130,7803764.474,918.306,11.00");
+		strings.add("71,670383.770,7803761.554,917.802,11.00");
+		strings.add("72,670390.621,7803758.963,917.411,11.00");
+		strings.add("73,670396.816,7803756.596,917.405,11.00");
+		strings.add("74,670403.836,7803753.905,917.168,11.00");
+		strings.add("75,670410.393,7803751.112,916.950,11.00");
+		strings.add("76,670416.032,7803748.273,916.607,11.00");
+		strings.add("77,670419.123,7803746.539,916.450,11.00");
+		strings.add("78,670424.286,7803743.078,916.063,11.00");
+		strings.add("79,670426.673,7803741.312,915.626,11.00");
+		strings.add("80,670432.191,7803737.706,914.542,11.00");
+		strings.add("81,670443.878,7803730.686,914.088,11.00");
+		strings.add("82,670446.295,7803738.215,914.404,11.00");
+		strings.add("83,670448.737,7803744.719,915.002,11.00");
+		strings.add("84,670450.549,7803751.424,915.176,11.00");
+		strings.add("85,670451.874,7803757.625,915.716,11.00");
+		strings.add("86,670452.030,7803766.698,916.447,11.00");
+		strings.add("87,670452.832,7803770.149,916.647,11.00");
+		strings.add("88,670458.074,7803780.324,916.656,11.00");
+		strings.add("89,670458.084,7803780.325,916.653,11.00");
+		strings.add("90,670448.571,7803785.730,917.104,11.00");
+		strings.add("91,670440.857,7803768.863,917.098,11.00");
+		strings.add("92,670436.643,7803768.892,917.246,9.55");
+		strings.add("93,670426.939,7803772.593,917.881,9.55");
+		strings.add("94,670417.509,7803774.407,918.137,10.50");
+		strings.add("95,670398.171,7803779.686,917.932,10.20");
+		strings.add("96,670389.632,7803782.190,917.932,10.20");
+		strings.add("97,670379.403,7803785.153,918.386,10.25");
+		strings.add("98,670371.129,7803786.285,918.586,10.25");
+		strings.add("99,670367.525,7803786.823,918.765,10.25");
+		strings.add("100,670360.176,7803785.485,919.308,10.25");
 
 		indexs.add(strings.size()-sub);
 		sub=strings.size();
