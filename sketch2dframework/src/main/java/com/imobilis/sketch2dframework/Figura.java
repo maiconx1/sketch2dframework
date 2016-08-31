@@ -199,7 +199,7 @@ public abstract class Figura extends AppCompatActivity
 		}
 		setMaior(new Point(getMaiorX().x, getMaiorY().y));
 		setMenor(new Point(getMenorX().x, getMenorY().y));
-		setDifs(new Point((getMaior().x + getMenor().x)/2, (getMaior().y+getMenor().y)/2));
+		setDifs(new Point((getMaior().x + getMenor().x) / 2, (getMaior().y + getMenor().y) / 2));
 	}
 
 	public void setMenorX(Point menorX)
@@ -530,7 +530,7 @@ public abstract class Figura extends AppCompatActivity
 					case MotionEvent.ACTION_CANCEL:
 						Log.d("TESTESTATUS: ", "CANCEL");
 					case MotionEvent.ACTION_UP:
-						if(event.getPointerId(0) == 0)
+						/*if(event.getPointerId(0) == 0)
 						{
 							//TODO;
 							if(clip)
@@ -546,7 +546,7 @@ public abstract class Figura extends AppCompatActivity
 							Log.d("TESTESTATUS: ", "UPPPP");
 							if(timerAtivo)
 							{
-								cancelaTimer();
+								//cancelaTimer();
 							}
 							movX = 0;
 							movY = 0;
@@ -569,6 +569,40 @@ public abstract class Figura extends AppCompatActivity
 								Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
 								indexLinhas.remove(indexLinhas.size() - 1);
 							}
+						}
+						break;*/
+						if(event.getPointerId(0) == 0)
+						{
+							if(clip)
+							{
+								Sketch2D.commandManager.execute(new MoveCommandClip((Figura) v.getTag(),linhas_clip.indexOf((Figura) v.getTag()), xViewAnterior, yViewAnterior));
+								invisible(false, ((Linha) v.getTag()).getIndex_poligono());
+							}
+							else if(!removendo_pontos)
+								Sketch2D.commandManager.execute(new MoveCommand((Figura) v.getTag(), xViewAnterior, yViewAnterior));
+
+
+							movX = 0;
+							movY = 0;
+
+							xViewAnterior = 0;
+							yViewAnterior = 0;
+							while(indexLinhas.size() > 0)
+							{
+								Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
+								indexLinhas.remove(indexLinhas.size() - 1);
+							}
+
+
+							setEditando(false);
+							Log.d("TESTESTATUS: ", "UPPPP");
+							if(timerAtivo)
+							{
+								//cancelaTimer();
+							}
+
+
+
 						}
 						break;
 				}
