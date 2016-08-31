@@ -12,6 +12,9 @@ import java.util.ArrayList;
 public class Circulo extends Figura
 {
 	private float raio;
+	private int index_poligono=-1;
+	private boolean tipoExcluir=false;
+
 
 	public Circulo(Activity activity, ArrayList<Point> pontos, float raio, boolean editavel)
 	{
@@ -24,6 +27,23 @@ public class Circulo extends Figura
 		super(activity, pontos, editavel, configuracoes);
 		setRaio(raio);
 	}
+
+	public int getIndex_poligono() {
+		return index_poligono;
+	}
+
+	public void setIndex_poligono(int index_poligono) {
+		this.index_poligono = index_poligono;
+	}
+
+	public boolean isTipoExcluir() {
+		return tipoExcluir;
+	}
+
+	public void setTipoExcluir(boolean tipoExcluir) {
+		this.tipoExcluir = tipoExcluir;
+	}
+
 
 	public void setRaio(float raio)
 	{
@@ -42,6 +62,19 @@ public class Circulo extends Figura
 		Point c = new Point((int)(getRaio()*mul), (int)(getRaio()*mul));
 		double distancia = Math.sqrt((c.x - ponto.x)*(c.x - ponto.x) + (c.y - ponto.y)*(c.y - ponto.y));
 		Log.d("lalala", "" + distancia + "//" + raio*mul);
+		//TODO;
+		if(isTipoExcluir())
+		{
+			if((distancia <= (raio+10)*mul)&&Figura.poligono_editando!=null){
+				//Nao pode ser excluido todos os pontos para tal é utilizado a funcao excluir e nao excluir ponto a ponto.
+				if(Figura.poligono_editando.getPontos().size()>1) {
+					Sketch2D.commandManager.execute(new DeletePointCommand(this,new Point(this.getPontos().get(0).x,this.getPontos().get(0).y),this.getIndex_poligono()));
+				}
+			}
+
+		}
+		//TODO 2;
+
 		return distancia <= (raio+10)*mul;
 	}
 

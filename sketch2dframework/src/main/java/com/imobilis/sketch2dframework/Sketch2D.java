@@ -17,6 +17,7 @@ public class Sketch2D extends AppCompatActivity
 
 	public static float distanciaParaLinha = 200;
 	public static int corDistancia = Color.BLACK, unidade = Sketch2D.UNIDADE_DP;
+	public static CommandManager commandManager;
 
 
 
@@ -404,17 +405,20 @@ public class Sketch2D extends AppCompatActivity
 	 * Exclui a figura na posição index do array de figuras do framework e deleta a view.
 	 * @param index posição da figura no array de figuras do framework.
 	 */
-	public static void removeDesenho(int index)
+	public static Figura removeDesenho(int index)
 	{
+		Figura f = null;
 		((ViewGroup) instance.getFigura(index).getView().getParent()).removeView(instance.getFigura(index).getView());
 		if(index > -1 && index < instance.getFiguras().size())
 		{
+			f = instance.getFiguras().get(index);
 			instance.getFiguras().remove(index);
 		}
 		for(int i = 0;i<instance.getFiguras().size();i++)
 		{
 			instance.getFiguras().get(i).setIndex(i);
 		}
+		return f;
 	}
 
 	public static void removeDesenho(Figura f)

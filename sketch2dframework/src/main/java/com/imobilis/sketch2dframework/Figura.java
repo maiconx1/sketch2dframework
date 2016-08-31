@@ -51,6 +51,13 @@ public abstract class Figura extends AppCompatActivity
 	public static float xViewAnterior = 0, yViewAnterior = 0;
 	public static final int CIRCULO = 0, LINHA = 1, POLIGONO = 2;
 
+	public static ArrayList<Circulo> indexCirculos = new ArrayList<>();
+	public static int indexCirculosSize0=-1;
+	public static boolean clip,removendo_pontos;
+	public static Figura poligono_editando =null;
+	public static ArrayList<Linha> linhas_clip=null;
+
+
 	private Point difs;
 
 	public Figura(Activity activity, ArrayList<Point> pontos)
@@ -108,6 +115,65 @@ public abstract class Figura extends AppCompatActivity
 	{
 		this.menuAtivo = menuAtivo;
 	}
+
+	//TODO;
+
+	public static void startModoEditaArestas(Figura f,Activity act, SketchParent parent,Point tamanhoTela)
+	{
+
+
+		if(f==null || clip || f.getPontos().size()<1)
+			return;
+
+		Sketch2D.commandManager.execute(new StartEditarArestaCommand(f, act, parent, tamanhoTela));
+
+
+
+	}
+	public static void startModoExcluirPontos(Figura f,Activity act, SketchParent parent)
+	{
+
+		if(f==null || removendo_pontos || f.getPontos().size()<1)
+			return;
+
+		Sketch2D.commandManager.execute(new StartExcluirPontosCommand(f,act,parent,false));
+
+
+	}
+	//TODO 2;
+
+
+	//TODO;
+	public static void reindexaPontos(int tipo,int index)
+	{
+		int REMOVEU=1;
+		int ADICIONOU=5;
+
+		if(tipo==REMOVEU)
+		{
+			for(int i=0;i<Figura.indexCirculos.size();i++)
+			{
+				if(Figura.indexCirculos.get(i).getIndex_poligono()>index)
+				{
+					Figura.indexCirculos.get(i).setIndex_poligono(Figura.indexCirculos.get(i).getIndex_poligono()-1);
+				}
+			}
+		}
+		else if(tipo==ADICIONOU)
+		{
+
+			for(int i=0;i<Figura.indexCirculos.size();i++)
+			{
+				if(Figura.indexCirculos.get(i).getIndex_poligono()>=index)
+				{
+					Figura.indexCirculos.get(i).setIndex_poligono(Figura.indexCirculos.get(i).getIndex_poligono()+1);
+				}
+			}
+		}
+
+	}
+	//TODO 2;
+
 
 	private void calculaMenorMaior()
 	{
@@ -360,6 +426,25 @@ public abstract class Figura extends AppCompatActivity
 						{
 							return false;
 						}
+
+						//TODO;
+						if(clip && (v.getTag()) instanceof Linha)
+						{
+							if(((Linha)v.getTag()).getIndex_poligono()==-1)
+								return false;
+						}
+						else if(clip)
+							return false;
+						if(removendo_pontos && (v.getTag()) instanceof Circulo)
+						{
+							if(((Circulo)v.getTag()).getIndex_poligono()==-1)
+								return false;
+						}
+						else if(removendo_pontos)
+							return false;
+						//TODO 2;
+
+
 						Log.d("TESTESTATUS", "PÓS EDITANDO");
 						setEditando(true);
 						x = event.getX();
@@ -376,7 +461,7 @@ public abstract class Figura extends AppCompatActivity
 						v.getParent().bringChildToFront(v);
 						if(((Figura)v.getTag()).isMenuAtivo())
 						{
-							ativaTimer(((SketchView) v).getActivity(), v);
+							//ativaTimer(((SketchView) v).getActivity(), v);
 						}
 						Log.d("STATUS: ", "DENTRO DA FIGURA");
 						Log.d("STATUS: ", "X inicial: " + x + "// Y inicial: " + y);
@@ -388,6 +473,20 @@ public abstract class Figura extends AppCompatActivity
 						{
 							v.setX(v.getX() + event.getX() - x);
 							v.setY(v.getY() + event.getY() - y);
+
+							//TODO;
+							if(clip)
+							{
+								if((v.getTag()) instanceof Linha)
+								{
+									invisible(true,((Linha)v.getTag()).getIndex_poligono());
+									Point p = new Point((int)(v.getX()-xViewAnterior),(int)(v.getY() - yViewAnterior));
+									metodo_move(v,p);
+								}
+							}
+							//TODO 2;
+
+
 							movX = event.getX();
 							movY = event.getY();
 							if(Math.sqrt(Math.pow(event.getX() - x, 2) + Math.pow(event.getY() - y, 2)) >= 5 && timerAtivo)
@@ -433,7 +532,17 @@ public abstract class Figura extends AppCompatActivity
 					case MotionEvent.ACTION_UP:
 						if(event.getPointerId(0) == 0)
 						{
-							setEditando(false);
+							//TODO;
+							if(clip)
+							{
+								Sketch2D.commandManager.execute(new MoveCommandClip((Figura) v.getTag(),linhas_clip.indexOf((Figura) v.getTag()), xViewAnterior, yViewAnterior));
+								invisible(false, ((Linha) v.getTag()).getIndex_poligono());
+							}
+							else if(!removendo_pontos)
+								Sketch2D.commandManager.execute(new MoveCommand((Figura) v.getTag(), xViewAnterior, yViewAnterior));
+							//TODO 2;
+
+								setEditando(false);
 							Log.d("TESTESTATUS: ", "UPPPP");
 							if(timerAtivo)
 							{
@@ -467,6 +576,44 @@ public abstract class Figura extends AppCompatActivity
 			}
 		};
 	}
+
+	//TODO;
+	public static void invisible(boolean hide, int atual)
+	{
+
+		for(int i=0;i<linhas_clip.size();i++)
+		{
+			if(i!=atual)
+			{
+				if(hide)
+					linhas_clip.get(i).getView().setVisibility(View.INVISIBLE);
+				else
+					linhas_clip.get(i).getView().setVisibility(View.VISIBLE);
+			}
+		}
+
+	}
+
+
+	public static Point sum(Point p1,Point p2)
+	{
+		Point c = new Point(p1.x+p2.x,p1.y+p2.y);
+		return c;
+	}
+	public static void metodo_move(View view,Point p)
+	{
+		Linha v = (Linha)(view.getTag());
+		int index_clip = v.getIndex_poligono();
+
+		poligono_editando.getPontos().set(index_clip, sum(v.getPontos().get(0), p));
+		poligono_editando.getPontos().set(index_clip + 1 < poligono_editando.getPontos().size() ? index_clip + 1 : 0, sum(v.getPontos().get(1), p));
+		int  cor = Configuracoes.getConfPadrao().getCor();
+		Configuracoes.setCorPadrao(Color.RED);
+		poligono_editando.getView().invalidate();
+		Configuracoes.setCorPadrao(cor);
+	}
+	//TODO2;
+
 
 	private static void setEditando(boolean editando)
 	{

@@ -16,6 +16,7 @@ public class Linha extends Figura
 	private double modulo;
 	private float inclinacao;
 	private Equacao equacao;
+	private int index_poligono=-1;
 
 	public Linha(Activity activity, ArrayList<Point> pontos, boolean editavel)
 	{
@@ -773,6 +774,16 @@ public class Linha extends Figura
 		double angulo;
 		angulo = Math.atan(Math.abs(((getEquacao().m/getEquacao().a)-(linha.getEquacao().m/linha.getEquacao().a)/(1+(getEquacao().m/getEquacao().a)*(linha.getEquacao().m/linha.getEquacao().a)))));
 		return angulo;
+	}
+
+	public int getIndex_poligono()
+	{
+		return index_poligono;
+	}
+
+	public void setIndex_poligono(int index_poligono)
+	{
+		this.index_poligono = index_poligono;
 	}
 
 	class Equacao
