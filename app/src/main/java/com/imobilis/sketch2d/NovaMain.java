@@ -241,11 +241,11 @@ public class NovaMain extends AppCompatActivity
 			int index = (i == linhas.size()-1?0:i+1);
 			Point p0 = linhas.get((i==0?linhas.size()-1:i-1)).getPonto(0), p1 = linhas.get(i).getPonto(0), p2 = linhas.get(index).getPonto(0);
 			//Log.d("LINHAS", linhas.get((i==0?linhas.size()-1:i-1)).getPontos() + "//" + linhas.get(i).getPontos() + "//" + linhas.get(index).getPontos());
-			Log.d("LINHAS", linhas.get(i).getPontos() + "");
+			//Log.d("LINHAS", linhas.get(i).getPontos() + "");
 			Linha linha1 = deslocaPonto(p0, p1, offset), linha2 = deslocaPonto(p1, p2, offset);
 			lDeslocadas.add(Sketch2D.desenhaLinha(this, parent, linha1.getPontos(), false, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.RED, 255)));
 			Point intersecao = linha1.pontoIntersecao(linha2);
-			Log.d("INTERSECAO GERADA: ", intersecao + "");
+			//Log.d("INTERSECAO GERADA: ", intersecao + "");
 			pOffset.add(intersecao);
 		}
 		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
@@ -518,9 +518,23 @@ public class NovaMain extends AppCompatActivity
 		ArrayList<ArrayList<float[]>> todosPontos = drawB_GN0930();
 
 		ArrayList<ArrayList<Point>> allPoints = new ArrayList<>();
+
+		/*ArrayList<Point> pontos = new ArrayList<>();
+		pontos.add(new Point(100, 700));
+		pontos.add(new Point(350, 700));
+		pontos.add(new Point(600, 700));
+		pontos.add(new Point(600, 450));
+		pontos.add(new Point(600, 200));
+		pontos.add(new Point(350, 50));
+		pontos.add(new Point(100, 200));*/
+
+
+
 		double maiory, maiorx, menorx, menory;
 		maiorx = menorx=todosPontos.get(0).get(0)[0];
 		maiory = menory=todosPontos.get(0).get(0)[1];
+		//maiorx = menorx = pontos.get(0).x;
+		//maiory = menory = pontos.get(0).y;
 		ArrayList<Point> pontos = new ArrayList<>();
 		for(ArrayList<float[]> ps : todosPontos)
 		{
@@ -534,9 +548,14 @@ public class NovaMain extends AppCompatActivity
 					menory=p[1];
 				else if(p[1]>maiory)
 					maiory=p[1];
-
 			}
-
+		}
+		for(Point p : pontos)
+		{
+			if(p.x < menorx) menorx = p.x;
+			else if(p.x > maiorx) maiorx = p.x;
+			if(p.y < menory) menory = p.y;
+			else if(p.y > maiory) maiory = p.y;
 		}
 		widthReal = maiorx - menorx;
 		heightReal = maiory - menory;
@@ -618,12 +637,15 @@ public class NovaMain extends AppCompatActivity
 
 		for(int i=0;i<1;i++)
 		{
-			Log.i("PontosH", "" + allPoints.get(i).size());
+			//Log.i("PontosH", "" + allPoints.get(i).size());
 			Configuracoes c = new Configuracoes();
 			c.setEstilo(1);
-			//c.setCor(colors.get(i));
+			c.setCor(colors.get(i));
 			poligono = Sketch2D.desenhaPoligono(this, ln, allPoints.get(0), false, c);
 		}
+		//Configuracoes c = new Configuracoes();
+		//c.setEstilo(Configuracoes.LINHA);
+		//poligono = Sketch2D.desenhaPoligono(this, ln, pontos, false, c);
 
 		for(int i = 0;i<allPoints.get(0).size();i++)
 		{
@@ -719,23 +741,23 @@ public class NovaMain extends AppCompatActivity
 		strings.add("103, 100, 200, 100, 100");*/
 
 		//OFFSET BUGADO
-		/*strings.add("100, 105, 101, 100, 100");
-		strings.add("100, 153, 52, 100, 100");
-		strings.add("101, 204, 106, 100, 100");
+		/*strings.add("100, 100, 100, 100, 100");
+		strings.add("100, 150, 50, 100, 100");
+		strings.add("101, 200, 100, 100, 100");
 		strings.add("102, 208, 207, 100, 100");
 		strings.add("103, 109, 200, 100, 100");*/
 
 		/*strings.add("100, 100, 100, 100, 100");
-		strings.add("100, 150, 50, 100, 100");
-		strings.add("101, 200, 100, 100, 100");
-		strings.add("102, 200, 200, 100, 100");
-		strings.add("103, 109, 200, 100, 100");*/
+		strings.add("101, 150, 50, 100, 100");
+		strings.add("102, 200, 100, 100, 100");
+		strings.add("103, 200, 200, 100, 100");
+		strings.add("104, 100, 200, 100, 100");*/
 
 
 		strings.add("62,670360.236,7803785.472,919.392,11.00");
 		strings.add("63,670354.942,7803785.350,919.399,11.00");
 		strings.add("64,670348.331,7803785.332,919.579,11.00");
-		strings.add("65,670348.670,7803779.874,919.531,11.00");
+		//strings.add("65,670348.670,7803779.874,919.531,11.00");
 		strings.add("66,670350.204,7803770.948,919.437,11.00");
 		strings.add("67,670353.010,7803769.202,919.459,11.00");
 		strings.add("68,670357.011,7803768.121,919.435,11.00");

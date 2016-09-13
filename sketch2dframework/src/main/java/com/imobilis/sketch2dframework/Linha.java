@@ -727,7 +727,7 @@ public class Linha extends Figura
 		Point ponto = new Point();
 		double numerador = getPonto(1).x * (linha.getPonto(1).x * linha.getPonto(0).y - linha.getPonto(0).x * linha.getPonto(1).y - getPonto(0).y * linha.getPonto(1).x + getPonto(0).y * linha.getPonto(0).x) + getPonto(0).x * (linha.getPonto(0).x * linha.getPonto(1).y - linha.getPonto(1).x * linha.getPonto(0).y + getPonto(1).y * linha.getPonto(1).x - getPonto(1).y * linha.getPonto(0).x);
 		double denominador = getPonto(1).y * (linha.getPonto(1).x - linha.getPonto(0).x) + getPonto(0).y * (linha.getPonto(0).x - linha.getPonto(1).x) + linha.getPonto(0).y * (getPonto(1).x - getPonto(0).x) + linha.getPonto(1).y * (getPonto(0).x - getPonto(1).x);
-		Log.d("INTERSECAOPONTOS X", getPontos() + "//" + linha.getPontos() + "//NUMERADOR = " + numerador + "//DEMONIMADOR = " + denominador + "//PONTOX = " + numerador/denominador);
+		//Log.d("INTERSECAOPONTOS X", getPontos() + "//" + linha.getPontos() + "//NUMERADOR = " + numerador + "//DEMONIMADOR = " + denominador + "//PONTOX = " + numerador/denominador);
 		double resultX = numerador/denominador;
 		ponto.x = (int)Math.round(resultX);
 
@@ -735,10 +735,10 @@ public class Linha extends Figura
 
 		numerador = linha.getPonto(1).x * linha.getPonto(0).y - linha.getPonto(0).x * linha.getPonto(1).y + resultX * (linha.getPonto(1).y - linha.getPonto(0).y);
 		denominador = linha.getPonto(1).x - linha.getPonto(0).x;
-		Log.d("INTERSECAOPONTOS Y", getPontos() + "//" + linha.getPontos() + "//NUMERADOR = " + numerador + "//DEMONIMADOR = " + denominador + "//PONTOY = " + numerador/denominador);
+		//Log.d("INTERSECAOPONTOS Y", getPontos() + "//" + linha.getPontos() + "//NUMERADOR = " + numerador + "//DEMONIMADOR = " + denominador + "//PONTOY = " + numerador/denominador);
 		ponto.y = (int)Math.round(numerador / denominador);
 
-		if(getPonto(1).y == linha.getPonto(0).y) ponto.y = getPonto(1).y;
+		//if(getPonto(1).y == linha.getPonto(0).y) ponto.y = getPonto(1).y;
 
 		if(getPonto(0).x == getPonto(1).x)
 		{
@@ -749,6 +749,10 @@ public class Linha extends Figura
 		{
 			ponto.x = linha.getPonto(0).x;
 			ponto.y = Math.round((float)getEquacao().getY(ponto.x));
+		}
+		if(getPonto(0).x == getPonto(1).x && getPonto(1).x == linha.getPonto(0).x && linha.getPonto(0).x == linha.getPonto(1).x)
+		{
+			ponto.y = getPonto(1).y;
 		}
 		if(getPonto(0).y == getPonto(1).y)
 		{
@@ -765,7 +769,9 @@ public class Linha extends Figura
 			ponto.y = getPonto(1).y;
 		}
 
-		Log.d("INTERSECAO", ponto + "// Angulo: " + angulo(linha));
+		//Log.d("INTERSECAO", ponto + "// Angulo: " + angulo(linha));
+		Log.d("INTERSECAO", "X0: " + getX(0) + " Y0: " + getY(0) + "//X1: " + getX(1) + " Y1: " + getY(1) + "//X2: " + linha.getX(0) + " Y2: " + linha.getY(0) + "//X3: " + linha.getX(1) + " Y3: " + linha.getY(1));
+		Log.d("INTERSECAO_CALCULADA", "X: " + ponto.x + " Y: " + ponto.y);
 		return ponto;
 	}
 
