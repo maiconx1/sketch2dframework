@@ -49,11 +49,11 @@ public class SketchParent extends FrameLayout
 		conf = new Configuracoes(SketchParent.pontilhado, Configuracoes.LINHA, 3, true, SketchParent.corLinhas, SketchParent.alphaLinhas);
 		if(!SketchParent.atras)
 		{
-			for(int i = 0; i <= getWidth(); i += gradeMetros)//(getWidth() /  SketchParent.qtdLinhas))
+			for(int i = 0; i <= getWidth(); i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getWidth() /  SketchParent.qtdLinhas))
 			{
 				canvas.drawLine(i, 0, i, getHeight(), conf.getPaint());
 			}
-			for(int i = 0; i <= getHeight(); i += gradeMetros)//(getHeight() /  SketchParent.qtdColunas))
+			for(int i = 0; i <= getHeight(); i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getHeight() /  SketchParent.qtdColunas))
 			{
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
@@ -101,11 +101,11 @@ public class SketchParent extends FrameLayout
 
 		if(SketchParent.atras)
 		{
-			for(int i = 0; i <= getWidth(); i += gradeMetros)//(getWidth() / SketchParent.qtdLinhas))
+			for(int i = 0; i <= getWidth(); i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getWidth() / SketchParent.qtdLinhas))
 			{
 				canvas.drawLine(i, 0, i, getHeight(), conf.getPaint());
 			}
-			for(int i = 0; i <= getHeight(); i += gradeMetros)//(getHeight() /  SketchParent.qtdColunas))
+			for(int i = 0; i <= getHeight(); i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getHeight() /  SketchParent.qtdColunas))
 			{
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
