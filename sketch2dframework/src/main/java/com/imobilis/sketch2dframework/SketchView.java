@@ -173,11 +173,11 @@ public class SketchView extends View
 		{
 			setX(menorX.x - ((Circulo) figura).getRaio());
 			setY(menorY.y - ((Circulo) figura).getRaio());
-			for(Point p : figura.getPontos())
+			/*for(Point p : figura.getPontos())
 			{
 				p.x += (figura.getConfiguracoes().getTamLinha());
 				p.y += (figura.getConfiguracoes().getTamLinha());
-			}
+			}*/
 			canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
 			((Circulo) figura).setRaio(oldRadio);
 

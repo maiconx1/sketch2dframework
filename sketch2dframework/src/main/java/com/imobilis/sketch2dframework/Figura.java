@@ -118,7 +118,7 @@ public abstract class Figura extends AppCompatActivity
 
 	//TODO;
 
-	public static void startModoEditaArestas(Figura f,Activity act, SketchParent parent,Point tamanhoTela)
+	/*public static void startModoEditaArestas(Figura f,Activity act, SketchParent parent,Point tamanhoTela)
 	{
 
 
@@ -139,7 +139,7 @@ public abstract class Figura extends AppCompatActivity
 		Sketch2D.commandManager.execute(new StartExcluirPontosCommand(f,act,parent,false));
 
 
-	}
+	}*/
 	//TODO 2;
 
 

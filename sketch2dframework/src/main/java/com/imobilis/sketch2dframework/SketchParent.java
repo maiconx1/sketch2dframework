@@ -19,7 +19,7 @@ import java.text.DecimalFormat;
 public class SketchParent extends FrameLayout
 {
 	private Configuracoes conf;
-	public static int qtdLinhas = 5, qtdColunas = 5, corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30;
+	public static int qtdLinhas = 5, qtdColunas = 5, corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30, gradeMetros = 10;
 	public static boolean atras = false, mostraEscala = true, pontilhado = false;
 
 	public SketchParent(Context context)
@@ -49,11 +49,11 @@ public class SketchParent extends FrameLayout
 		conf = new Configuracoes(SketchParent.pontilhado, Configuracoes.LINHA, 3, true, SketchParent.corLinhas, SketchParent.alphaLinhas);
 		if(!SketchParent.atras)
 		{
-			for(int i = 0; i <= getWidth(); i += (getWidth() /  SketchParent.qtdLinhas))
+			for(int i = 0; i <= getWidth(); i += gradeMetros)//(getWidth() /  SketchParent.qtdLinhas))
 			{
 				canvas.drawLine(i, 0, i, getHeight(), conf.getPaint());
 			}
-			for(int i = 0; i <= getHeight(); i += (getHeight() /  SketchParent.qtdColunas))
+			for(int i = 0; i <= getHeight(); i += gradeMetros)//(getHeight() /  SketchParent.qtdColunas))
 			{
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
@@ -77,7 +77,7 @@ public class SketchParent extends FrameLayout
 				break;
 			case Sketch2D.UNIDADE_M:
 				//text = (tamL / dm.densityDpi) * 2.5 / 100 + " m";
-				text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format((tamL/Sketch2D.proporcao))+" m";
+				text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(gradeMetros)+" m";
 				break;
 			case Sketch2D.UNIDADE_KM:
 				text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
@@ -101,11 +101,11 @@ public class SketchParent extends FrameLayout
 
 		if(SketchParent.atras)
 		{
-			for(int i = 0; i <= getWidth(); i += (getWidth() / SketchParent.qtdLinhas))
+			for(int i = 0; i <= getWidth(); i += gradeMetros)//(getWidth() / SketchParent.qtdLinhas))
 			{
 				canvas.drawLine(i, 0, i, getHeight(), conf.getPaint());
 			}
-			for(int i = 0; i <= getHeight(); i += (getHeight() /  SketchParent.qtdColunas))
+			for(int i = 0; i <= getHeight(); i += gradeMetros)//(getHeight() /  SketchParent.qtdColunas))
 			{
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
@@ -129,7 +129,7 @@ public class SketchParent extends FrameLayout
 				break;
 			case Sketch2D.UNIDADE_M:
 				//text = (tamL*Sketch2D.proporcao) + " m";
-				text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format((tamL/Sketch2D.proporcao))+" m";
+				text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(gradeMetros)+" m";
 				break;
 			case Sketch2D.UNIDADE_KM:
 				text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
