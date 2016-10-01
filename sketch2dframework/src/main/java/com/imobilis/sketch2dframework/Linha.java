@@ -811,5 +811,26 @@ public class Linha extends Figura
 			double y = (m/a)*x + (b/a);
 			return y;
 		}
+
+		public double getX(double y)
+		{
+			double x = (a*y - b)/m;
+			return x;
+		}
+
+		public double getM()
+		{
+			return m;
+		}
+
+		public double getA()
+		{
+			return a;
+		}
+
+		public double getB()
+		{
+			return b;
+		}
 	}
 }
