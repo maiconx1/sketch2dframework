@@ -792,7 +792,7 @@ public class Linha extends Figura
 		this.index_poligono = index_poligono;
 	}
 
-	class Equacao
+	public class Equacao
 	{
 		double	m, //acompanha o x
 				a, //acompanha o y
