@@ -101,7 +101,7 @@ public class Sketch2D extends AppCompatActivity
 	 * @param distancia Define se a linha é uma linha de distância ou não
 	 * @return retorna a linha criada.
 	 */
-	protected static Linha desenhaLinha(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes, boolean distancia)
+	public static Linha desenhaLinha(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes, boolean distancia)
 	{
 		Linha linha = new Linha(activity, pontos, editavel, configuracoes, distancia);
 		Sketch2D.instance.addFigura(linha);
