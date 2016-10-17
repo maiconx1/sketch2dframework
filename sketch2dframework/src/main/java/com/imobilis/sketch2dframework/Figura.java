@@ -58,7 +58,15 @@ public abstract class Figura extends AppCompatActivity
 	public static ArrayList<Linha> linhas_clip=null;
 
 
-	private Point difs;
+    //TODO 17-10
+    public static int[] indexCirculosSelected = new int[]{-1,-1};
+    public static ArrayList<Integer> indexsOffset=null;
+    public static ArrayList<Integer> indexsExcluidos = new ArrayList<>();
+
+    //TODO 17-10 2
+
+
+    private Point difs;
 
 	public Figura(Activity activity, ArrayList<Point> pontos)
 	{
@@ -427,8 +435,8 @@ public abstract class Figura extends AppCompatActivity
 							return false;
 						}
 
-						//TODO;
-						if(clip && (v.getTag()) instanceof Linha)
+						//TODO 17-10;
+						/*if(clip && (v.getTag()) instanceof Linha)
 						{
 							if(((Linha)v.getTag()).getIndex_poligono()==-1)
 								return false;
@@ -441,8 +449,8 @@ public abstract class Figura extends AppCompatActivity
 								return false;
 						}
 						else if(removendo_pontos)
-							return false;
-						//TODO 2;
+							return false;*/
+						//TODO 17-10 2;
 
 
 						Log.d("TESTESTATUS", "PÓS EDITANDO");
@@ -471,11 +479,10 @@ public abstract class Figura extends AppCompatActivity
 						Log.d("TESTESTATUS", "MOVEEE");
 						if(((Figura) v.getTag()).isEditavel() && event.getPointerId(0) == 0)
 						{
-							v.setX(v.getX() + event.getX() - x);
-							v.setY(v.getY() + event.getY() - y);
 
-							//TODO;
-							if(clip)
+
+                            //TODO 17-10;
+							/*if(clip)
 							{
 								if((v.getTag()) instanceof Linha)
 								{
@@ -483,10 +490,20 @@ public abstract class Figura extends AppCompatActivity
 									Point p = new Point((int)(v.getX()-xViewAnterior),(int)(v.getY() - yViewAnterior));
 									metodo_move(v,p);
 								}
-							}
-							//TODO 2;
+							}*/
+                            if(clip)
+                            {
+                                return false;
+                                //moveOffset(v,event.getX());
+
+                            }
+                            //TODO 17-10 2;
 
 
+
+
+							v.setX(v.getX() + event.getX() - x);
+							v.setY(v.getY() + event.getY() - y);
 							movX = event.getX();
 							movY = event.getY();
 							if(Math.sqrt(Math.pow(event.getX() - x, 2) + Math.pow(event.getY() - y, 2)) >= 5 && timerAtivo)
@@ -530,59 +547,23 @@ public abstract class Figura extends AppCompatActivity
 					case MotionEvent.ACTION_CANCEL:
 						Log.d("TESTESTATUS: ", "CANCEL");
 					case MotionEvent.ACTION_UP:
-						/*if(event.getPointerId(0) == 0)
-						{
-							//TODO;
-							if(clip)
-							{
-								Sketch2D.commandManager.execute(new MoveCommandClip((Figura) v.getTag(),linhas_clip.indexOf((Figura) v.getTag()), xViewAnterior, yViewAnterior));
-								invisible(false, ((Linha) v.getTag()).getIndex_poligono());
-							}
-							else if(!removendo_pontos)
-								Sketch2D.commandManager.execute(new MoveCommand((Figura) v.getTag(), xViewAnterior, yViewAnterior));
-							//TODO 2;
 
-								setEditando(false);
-							Log.d("TESTESTATUS: ", "UPPPP");
-							if(timerAtivo)
-							{
-								//cancelaTimer();
-							}
-							movX = 0;
-							movY = 0;
-							for(Point p : ((Figura) v.getTag()).getPontos())
-							{
-								p.x += v.getX() - xViewAnterior;
-								p.y += v.getY() - yViewAnterior;
-							}
-							for(Point p : ((Figura) v.getTag()).getPontosEscalados())
-							{
-								p.x += v.getX() - xViewAnterior;
-								p.y += v.getY() - yViewAnterior;
-							}
-
-							((Figura)v.getTag()).deslocaFigura((int)(v.getX() - xViewAnterior), (int)(v.getY() - yViewAnterior));
-							xViewAnterior = 0;
-							yViewAnterior = 0;
-							while(indexLinhas.size() > 0)
-							{
-								Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
-								indexLinhas.remove(indexLinhas.size() - 1);
-							}
-						}
-						break;*/
 						if(event.getPointerId(0) == 0)
 						{
-							if(clip)
-							{
-								Sketch2D.commandManager.execute(new MoveCommandClip((Figura) v.getTag(),linhas_clip.indexOf((Figura) v.getTag()), xViewAnterior, yViewAnterior));
-								invisible(false, ((Linha) v.getTag()).getIndex_poligono());
-							}
-							else if(!removendo_pontos)
-								Sketch2D.commandManager.execute(new MoveCommand((Figura) v.getTag(), xViewAnterior, yViewAnterior));
+
+                            if(clip)
+                            {
+                                //TODO 17-10;
+								/*Sketch2D.commandManager.execute(new MoveCommandClip((Figura) v.getTag(),linhas_clip.indexOf((Figura) v.getTag()), xViewAnterior, yViewAnterior));
+								invisible(false, ((Linha) v.getTag()).getIndex_poligono());*/
+                                //TODO 17-10 2;
+                            }
+                            else if(!removendo_pontos)
+                                Sketch2D.commandManager.execute(new MoveCommand((Figura) v.getTag(), xViewAnterior, yViewAnterior));
 
 
-							movX = 0;
+
+                            movX = 0;
 							movY = 0;
 
 							xViewAnterior = 0;

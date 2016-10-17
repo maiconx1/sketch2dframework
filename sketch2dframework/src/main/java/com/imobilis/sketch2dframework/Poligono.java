@@ -12,6 +12,8 @@ import java.util.ArrayList;
  */
 public class Poligono extends Figura
 {
+	public boolean sentidoHorario=true;
+
 
 	public Poligono(Activity activity, ArrayList<Point> pontos, boolean editavel)
 	{
@@ -22,6 +24,18 @@ public class Poligono extends Figura
 	{
 		super(activity, pontos, editavel, configuracoes);
 	}
+
+	//TODO 17-10
+	public boolean isSentidoHorario() {
+		return sentidoHorario;
+	}
+
+	public void setSentidoHorario(boolean sentidoHorario) {
+		this.sentidoHorario = sentidoHorario;
+	}
+
+	//TODO 17-10 2
+
 
 	@Override
 	public Point getPonto(int index)

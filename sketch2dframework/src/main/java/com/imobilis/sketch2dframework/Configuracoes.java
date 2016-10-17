@@ -23,7 +23,7 @@ public class Configuracoes implements Parcelable
 	private float escala;
 	private int zoom;
 	private int estilo;
-	protected static int corPadrao = Color.BLACK, alphaPadrao = 255, tamLinhaPadrao = 1, estiloPadrao = Configuracoes.PREENCHIDO;
+	protected static int corPadrao = Color.BLACK, alphaPadrao = 255, tamLinhaPadrao = 1, estiloPadrao = Configuracoes.LINHA;
 	protected static float escalaPadrao = 1;
 	protected static boolean pontilhadoPadrao = false, antiAliasPadrao = true;
 	private static Configuracoes confPadrao = new Configuracoes();

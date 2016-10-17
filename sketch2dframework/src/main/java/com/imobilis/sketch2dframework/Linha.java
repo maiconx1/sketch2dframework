@@ -17,6 +17,8 @@ public class Linha extends Figura
 	private float inclinacao;
 	private Equacao equacao;
 	private int index_poligono=-1;
+	private int[] sentidoxy;
+
 
 	public Linha(Activity activity, ArrayList<Point> pontos, boolean editavel)
 	{
@@ -52,6 +54,21 @@ public class Linha extends Figura
 		{
 			float dx = getPonto(1).x - getPonto(0).x;
 			float dy = getPonto(1).y - getPonto(0).y;
+
+            //TODO 17-10
+            sentidoxy = new int[2];
+            sentidoxy[0] = (int)Math.signum(dx);
+            sentidoxy[1] = (int)Math.signum(dy);
+
+            //Essa medida abaixo foi necessária devido a variação do método interseção.
+            if(Math.abs(dx)==1)
+                sentidoxy[0]=0;
+            if(Math.abs(dy)==1)
+                sentidoxy[1]=0;
+            setSentidoxy(sentidoxy);
+            //TODO 17-10 2
+
+
 			float m =dx/dy;
 			float angle = (float)Math.atan(m);
 			angle = (float)((angle*180)/Math.PI);
@@ -63,6 +80,17 @@ public class Linha extends Figura
 			setModulo(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy,2)));
 		}
 	}
+
+    //TODO 17-10
+
+    public int[] getSentidoxy() {
+        return sentidoxy;
+    }
+
+    public void setSentidoxy(int[] sentidoxy) {
+        this.sentidoxy = sentidoxy;
+    }
+    //TODO 17-10 2
 
 	@Override
 	public Point getPonto(int index)
