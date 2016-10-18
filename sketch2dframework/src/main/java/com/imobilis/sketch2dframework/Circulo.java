@@ -17,6 +17,7 @@ public class Circulo extends Figura
 	private int index_poligono=-1;
 	private boolean tipoExcluir=false;
 	private boolean tipoClip=false;
+	private boolean cruz=false;
 
 
 
@@ -400,5 +401,15 @@ public class Circulo extends Figura
 		pontos[1] = new Point(1000000, 1000000);
 		retorno.add(pontos);
 		return retorno;
+	}
+
+	public boolean isCruz()
+	{
+		return cruz;
+	}
+
+	public void setCruz(boolean cruz)
+	{
+		this.cruz = cruz;
 	}
 }

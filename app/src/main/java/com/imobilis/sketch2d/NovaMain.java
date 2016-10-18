@@ -16,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.imobilis.sketch2dframework.Circulo;
 import com.imobilis.sketch2dframework.Configuracoes;
 import com.imobilis.sketch2dframework.Figura;
 import com.imobilis.sketch2dframework.Linha;
@@ -128,6 +129,9 @@ public class NovaMain extends AppCompatActivity
 			}
 		});*/
 		SketchParent.setQtdColunas(50);
+		Circulo c = Sketch2D.desenhaCirculo(this, parent, new Point(200, 200), 20, false);
+		c.setCruz(true);
+		//c.getView().invalidate();
 		parent.invalidate();
 	}
 	@Override

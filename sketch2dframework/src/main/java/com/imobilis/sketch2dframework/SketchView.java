@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
@@ -178,6 +179,24 @@ public class SketchView extends View
 				p.x += (figura.getConfiguracoes().getTamLinha());
 				p.y += (figura.getConfiguracoes().getTamLinha());
 			}*/
+			if(((Circulo)figura).isCruz())
+			{
+				float x,y;
+				x = figura.getPontos().get(0).x - getX();
+				y = figura.getPontos().get(0).y - getY();
+				Path caminho;
+				caminho = new Path();
+				caminho.reset();
+				caminho.moveTo(x, (int) (y - (0.30 * oldRadio)));
+				caminho.lineTo(x, (int) (y + (0.30 * oldRadio)));
+				canvas.drawPath(caminho, figura.getPaint());
+				caminho = new Path();
+				caminho.reset();
+				caminho.moveTo((int) (x - (0.30 * oldRadio)), y);
+				caminho.lineTo((int)(x + (0.30 * oldRadio)), y);
+				canvas.drawPath(caminho, figura.getPaint());
+				Log.d("CIRCULO", "ISCRUZ");
+			}
 			canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
 			((Circulo) figura).setRaio(oldRadio);
 
