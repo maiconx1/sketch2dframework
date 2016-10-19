@@ -192,16 +192,18 @@ public class SketchView extends View
 				points.add(new Point((int) (x - (0.30 * oldRadio)), (int)y));
 				points.add(new Point((int) (x + (0.30 * oldRadio)), (int)y));
 				Sketch2D.desenhaLinha(figura.getActivity(), (FrameLayout) getParent(), points, false, figura.getConfiguracoes());*/
+				int maisUm = 0;
+				maisUm = (((Circulo)figura).getRaio()%2 == 0?0:1);
 				Path caminho;
 				caminho = new Path();
 				caminho.reset();
 				caminho.moveTo(x, (int) (y - (0.50 * oldRadio)));
-				caminho.lineTo(x, (int) (y + (0.50 * oldRadio) + 1));
+				caminho.lineTo(x, (int) (y + (0.50 * oldRadio) + maisUm));
 				canvas.drawPath(caminho, figura.getPaint());
 				caminho = new Path();
 				caminho.reset();
 				caminho.moveTo((int) (x - (0.50 * oldRadio)), y);
-				caminho.lineTo((int) (x + (0.50 * oldRadio) + 1), y);
+				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
 				canvas.drawPath(caminho, figura.getPaint());
 			}
 			canvas.drawCircle(/*figura.getPontos().get(0).x*/figura.getPonto(0).x - getX(), /*figura.getPontos().get(0).y*/figura.getPonto(0).y - getY(), ((Circulo) figura).getRaio(), figura.getPaint());
