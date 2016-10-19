@@ -780,8 +780,8 @@ public abstract class Figura extends AppCompatActivity
 
 		}
 
-		tam[0] += 2*(figura.getConfiguracoes().getTamLinha()+2);
-		tam[1] += 2*(figura.getConfiguracoes().getTamLinha()+2);
+		tam[0] += 2*(figura.getConfiguracoes().getTamLinha());
+		tam[1] += 2*(figura.getConfiguracoes().getTamLinha());
 
 		if(figura instanceof Linha)
 		{

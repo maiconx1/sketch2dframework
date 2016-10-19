@@ -182,22 +182,22 @@ public class SketchView extends View
 			if(((Circulo)figura).isCruz())
 			{
 				float x,y;
-				x = figura.getPontos().get(0).x - getX();
-				y = figura.getPontos().get(0).y - getY();
+				x = figura.getPonto(0).x - getX();
+				y = figura.getPonto(0).y - getY();
 				Path caminho;
 				caminho = new Path();
 				caminho.reset();
 				caminho.moveTo(x, (int) (y - (0.30 * oldRadio)));
 				caminho.lineTo(x, (int) (y + (0.30 * oldRadio)));
-				canvas.drawPath(caminho, figura.getPaint());
+				Configuracoes c = new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255);
+				canvas.drawPath(caminho, c.getPaint());
 				caminho = new Path();
 				caminho.reset();
 				caminho.moveTo((int) (x - (0.30 * oldRadio)), y);
-				caminho.lineTo((int)(x + (0.30 * oldRadio)), y);
-				canvas.drawPath(caminho, figura.getPaint());
-				Log.d("CIRCULO", "ISCRUZ");
+				caminho.lineTo((int) (x + (0.30 * oldRadio)), y);
+				canvas.drawPath(caminho, c.getPaint());
 			}
-			canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
+			canvas.drawCircle(/*figura.getPontos().get(0).x*/figura.getPonto(0).x - getX(), /*figura.getPontos().get(0).y*/figura.getPonto(0).y - getY(), ((Circulo) figura).getRaio(), figura.getPaint());
 			((Circulo) figura).setRaio(oldRadio);
 
 
