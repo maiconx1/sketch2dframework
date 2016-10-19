@@ -174,28 +174,35 @@ public class SketchView extends View
 		{
 			setX(menorX.x - ((Circulo) figura).getRaio());
 			setY(menorY.y - ((Circulo) figura).getRaio());
-			/*for(Point p : figura.getPontos())
+			for(Point p : figura.getPontos())
 			{
 				p.x += (figura.getConfiguracoes().getTamLinha());
 				p.y += (figura.getConfiguracoes().getTamLinha());
-			}*/
+			}
 			if(((Circulo)figura).isCruz())
 			{
 				float x,y;
 				x = figura.getPonto(0).x - getX();
 				y = figura.getPonto(0).y - getY();
+				/*ArrayList<Point> points = new ArrayList<>();
+				points.add(new Point((int)x, (int) (y - (0.30 * oldRadio))));
+				points.add(new Point((int)x, (int) (y + (0.30 * oldRadio))));
+				Sketch2D.desenhaLinha(figura.getActivity(), (FrameLayout)getParent(), points, false, figura.getConfiguracoes());
+				points = new ArrayList<>();
+				points.add(new Point((int) (x - (0.30 * oldRadio)), (int)y));
+				points.add(new Point((int) (x + (0.30 * oldRadio)), (int)y));
+				Sketch2D.desenhaLinha(figura.getActivity(), (FrameLayout) getParent(), points, false, figura.getConfiguracoes());*/
 				Path caminho;
 				caminho = new Path();
 				caminho.reset();
-				caminho.moveTo(x, (int) (y - (0.30 * oldRadio)));
-				caminho.lineTo(x, (int) (y + (0.30 * oldRadio)));
-				Configuracoes c = new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255);
-				canvas.drawPath(caminho, c.getPaint());
+				caminho.moveTo(x, (int) (y - (0.50 * oldRadio)));
+				caminho.lineTo(x, (int) (y + (0.50 * oldRadio) + 1));
+				canvas.drawPath(caminho, figura.getPaint());
 				caminho = new Path();
 				caminho.reset();
-				caminho.moveTo((int) (x - (0.30 * oldRadio)), y);
-				caminho.lineTo((int) (x + (0.30 * oldRadio)), y);
-				canvas.drawPath(caminho, c.getPaint());
+				caminho.moveTo((int) (x - (0.50 * oldRadio)), y);
+				caminho.lineTo((int) (x + (0.50 * oldRadio) + 1), y);
+				canvas.drawPath(caminho, figura.getPaint());
 			}
 			canvas.drawCircle(/*figura.getPontos().get(0).x*/figura.getPonto(0).x - getX(), /*figura.getPontos().get(0).y*/figura.getPonto(0).y - getY(), ((Circulo) figura).getRaio(), figura.getPaint());
 			((Circulo) figura).setRaio(oldRadio);
