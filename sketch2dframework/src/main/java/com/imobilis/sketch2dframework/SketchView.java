@@ -205,6 +205,7 @@ public class SketchView extends View
 				caminho.moveTo((int) (x - (0.50 * oldRadio)), y);
 				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
 				canvas.drawPath(caminho, figura.getPaint());
+				//setBackgroundColor(Color.GRAY);
 			}
 			canvas.drawCircle(/*figura.getPontos().get(0).x*/figura.getPonto(0).x - getX(), /*figura.getPontos().get(0).y*/figura.getPonto(0).y - getY(), ((Circulo) figura).getRaio(), figura.getPaint());
 			((Circulo) figura).setRaio(oldRadio);

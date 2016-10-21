@@ -129,7 +129,7 @@ public class NovaMain extends AppCompatActivity
 			}
 		});*/
 		SketchParent.setQtdColunas(50);
-		Circulo c = Sketch2D.desenhaCirculo(this, parent, new Point(200, 200), 20, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLUE, 255));
+		Circulo c = Sketch2D.desenhaCirculo(this, parent, new Point(200, 200), 150, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLUE, 255));
 		c.setCruz(true);
 		ArrayList<Point> points = new ArrayList<>();
 		points.add(new Point(100, 300));
