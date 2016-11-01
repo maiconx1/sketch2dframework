@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/maiconx1/sketch2dframework'
     gitUrl = 'https://github.com/maiconx1/sketch2dframework.git'
 
-    libraryVersion = '2.0.24'
+    libraryVersion = '2.1.0'
 
     developerId = 'maiconx1'
     developerName = 'Maicon Castro'

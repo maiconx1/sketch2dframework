@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -170,6 +171,23 @@ public class SketchView extends View
 			}
 
 		}
+		else if(figura instanceof  Arco)
+		{
+			setX(menorX.x - ((Arco) figura).getRaio());
+			setY(menorY.y - ((Arco) figura).getRaio());
+			float left,top,right,bottom,angleInit,angleEnd;
+			float x = figura.getPonto(0).x- getX();
+			float y = figura.getPonto(0).y-getY();
+			float raio = ((Arco)figura).getRaio();
+			left = x-raio;
+			right = x+raio;
+			top = y-raio;
+			bottom = y+raio;
+			angleInit = ((Arco)figura).getAngleInit();
+			angleEnd = ((Arco)figura).getDegrees();
+			RectF rect = new RectF(left,top,right,bottom);
+			canvas.drawArc(rect, angleInit, angleEnd, true, figura.getPaint());
+		}
 		else if(figura instanceof Circulo)
 		{
 			setX(menorX.x - ((Circulo) figura).getRaio());
@@ -215,7 +233,29 @@ public class SketchView extends View
 		}
 
 
-		if(linha_distancia)
+		if(figura instanceof Arco)
+		{
+			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+			textPaint.setColor(Sketch2D.corTextoDistancia);
+			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,12, getResources().getDisplayMetrics()));
+			textPaint.setTextAlign(Paint.Align.LEFT);
+
+			String text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(Math.abs(((Arco)figura).getDegrees()))+"°";
+			Rect bounds = new Rect();
+			textPaint.getTextBounds(""+text, 0, text.length(), bounds);
+			Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
+
+			float dy = ((Arco)figura).getRaio()-tamText.y;
+			float dx = 0;
+
+			canvas.save();
+			//canvas.translate(90, 90); //Consertando deslocamento da linha para centro do canvas
+			canvas.drawText(" "+text, dx, dy, textPaint);
+
+
+			canvas.restore();
+		}
+		else if(linha_distancia)
 		{
 			setX(menorX.x);
 			setY(menorY.y);

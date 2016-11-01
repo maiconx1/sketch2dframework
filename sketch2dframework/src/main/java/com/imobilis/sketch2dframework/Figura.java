@@ -739,6 +739,11 @@ public abstract class Figura extends AppCompatActivity
 
 			Log.i("Scalando","Nova mul = "+mul+" r = "+((Circulo)figura).getRaio()+" tam[0]="+tam[0]+" tam[1]="+tam[1]);
 		}
+		else if(figura instanceof  Arco)
+		{
+			tam[0] = 2*(int)(((Arco)figura).getRaio()*mul);
+			tam[1] = 2*(int)(((Arco)figura).getRaio()*mul);
+		}
 		else
 		{
 			Point menorX, menorY, maiorX, maiorY;
