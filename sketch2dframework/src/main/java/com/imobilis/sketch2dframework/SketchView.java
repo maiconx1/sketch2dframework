@@ -237,7 +237,7 @@ public class SketchView extends View
 		{
 			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
 			textPaint.setColor(Sketch2D.corTextoDistancia);
-			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,12, getResources().getDisplayMetrics()));
+			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,Sketch2D.tamanhoTextoAngulo, getResources().getDisplayMetrics()));
 			textPaint.setTextAlign(Paint.Align.LEFT);
 
 			String text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(Math.abs(((Arco)figura).getDegrees()))+"°";
@@ -245,8 +245,8 @@ public class SketchView extends View
 			textPaint.getTextBounds(""+text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
 
-			float dy = ((Arco)figura).getRaio()-tamText.y;
-			float dx = 0;
+			float dy = ((Arco)figura).getRaio()-((Arco)figura).getRaio()/4;
+			float dx = ((Arco)figura).getRaio();
 
 			canvas.save();
 			//canvas.translate(90, 90); //Consertando deslocamento da linha para centro do canvas

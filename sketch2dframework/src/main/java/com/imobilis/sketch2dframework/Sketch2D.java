@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Sketch2D extends AppCompatActivity
 {
 	private static Singleton instance = Singleton.getInstance();
-
+	public static int tamanhoTextoAngulo=15;
 	public static float distanciaParaLinha = 200;
 	public static int corDistancia = Color.BLACK, unidade = Sketch2D.UNIDADE_DP;
 	public static CommandManager commandManager;
