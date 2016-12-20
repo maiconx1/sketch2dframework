@@ -1,6 +1,7 @@
 package com.imobilis.sketch2dframework;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ public class Sketch2D extends AppCompatActivity
 	public static float distanciaParaLinha = 200;
 	public static int corDistancia = Color.BLACK, unidade = Sketch2D.UNIDADE_DP;
 	public static CommandManager commandManager;
+	public static Context context;
 
 
 

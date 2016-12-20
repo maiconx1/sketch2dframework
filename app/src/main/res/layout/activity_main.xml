@@ -12,12 +12,11 @@
         android:textColor="#000000"
         android:textSize="25sp"/>
 
-    <com.imobilis.sketch2dframework.SketchParent
+    <com.imobilis.sketch2dframework.SketchParentZoom
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.1"
-        android:id="@+id/lnDesenho">
-    </com.imobilis.sketch2dframework.SketchParent>
+        android:id="@+id/lnDesenho"/>
 
     <SeekBar
         android:layout_width="match_parent"
