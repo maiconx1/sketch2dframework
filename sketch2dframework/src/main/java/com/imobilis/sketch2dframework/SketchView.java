@@ -98,6 +98,7 @@ public class SketchView extends View
 	{
 		super.onDraw(canvas);
 		boolean old = true;
+		float a=figura.getConfiguracoes().getTamLinha()/2;
 
 		Log.d("STATUSE: ", "DESENHANDO");
 		Point menorX, menorY, maiorX, maiorY;
@@ -137,13 +138,13 @@ public class SketchView extends View
 		}
 		if (figura instanceof Poligono || (figura instanceof Linha && !linha_distancia))
 		{
-			setX(menorX.x);
-			setY(menorY.y);
+			setX(menorX.x-a);
+			setY(menorY.y-a);
 
 			for(Point p : figura.getPontos())
 			{
-				p.x += (figura.getConfiguracoes().getTamLinha());
-				p.y += (figura.getConfiguracoes().getTamLinha());
+				p.x -=(figura.getConfiguracoes().getTamLinha());
+				p.y -=(figura.getConfiguracoes().getTamLinha());
 			}
 
 			if(figura instanceof Poligono)
@@ -152,7 +153,7 @@ public class SketchView extends View
 			}
 			else
 			{
-				canvas.drawPath(((Linha) figura).getCaminho(getX(), getY()), figura.getPaint());
+				canvas.drawPath(((Linha) figura).getCaminho(getX(),getY()), figura.getPaint());
 			}
 
 			figura.setPontosEscalados(copyPoints(figura.getPontos()));
@@ -190,15 +191,16 @@ public class SketchView extends View
 		}
 		else if(figura instanceof Circulo)
 		{
-			setX(menorX.x - ((Circulo) figura).getRaio());
-			setY(menorY.y - ((Circulo) figura).getRaio());
-			for(Point p : figura.getPontos())
-			{
-				p.x += (figura.getConfiguracoes().getTamLinha());
-				p.y += (figura.getConfiguracoes().getTamLinha());
-			}
+
 			if(((Circulo)figura).isCruz())
 			{
+				setX(menorX.x - ((Circulo) figura).getRaio());
+				setY(menorY.y - ((Circulo) figura).getRaio());
+				for(Point p : figura.getPontos())
+				{
+					p.x += (figura.getConfiguracoes().getTamLinha());
+					p.y += (figura.getConfiguracoes().getTamLinha());
+				}
 				float x,y;
 				x = figura.getPonto(0).x - getX();
 				y = figura.getPonto(0).y - getY();
@@ -224,11 +226,20 @@ public class SketchView extends View
 				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
 				canvas.drawPath(caminho, figura.getPaint());
 				//setBackgroundColor(Color.GRAY);
+				canvas.drawCircle(/*figura.getPontos().get(0).x*/figura.getPonto(0).x - getX(), /*figura.getPontos().get(0).y*/figura.getPonto(0).y - getY(), ((Circulo) figura).getRaio(), figura.getPaint());
+
 			}
-			canvas.drawCircle(/*figura.getPontos().get(0).x*/figura.getPonto(0).x - getX(), /*figura.getPontos().get(0).y*/figura.getPonto(0).y - getY(), ((Circulo) figura).getRaio(), figura.getPaint());
+			else{
+				setX(menorX.x - ((Circulo) figura).getRaio()-a);
+				setY(menorY.y - ((Circulo) figura).getRaio()-a);
+				for(Point p : figura.getPontos())
+				{
+					//p.x += (figura.getConfiguracoes().getTamLinha());
+					//p.y += (figura.getConfiguracoes().getTamLinha());
+				}
+				canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
+			}
 			((Circulo) figura).setRaio(oldRadio);
-
-
 			figura.setPontos(oldPoints);
 		}
 

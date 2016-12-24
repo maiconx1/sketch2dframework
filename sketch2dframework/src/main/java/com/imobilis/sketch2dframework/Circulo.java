@@ -96,77 +96,77 @@ public class Circulo extends Figura
         //TODO 17-10;
         if(isTipoClip() && Figura.indexCirculosSelected[1]==-1)
         {
-            if(Figura.indexCirculosSelected[0]==-1)
-            {
-                Figura.indexCirculosSelected[0]=this.index_poligono;
-            }
-            else if(Figura.indexCirculosSelected[1]==-1)
-            {
-                Figura.indexCirculosSelected[1]=this.index_poligono;
-                int size = Figura.indexCirculosSize0;
-                int cont= Figura.indexCirculosSelected[0];
-                ArrayList<Integer> indexs = new ArrayList<>();
-                int incremento = ((Poligono)Figura.poligono_editando).isSentidoHorario()?1:-1;
-                for(int i=0;i<size;i++)
-                {
-                    cont+=incremento;
+	        if(Figura.indexCirculosSelected[0]==-1)
+	        {
+		        Figura.indexCirculosSelected[0]=this.index_poligono;
+	        }
+	        else if(Figura.indexCirculosSelected[1]==-1)
+	        {
+		        Figura.indexCirculosSelected[1]=this.index_poligono;
+		        int size = Figura.indexCirculosSize0;
+		        int cont= Figura.indexCirculosSelected[0];
+		        ArrayList<Integer> indexs = new ArrayList<>();
+		        int incremento = ((Poligono)Figura.poligono_editando).isSentidoHorario()?1:-1;
+		        for(int i=0;i<size;i++)
+		        {
+			        cont+=incremento;
 
-                    if(cont==-1)
-                        cont = size-1;
-                    else if(cont==size)
-                        cont=0;
+			        if(cont==-1)
+				        cont = size-1;
+			        else if(cont==size)
+				        cont=0;
 
-                    if(cont==Figura.indexCirculosSelected[1])
-                        break;
+			        if(cont==Figura.indexCirculosSelected[1])
+				        break;
 
-                    indexs.add(cont);
-                    indexCirculos.get(cont).getConfiguracoes().setEstilo(Configuracoes.PREENCHIDO);
-                    indexCirculos.get(cont).getConfiguracoes().setCor(Color.RED);
-                    indexCirculos.get(cont).getView().invalidate();
-                }
-                for(int i=0;i<indexs.size();i++)
-                {
-                    Log.d("MeuLog","P = "+indexs.get(i));
-                }
-                Figura.linhas_clip = new ArrayList<>();
+			        indexs.add(cont);
+			        indexCirculos.get(cont).getConfiguracoes().setEstilo(Configuracoes.PREENCHIDO);
+			        //indexCirculos.get(cont).getConfiguracoes().setCor(Color.RED);
+			        indexCirculos.get(cont).getView().invalidate();
+		        }
+		        for(int i=0;i<indexs.size();i++)
+		        {
+			        Log.d("MeuLog","P = "+indexs.get(i));
+		        }
+		        Figura.linhas_clip = new ArrayList<>();
 
-                if(incremento==-1)
-                {
-                    indexs.add(0, indexCirculosSelected[0]);
-                    if(indexCirculosSelected[0]!=indexCirculosSelected[1])
-                        indexs.add(indexCirculosSelected[1]);
-                }
-                else{
-                    indexs.add(0, indexCirculosSelected[1]);
-                    if(indexCirculosSelected[0]!=indexCirculosSelected[1])
-                        indexs.add(indexCirculosSelected[0]);
-                }
+		        if(incremento==-1)
+		        {
+			        indexs.add(0, indexCirculosSelected[0]);
+			        if(indexCirculosSelected[0]!=indexCirculosSelected[1])
+				        indexs.add(indexCirculosSelected[1]);
+		        }
+		        else{
+			        indexs.add(0, indexCirculosSelected[1]);
+			        if(indexCirculosSelected[0]!=indexCirculosSelected[1])
+				        indexs.add(indexCirculosSelected[0]);
+		        }
 
 
-                for(int i=0;i<indexs.size();i++)
-                {
-                    Log.d("MeuLog","PEE = "+indexs.get(i)+" ponto = "+Figura.poligono_editando.getPontos().get(i).toString());
-                }
+		        for(int i=0;i<indexs.size();i++)
+		        {
+			        Log.d("MeuLog","PEE = "+indexs.get(i)+" ponto = "+Figura.poligono_editando.getPontos().get(i).toString());
+		        }
 
-                for(int i=0;i<indexs.size()-1;i++)
-                {
-                    Point a = Figura.indexCirculos.get(indexs.get(i)).getPontos().get(0);
-                    Point b = Figura.indexCirculos.get(indexs.get(i+1)).getPontos().get(0);
-                    ArrayList<Point> pontos = new ArrayList<>();
-                    pontos.add(a);
-                    pontos.add(b);
-                    Configuracoes cc = new Configuracoes();
-                    cc.setCor(Color.BLUE);
-                    Figura.linhas_clip.add(Sketch2D.desenhaLinha(Figura.indexCirculos.get(0).getActivity(),(FrameLayout)Figura.indexCirculos.get(0).getView().getParent(), pontos, true, cc));
+		        for(int i=0;i<indexs.size()-1;i++)
+		        {
+			        Point a = Figura.poligono_editando.getPontos().get(indexs.get(i));
+			        Point b = Figura.poligono_editando.getPontos().get(indexs.get(i+1));
+			        ArrayList<Point> pontos = new ArrayList<>();
+			        pontos.add(a);
+			        pontos.add(b);
+			        Configuracoes cc = new Configuracoes();
+			        cc.setCor(Color.BLUE);
+			        Figura.linhas_clip.add(Sketch2D.desenhaLinha(Figura.indexCirculos.get(0).getActivity(),(FrameLayout)Figura.indexCirculos.get(0).getView().getParent(), pontos, true, cc));
 
-                    ((Linha)Sketch2D.getFiguras().get(Sketch2D.getFiguras().size()-1)).setIndex_poligono(indexs.get(i+1));
+			        ((Linha)Sketch2D.getFiguras().get(Sketch2D.getFiguras().size()-1)).setIndex_poligono(indexs.get(i+1));
 
-                }
+		        }
 
-                Figura.indexsOffset = indexs;
-            }
-            this.getConfiguracoes().setEstilo(Configuracoes.PREENCHIDO);
-            this.getView().invalidate();
+		        Figura.indexsOffset = indexs;
+	        }
+	        this.getConfiguracoes().setEstilo(Configuracoes.PREENCHIDO);
+	        this.getView().invalidate();
         }
         //TODO 17-10 2;
 

@@ -516,6 +516,31 @@ public abstract class Figura extends AppCompatActivity
 								Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
 								indexLinhas.remove(indexLinhas.size() - 1);
 							}
+							/*for(int i = 0; i < Sketch2D.getFiguras().size(); i++)
+							{
+								if(indexLinhas.indexOf(Sketch2D.getFiguras().get(i)) < 0)
+								{
+									Figura f = Sketch2D.getFiguras().get(i);
+									if(Sketch2D.getFiguras().indexOf(f) != Sketch2D.getFiguras().indexOf(v.getTag()))
+									{
+										ArrayList<Point[]> linhas;
+										linhas = ((Figura) v.getTag()).pontoMaisProximo(f, v.getX() - xViewAnterior, v.getY() - yViewAnterior);
+										for(Point p[] : linhas)
+										{
+											double dist = Figura.distancia2Pontos(p[0], p[1]);
+											float mul = ((Figura) v.getTag()).getConfiguracoes().getEscala() * ((Figura) v.getTag()).getConfiguracoes().getZoom();
+											if(dist < Sketch2D.distanciaParaLinha * mul/*200*//*)
+											{
+												ArrayList<Point> pp = new ArrayList<>();
+												pp.add(new Point(p[0].x - 90, p[0].y - 90));
+												pp.add(new Point(p[1].x - 90, p[1].y - 90));
+												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Sketch2D.corDistancia, 180), true);
+												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
+											}
+										}
+									}
+								}
+							}*/
 							for(int i = 0; i < Sketch2D.getFiguras().size(); i++)
 							{
 								if(indexLinhas.indexOf(Sketch2D.getFiguras().get(i)) < 0)
@@ -532,10 +557,26 @@ public abstract class Figura extends AppCompatActivity
 											if(dist < Sketch2D.distanciaParaLinha * mul/*200*/)
 											{
 												ArrayList<Point> pp = new ArrayList<>();
-												pp.add(new Point(p[0].x - 90, p[0].y - 90));
-												pp.add(new Point(p[1].x - 90, p[1].y - 90));
-												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Sketch2D.corDistancia, 180), true);
-												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
+												int tam1 = ((Figura) v.getTag()).getConfiguracoes().getTamLinha();
+												int tam2 = f.getConfiguracoes().getTamLinha();
+
+												int b = 90+tam2;
+												int a = 90-tam1;
+												if(!(f instanceof Circulo))
+													b = 90-tam2/2;
+												pp.add(new Point(p[0].x - a, p[0].y - a));
+												pp.add(new Point(p[1].x - b, p[1].y - b));
+												Linha l = Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Sketch2D.corDistancia, 180), true);
+
+												pp = new ArrayList<>(pp);
+												pp.set(0,new Point(p[0].x,p[0].y));
+												pp.set(1,new Point(p[1].x ,p[1].y));
+												float dx = pp.get(1).x - pp.get(0).x;
+												float dy = pp.get(1).y - pp.get(0).y;
+												l.setModulo(Math.sqrt(Math.pow(Math.abs(dx), 2) + Math.pow(Math.abs(dy),2)));
+
+												indexLinhas.add(l);
+
 											}
 										}
 									}
@@ -726,7 +767,7 @@ public abstract class Figura extends AppCompatActivity
 
 	public static int[] tamLayout(Figura figura)
 	{
-		boolean old=!false;
+		/*boolean old=!false;
 		Log.i("Scalando", "tamLayout");
 		int tam[] = {0,0};
 		float mul = figura.getConfiguracoes().getEscala();
@@ -789,6 +830,84 @@ public abstract class Figura extends AppCompatActivity
 		//tam[1] += 2*(figura.getConfiguracoes().getTamLinha()+2);
 		tam[0] += 2*(figura.getConfiguracoes().getTamLinha()+1);
 		tam[1] += 2*(figura.getConfiguracoes().getTamLinha()+1);
+
+		if(figura instanceof Linha)
+		{
+			boolean linha_distancia = false;
+			if(((Linha)figura).isDistancia())
+			{
+				linha_distancia = true;
+			}
+			if(linha_distancia)
+			{
+				tam[1] += 180;
+				tam[0] += 180;
+			}
+
+		}
+
+		return tam;*/
+		boolean old=!false;
+		Log.i("Scalando", "tamLayout");
+		int tam[] = {0,0};
+		float mul = figura.getConfiguracoes().getEscala();
+		if(figura instanceof  Circulo)
+		{
+
+			tam[0] = 2*(int)(((Circulo)figura).getRaio()*mul);
+			tam[1] = 2*(int)(((Circulo)figura).getRaio()*mul);
+
+
+			Log.i("Scalando","Nova mul = "+mul+" r = "+((Circulo)figura).getRaio()+" tam[0]="+tam[0]+" tam[1]="+tam[1]);
+		}
+		else if(figura instanceof  Arco)
+		{
+			tam[0] = 2*(int)(((Arco)figura).getRaio()*mul);
+			tam[1] = 2*(int)(((Arco)figura).getRaio()*mul);
+		}
+		else
+		{
+			Point menorX, menorY, maiorX, maiorY;
+			maiorX = maiorY = menorX = menorY = figura.getPontos().get(0);
+			for(Point p : figura.getPontos())
+			{
+				if(p.x < menorX.x)
+				{
+					menorX = p;
+				}
+				if(p.y < menorY.y)
+				{
+					menorY = p;
+				}
+				if(p.x > maiorX.x)
+				{
+					maiorX = p;
+				}
+				if(p.y > maiorY.y)
+				{
+					maiorY = p;
+				}
+			}
+			tam[0] = maiorX.x-menorX.x;
+			tam[1] = maiorY.y-menorY.y;
+
+
+			Log.i("Scalano","tam[0]="+tam[0]+" tam[1]="+tam[1]);
+
+
+			if(old)
+			{
+				tam[0] = (int)(tam[0]*mul);
+
+				tam[1] = (int)(tam[1]*mul);
+			}
+
+			Log.i("Scalano","2tam[0]="+tam[0]+" tam[1]="+tam[1]+" mul = "+mul);
+
+		}
+
+		tam[0] += (figura.getConfiguracoes().getTamLinha());
+		tam[1] += (figura.getConfiguracoes().getTamLinha());
 
 		if(figura instanceof Linha)
 		{

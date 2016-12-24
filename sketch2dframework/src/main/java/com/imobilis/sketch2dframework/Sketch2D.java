@@ -434,13 +434,11 @@ public class Sketch2D extends AppCompatActivity
 	{
 		Figura f = null;
 		((ViewGroup) instance.getFigura(index).getView().getParent()).removeView(instance.getFigura(index).getView());
-		if(index > -1 && index < instance.getFiguras().size())
-		{
+		if (index > -1 && index < instance.getFiguras().size()) {
 			f = instance.getFiguras().get(index);
 			instance.getFiguras().remove(index);
 		}
-		for(int i = 0;i<instance.getFiguras().size();i++)
-		{
+		for (int i = 0; i < instance.getFiguras().size(); i++) {
 			instance.getFiguras().get(i).setIndex(i);
 		}
 		return f;
@@ -453,6 +451,28 @@ public class Sketch2D extends AppCompatActivity
 		for(int i = 0;i<instance.getFiguras().size();i++)
 		{
 			instance.getFiguras().get(i).setIndex(i);
+		}
+	}
+
+	/**
+	 * Adapta o tamanho de todas as figuras com o aumento de linha.
+	 * @param aumentoDaLinha valor do aumento do tamanho(espessura) da linha.
+	 */
+	public static void adaptaTamanho(int aumentoDaLinha)
+	{
+		for(Figura f:Sketch2D.getFiguras())
+		{
+
+			f.getConfiguracoes().setEstilo(Configuracoes.LINHA);
+			f.getConfiguracoes().setTamLinha(f.getConfiguracoes().getTamLinha() + aumentoDaLinha);
+			ViewGroup.LayoutParams params = (f.getView()).getLayoutParams();
+			f.getView().setLayoutParams(new FrameLayout.LayoutParams(params.width + aumentoDaLinha, params.height + aumentoDaLinha));
+			if(!(f instanceof Circulo)){
+				f.getView().setX(f.getView().getX() - (aumentoDaLinha));
+				f.getView().setY(f.getView().getY() - (aumentoDaLinha));
+			}
+			f.getView().invalidate();
+
 		}
 	}
 
