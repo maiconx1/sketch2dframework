@@ -137,7 +137,7 @@ public class SketchParent extends FrameLayout
 					text = (tamL / dm.densityDpi) + " inch";
 					break;
 			}
-			//text = (tamL/dm.densityDpi)*2.5 + " cm";
+			//text = (tamL/dm.densityDpi)*2.5 + " cm"
 			Rect bounds = new Rect();
 			textPaint.getTextBounds(text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
