@@ -194,24 +194,21 @@ public class SketchView extends View
 
 			if(((Circulo)figura).isCruz())
 			{
-				setX(menorX.x - ((Circulo) figura).getRaio());
-				setY(menorY.y - ((Circulo) figura).getRaio());
-				for(Point p : figura.getPontos())
-				{
-					p.x += (figura.getConfiguracoes().getTamLinha());
-					p.y += (figura.getConfiguracoes().getTamLinha());
-				}
+				int dif = (int)(a
+				);
+				setX(menorX.x - ((Circulo) figura).getRaio()-dif-1.5f);
+				setY(menorY.y - ((Circulo) figura).getRaio()-dif-1.5f);
+                /*for(Point p : figura.getPontos())
+                {
+                    p.x += (figura.getConfiguracoes().getTamLinha());
+                    p.y += (figura.getConfiguracoes().getTamLinha());
+                }*/
+
+				dif = (int)(a*2);
+
 				float x,y;
-				x = figura.getPonto(0).x - getX();
-				y = figura.getPonto(0).y - getY();
-				/*ArrayList<Point> points = new ArrayList<>();
-				points.add(new Point((int)x, (int) (y - (0.30 * oldRadio))));
-				points.add(new Point((int)x, (int) (y + (0.30 * oldRadio))));
-				Sketch2D.desenhaLinha(figura.getActivity(), (FrameLayout)getParent(), points, false, figura.getConfiguracoes());
-				points = new ArrayList<>();
-				points.add(new Point((int) (x - (0.30 * oldRadio)), (int)y));
-				points.add(new Point((int) (x + (0.30 * oldRadio)), (int)y));
-				Sketch2D.desenhaLinha(figura.getActivity(), (FrameLayout) getParent(), points, false, figura.getConfiguracoes());*/
+				x = figura.getPonto(0).x - getX()-dif;
+				y = figura.getPonto(0).y - getY()-dif;
 				int maisUm = 0;
 				maisUm = (((Circulo)figura).getRaio()%2 == 0?0:1);
 				Path caminho;
@@ -226,17 +223,12 @@ public class SketchView extends View
 				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
 				canvas.drawPath(caminho, figura.getPaint());
 				//setBackgroundColor(Color.GRAY);
-				canvas.drawCircle(/*figura.getPontos().get(0).x*/figura.getPonto(0).x - getX(), /*figura.getPontos().get(0).y*/figura.getPonto(0).y - getY(), ((Circulo) figura).getRaio(), figura.getPaint());
+				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
 
 			}
 			else{
-				setX(menorX.x - ((Circulo) figura).getRaio()-a);
-				setY(menorY.y - ((Circulo) figura).getRaio()-a);
-				for(Point p : figura.getPontos())
-				{
-					//p.x += (figura.getConfiguracoes().getTamLinha());
-					//p.y += (figura.getConfiguracoes().getTamLinha());
-				}
+				setX(menorX.x - ((Circulo) figura).getRaio()-a-1.5f);
+				setY(menorY.y - ((Circulo) figura).getRaio()-a-1.5f);
 				canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
 			}
 			((Circulo) figura).setRaio(oldRadio);

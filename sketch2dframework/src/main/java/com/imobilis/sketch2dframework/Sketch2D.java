@@ -462,16 +462,10 @@ public class Sketch2D extends AppCompatActivity
 	{
 		for(Figura f:Sketch2D.getFiguras())
 		{
-
 			f.getConfiguracoes().setEstilo(Configuracoes.LINHA);
 			f.getConfiguracoes().setTamLinha(f.getConfiguracoes().getTamLinha() + aumentoDaLinha);
 			ViewGroup.LayoutParams params = (f.getView()).getLayoutParams();
 			f.getView().setLayoutParams(new FrameLayout.LayoutParams(params.width + aumentoDaLinha, params.height + aumentoDaLinha));
-			if(!(f instanceof Circulo)){
-				f.getView().setX(f.getView().getX() - (aumentoDaLinha));
-				f.getView().setY(f.getView().getY() - (aumentoDaLinha));
-			}
-			f.getView().invalidate();
 
 		}
 	}

@@ -771,12 +771,12 @@ public class Linha extends Figura
 		if(getPontos().get(0).x == getPontos().get(1).x)
 		{
 			ponto.x = getPontos().get(0).x;
-			ponto.y = Math.round((float)linha.getEquacao().getY(ponto.x));
+			ponto.y = Math.round((float)linha.getEquacao().getY(resultX));
 		}
 		else if(linha.getPontos().get(0).x == linha.getPontos().get(1).x)
 		{
 			ponto.x = linha.getPontos().get(0).x;
-			ponto.y = Math.round((float)getEquacao().getY(ponto.x));
+			ponto.y = Math.round((float)getEquacao().getY(resultX));
 		}
 		if(getPontos().get(0).x == getPontos().get(1).x && getPontos().get(1).x == linha.getPontos().get(0).x && linha.getPontos().get(0).x == linha.getPontos().get(1).x)
 		{

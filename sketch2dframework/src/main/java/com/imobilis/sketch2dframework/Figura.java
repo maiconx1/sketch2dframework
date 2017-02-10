@@ -491,12 +491,13 @@ public abstract class Figura extends AppCompatActivity
 									metodo_move(v,p);
 								}
 							}*/
-                            if(clip)
+                            if(removendo_pontos || clip)
                             {
                                 return false;
                                 //moveOffset(v,event.getX());
 
                             }
+
                             //TODO 17-10 2;
 
 
@@ -564,6 +565,12 @@ public abstract class Figura extends AppCompatActivity
 												int a = 90-tam1;
 												if(!(f instanceof Circulo))
 													b = 90-tam2/2;
+
+												if(v.getTag() instanceof Circulo)
+												{
+													a = 90 +tam1;
+												}
+
 												pp.add(new Point(p[0].x - a, p[0].y - a));
 												pp.add(new Point(p[1].x - b, p[1].y - b));
 												Linha l = Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Sketch2D.corDistancia, 180), true);
@@ -854,16 +861,16 @@ public abstract class Figura extends AppCompatActivity
 		if(figura instanceof  Circulo)
 		{
 
-			tam[0] = 2*(int)(((Circulo)figura).getRaio()*mul);
-			tam[1] = 2*(int)(((Circulo)figura).getRaio()*mul);
+			tam[0] = 2*(int)(((Circulo)figura).getRaio()+2);
+			tam[1] = 2*(int)(((Circulo)figura).getRaio()+2);
 
 
 			Log.i("Scalando","Nova mul = "+mul+" r = "+((Circulo)figura).getRaio()+" tam[0]="+tam[0]+" tam[1]="+tam[1]);
 		}
 		else if(figura instanceof  Arco)
 		{
-			tam[0] = 2*(int)(((Arco)figura).getRaio()*mul);
-			tam[1] = 2*(int)(((Arco)figura).getRaio()*mul);
+			tam[0] = 2*(int)(((Arco)figura).getRaio()+2);
+			tam[1] = 2*(int)(((Arco)figura).getRaio()+2);
 		}
 		else
 		{

@@ -31,11 +31,6 @@ public class CommandManager{
             try{
                 Command command = undoStack.pop();
                 command.undo();
-                if(command instanceof DeletePointCommand)
-                {
-                    if(((DeletePointCommand) command).getIndex()==3)
-                        Log.d("Ponto undo 22222","Ponto = "+((DeletePointCommand) command).getPonto().toString());
-                }
                 redoStack.push(command);
             }
             catch(IllegalStateException ex)
@@ -44,6 +39,34 @@ public class CommandManager{
             }
         }
 
+    }
+    public void undoWithoutRedo(){
+        if(!undoStack.isEmpty())
+        {
+            try{
+                Command command = undoStack.pop();
+                command.undo();
+            }
+            catch(IllegalStateException ex)
+            {
+                //Log.d("DEURUIM","EXCEPTION UNDO");
+            }
+        }
+
+    }
+    public void redoWithoutUndo()
+    {
+        if(!redoStack.isEmpty())
+        {
+            try{
+                Command command = redoStack.pop();
+                command.redo();
+            }
+            catch(IllegalStateException ex)
+            {
+                // Log.d("DEURUIM","EXCEPTION REDO");
+            }
+        }
     }
     public void redo(){
         if(!redoStack.isEmpty())
