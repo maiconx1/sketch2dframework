@@ -13,6 +13,12 @@ import java.util.ArrayList;
 public class Linha extends Figura
 {
 	private boolean distancia;
+	private double modulo;
+	private float inclinacao;
+	private Equacao equacao;
+	private int index_poligono=-1;
+	private int[] sentidoxy;
+
 
 	public Linha(Activity activity, ArrayList<Point> pontos, boolean editavel)
 	{
@@ -22,25 +28,86 @@ public class Linha extends Figura
 		conf.setTamLinha(5);
 		setConfiguracoes(conf);
 		setDistancia(false);
+		setup();
+		equacao = new Equacao(this);
 	}
 
 	public Linha(Activity activity, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
 	{
 		super(activity, pontos, editavel, configuracoes);
 		setDistancia(false);
+		setup();
+		equacao = new Equacao(this);
 	}
 
 	public Linha(Activity activity, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes, boolean distancia)
 	{
 		super(activity, pontos, editavel, configuracoes);
 		setDistancia(distancia);
+		setup();
+		equacao = new Equacao(this);
+	}
+
+	private void setup()
+	{
+		if(getPontos().size()==2)
+		{
+			float dx = getPonto(1).x - getPonto(0).x;
+			float dy = getPonto(1).y - getPonto(0).y;
+
+            //TODO 17-10
+            sentidoxy = new int[2];
+            sentidoxy[0] = (int)Math.signum(dx);
+            sentidoxy[1] = (int)Math.signum(dy);
+
+            //Essa medida abaixo foi necessária devido a variação do método interseção.
+            if(Math.abs(dx)==1)
+                sentidoxy[0]=0;
+            if(Math.abs(dy)==1)
+                sentidoxy[1]=0;
+            setSentidoxy(sentidoxy);
+            //TODO 17-10 2
+
+
+			float m =dx/dy;
+			float angle = (float)Math.atan(m);
+			angle = (float)((angle*180)/Math.PI);
+			setInclinacao(angle);
+
+			dx = Math.abs(dx);
+			dy = Math.abs(dy);
+
+			setModulo(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy,2)));
+		}
+	}
+
+    //TODO 17-10
+
+    public int[] getSentidoxy() {
+        return sentidoxy;
+    }
+
+    public void setSentidoxy(int[] sentidoxy) {
+        this.sentidoxy = sentidoxy;
+    }
+    //TODO 17-10 2
+
+	@Override
+	public Point getPonto(int index)
+	{
+		if(isDistancia() || getPontosEscalados().size() < 1)
+		{
+			return getPontos().get(index);
+		}
+		return getPontosEscalados().get(index);
 	}
 
 	@Override
-	public boolean isDentro(Point ponto)
+	public boolean isDentro(Point p)
 	{
 		float y;
 		Point pInicial = getPonto(0), pFinal = getPonto(1);
+		Point ponto = new Point(p);
 		ponto.x += getView().getX();
 		ponto.y += getView().getY();
 		Log.d("STATUS: ", "IS DENTRO: clickX=" + ponto.x + "//clickY=" + ponto.y + "//initX=" + pInicial.x + "//initY=" + pInicial.y + "//fimX=" + pFinal.x + "//fimY=" + pFinal.y);
@@ -656,5 +723,142 @@ public class Linha extends Figura
 	public void setDistancia(boolean distancia)
 	{
 		this.distancia = distancia;
+	}
+
+	public double getModulo()
+	{
+		return modulo;
+	}
+
+	public void setModulo(double modulo)
+	{
+		this.modulo = modulo;
+	}
+
+	public float getInclinacao()
+	{
+		return inclinacao;
+	}
+
+	public void setInclinacao(float inclinacao)
+	{
+		this.inclinacao = inclinacao;
+	}
+
+	public Equacao getEquacao()
+	{
+		return equacao;
+	}
+
+	public Point pontoIntersecao(Linha linha)
+	{
+		Point ponto = new Point();
+		double numerador = getPontos().get(1).x * (linha.getPontos().get(1).x * linha.getPontos().get(0).y - linha.getPontos().get(0).x * linha.getPontos().get(1).y - getPontos().get(0).y * linha.getPontos().get(1).x + getPontos().get(0).y * linha.getPontos().get(0).x) + getPontos().get(0).x * (linha.getPontos().get(0).x * linha.getPontos().get(1).y - linha.getPontos().get(1).x * linha.getPontos().get(0).y + getPontos().get(1).y * linha.getPontos().get(1).x - getPontos().get(1).y * linha.getPontos().get(0).x);
+		double denominador = getPontos().get(1).y * (linha.getPontos().get(1).x - linha.getPontos().get(0).x) + getPontos().get(0).y * (linha.getPontos().get(0).x - linha.getPontos().get(1).x) + linha.getPontos().get(0).y * (getPontos().get(1).x - getPontos().get(0).x) + linha.getPontos().get(1).y * (getPontos().get(0).x - getPontos().get(1).x);
+		double resultX = numerador/denominador;
+		Log.d("INTERSECAOPONTOS X", getPontos() + "//" + linha.getPontos() + "//NUMERADOR = " + numerador + "//DEMONIMADOR = " + denominador + "//PONTOX = " + resultX + "//ARREDONDADO = " + Math.round(resultX));
+		ponto.x = (int)Math.round(resultX);
+
+		//if(getPontos().get(1).x == linha.getPontos().get(0).x) ponto.x = getPontos().get(1).x;
+
+		numerador = linha.getPontos().get(1).x * linha.getPontos().get(0).y - linha.getPontos().get(0).x * linha.getPontos().get(1).y + resultX * (linha.getPontos().get(1).y - linha.getPontos().get(0).y);
+		denominador = linha.getPontos().get(1).x - linha.getPontos().get(0).x;
+		Log.d("INTERSECAOPONTOS Y", getPontos() + "//" + linha.getPontos() + "//NUMERADOR = " + numerador + "//DEMONIMADOR = " + denominador + "//PONTOY = " + numerador/denominador);
+		ponto.y = (int)Math.round(numerador / denominador);
+
+		//if(getPontos().get(1).y == linha.getPontos().get(0).y) ponto.y = getPontos().get(1).y;
+
+		if(getPontos().get(0).x == getPontos().get(1).x)
+		{
+			ponto.x = getPontos().get(0).x;
+			ponto.y = Math.round((float)linha.getEquacao().getY(resultX));
+		}
+		else if(linha.getPontos().get(0).x == linha.getPontos().get(1).x)
+		{
+			ponto.x = linha.getPontos().get(0).x;
+			ponto.y = Math.round((float)getEquacao().getY(resultX));
+		}
+		if(getPontos().get(0).x == getPontos().get(1).x && getPontos().get(1).x == linha.getPontos().get(0).x && linha.getPontos().get(0).x == linha.getPontos().get(1).x)
+		{
+			ponto.y = getPontos().get(1).y;
+		}
+		if(getPontos().get(0).y == getPontos().get(1).y)
+		{
+			ponto.y = getPontos().get(0).y;
+		}
+		else if(linha.getPontos().get(0).y == linha.getPontos().get(1).y)
+		{
+			ponto.y = linha.getPontos().get(0).y;
+		}
+
+		/*if(angulo(linha) < 0.06)
+		{
+			ponto.x = getPontos().get(1).x;
+			ponto.y = getPontos().get(1).y;
+		}*/
+
+		//Log.d("INTERSECAO", ponto + "// Angulo: " + angulo(linha));
+		Log.d("INTERSECAO", "X0: " + getX(0) + " Y0: " + getY(0) + "//X1: " + getX(1) + " Y1: " + getY(1) + "//X2: " + linha.getX(0) + " Y2: " + linha.getY(0) + "//X3: " + linha.getX(1) + " Y3: " + linha.getY(1));
+		Log.d("INTERSECAO_CALCULADA", "X: " + ponto.x + " Y: " + ponto.y);
+		return ponto;
+	}
+
+	private double angulo(Linha linha)
+	{
+		double angulo;
+		angulo = Math.atan(Math.abs(((getEquacao().m/getEquacao().a)-(linha.getEquacao().m/linha.getEquacao().a)/(1+(getEquacao().m/getEquacao().a)*(linha.getEquacao().m/linha.getEquacao().a)))));
+		return angulo;
+	}
+
+	public int getIndex_poligono()
+	{
+		return index_poligono;
+	}
+
+	public void setIndex_poligono(int index_poligono)
+	{
+		this.index_poligono = index_poligono;
+	}
+
+	public class Equacao
+	{
+		double	m, //acompanha o x
+				a, //acompanha o y
+				b; //termo independente
+
+		public Equacao(Linha linha)
+		{
+			b = (linha.getPontos().get(0).x * linha.getPontos().get(1).y - linha.getPontos().get(1).x*linha.getPontos().get(0).y)*(-1);
+			m = (linha.getPontos().get(0).y - linha.getPontos().get(1).y)*(-1);
+			a = linha.getPontos().get(1).x - linha.getPontos().get(0).x;
+			Log.d("EQUACAO", a + "y = " + m + "x + " + b);
+		}
+
+		public double getY(double x)
+		{
+			double y = (m/a)*x + (b/a);
+			return y;
+		}
+
+		public double getX(double y)
+		{
+			double x = (a*y - b)/m;
+			return x;
+		}
+
+		public double getM()
+		{
+			return m;
+		}
+
+		public double getA()
+		{
+			return a;
+		}
+
+		public double getB()
+		{
+			return b;
+		}
 	}
 }

@@ -34,9 +34,12 @@ public abstract class Figura extends AppCompatActivity
 	private Point menorX, menorY, maiorX, maiorY, menor, maior;
 	private static Activity activity;
 	private boolean editavel;
+	boolean confPadrao = false;
 	private Configuracoes configuracoes;
 	private SketchView view;
 	private int index;
+	private boolean menuAtivo;
+
 	public static float x = 0, y = 0, movX = 0, movY = 0;
 	private static Timer timerAtual;
 	private static TimerTask task;
@@ -44,8 +47,26 @@ public abstract class Figura extends AppCompatActivity
 	private static boolean timerAtivo = false;
 	private static Activity actTimer = null;
 	private static ArrayList<Figura> indexLinhas = new ArrayList<>();
+	private static boolean editando = false;
 	public static float xViewAnterior = 0, yViewAnterior = 0;
 	public static final int CIRCULO = 0, LINHA = 1, POLIGONO = 2;
+
+	public static ArrayList<Circulo> indexCirculos = new ArrayList<>();
+	public static int indexCirculosSize0=-1;
+	public static boolean clip,removendo_pontos;
+	public static Figura poligono_editando =null;
+	public static ArrayList<Linha> linhas_clip=null;
+
+
+    //TODO 17-10
+    public static int[] indexCirculosSelected = new int[]{-1,-1};
+    public static ArrayList<Integer> indexsOffset=null;
+    public static ArrayList<Integer> indexsExcluidos = new ArrayList<>();
+
+    //TODO 17-10 2
+
+
+    private Point difs;
 
 	public Figura(Activity activity, ArrayList<Point> pontos)
 	{
@@ -54,6 +75,8 @@ public abstract class Figura extends AppCompatActivity
 		setConfiguracoes(new Configuracoes());
 		setPaint(getConfiguracoes().getPaint());
 		calculaMenorMaior();
+		setConfPadrao(true);
+		setMenuAtivo(true);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, Configuracoes configuracoes)
@@ -63,6 +86,8 @@ public abstract class Figura extends AppCompatActivity
 		setConfiguracoes(configuracoes);
 		setPaint(getConfiguracoes().getPaint());
 		calculaMenorMaior();
+		setConfPadrao(false);
+		setMenuAtivo(true);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, boolean editavel)
@@ -73,6 +98,8 @@ public abstract class Figura extends AppCompatActivity
 		setPaint(getConfiguracoes().getPaint());
 		setEditavel(editavel);
 		calculaMenorMaior();
+		setConfPadrao(true);
+		setMenuAtivo(true);
 	}
 
 	public Figura(Activity activity, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
@@ -83,7 +110,78 @@ public abstract class Figura extends AppCompatActivity
 		setPaint(getConfiguracoes().getPaint());
 		setEditavel(editavel);
 		calculaMenorMaior();
+		setConfPadrao(false);
+		setMenuAtivo(true);
 	}
+
+	public boolean isMenuAtivo()
+	{
+		return menuAtivo;
+	}
+
+	public void setMenuAtivo(boolean menuAtivo)
+	{
+		this.menuAtivo = menuAtivo;
+	}
+
+	//TODO;
+
+	/*public static void startModoEditaArestas(Figura f,Activity act, SketchParent parent,Point tamanhoTela)
+	{
+
+
+		if(f==null || clip || f.getPontos().size()<1)
+			return;
+
+		Sketch2D.commandManager.execute(new StartEditarArestaCommand(f, act, parent, tamanhoTela));
+
+
+
+	}
+	public static void startModoExcluirPontos(Figura f,Activity act, SketchParent parent)
+	{
+
+		if(f==null || removendo_pontos || f.getPontos().size()<1)
+			return;
+
+		Sketch2D.commandManager.execute(new StartExcluirPontosCommand(f,act,parent,false));
+
+
+	}*/
+	//TODO 2;
+
+
+	//TODO;
+	public static void reindexaPontos(int tipo,int index)
+	{
+		int REMOVEU=1;
+		int ADICIONOU=5;
+
+		if(tipo==REMOVEU)
+		{
+			for(int i=0;i<Figura.indexCirculos.size();i++)
+			{
+				if(Figura.indexCirculos.get(i).getIndex_poligono()>index)
+				{
+					Figura.indexCirculos.get(i).setIndex_poligono(Figura.indexCirculos.get(i).getIndex_poligono()-1);
+				}
+			}
+		}
+		else if(tipo==ADICIONOU)
+		{
+
+			for(int i=0;i<Figura.indexCirculos.size();i++)
+			{
+				if(Figura.indexCirculos.get(i).getIndex_poligono()>=index)
+				{
+					Figura.indexCirculos.get(i).setIndex_poligono(Figura.indexCirculos.get(i).getIndex_poligono()+1);
+				}
+			}
+		}
+
+	}
+	//TODO 2;
+
 
 	private void calculaMenorMaior()
 	{
@@ -109,6 +207,7 @@ public abstract class Figura extends AppCompatActivity
 		}
 		setMaior(new Point(getMaiorX().x, getMaiorY().y));
 		setMenor(new Point(getMenorX().x, getMenorY().y));
+		setDifs(new Point((getMaior().x + getMenor().x) / 2, (getMaior().y + getMenor().y) / 2));
 	}
 
 	public void setMenorX(Point menorX)
@@ -175,6 +274,11 @@ public abstract class Figura extends AppCompatActivity
 		float mul = getConfiguracoes().getEscala()*getConfiguracoes().getZoom();
 		p = new Point((int)(getPontos().get(index).x + getConfiguracoes().getTamLinha()*mul), (int)(getPontos().get(index).y + getConfiguracoes().getTamLinha()*mul));
 		return p;
+	}
+
+	public void setPonto(int index, Point ponto)
+	{
+		pontos.set(index, ponto);
 	}
 
 	public void setPontos(ArrayList<Point> pontos)
@@ -325,24 +429,80 @@ public abstract class Figura extends AppCompatActivity
 				switch(event.getAction())
 				{
 					case MotionEvent.ACTION_DOWN:
+						Log.d("TESTESTATUS", "DOWNN");
+						if(editando)
+						{
+							return false;
+						}
+
+						//TODO 17-10;
+						/*if(clip && (v.getTag()) instanceof Linha)
+						{
+							if(((Linha)v.getTag()).getIndex_poligono()==-1)
+								return false;
+						}
+						else if(clip)
+							return false;
+						if(removendo_pontos && (v.getTag()) instanceof Circulo)
+						{
+							if(((Circulo)v.getTag()).getIndex_poligono()==-1)
+								return false;
+						}
+						else if(removendo_pontos)
+							return false;*/
+						//TODO 17-10 2;
+
+
+						Log.d("TESTESTATUS", "PÓS EDITANDO");
+						setEditando(true);
 						x = event.getX();
 						y = event.getY();
 						if(!((Figura) v.getTag()).isDentro(new Point((int) x, (int) y)) || !((Figura)v.getTag()).isEditavel())
 						{
 							Log.d("STATUS: ", "FORA DA FIGURA");
+							setEditando(false);
 							return false;
 						}
+						Log.d("TESTESTATUS", "PÓS FORA FIGURA");
 						xViewAnterior = v.getX();
 						yViewAnterior = v.getY();
 						v.getParent().bringChildToFront(v);
-						ativaTimer(((SketchView)v).getActivity(), v);
+						if(((Figura)v.getTag()).isMenuAtivo())
+						{
+							//ativaTimer(((SketchView) v).getActivity(), v);
+						}
 						Log.d("STATUS: ", "DENTRO DA FIGURA");
 						Log.d("STATUS: ", "X inicial: " + x + "// Y inicial: " + y);
-
 						break;
 					case MotionEvent.ACTION_MOVE:
-						if(((Figura)v.getTag()).isEditavel())
+						//Log.d("TETESTES", "" + event.getPointerCount());
+						Log.d("TESTESTATUS", "MOVEEE");
+						if(((Figura) v.getTag()).isEditavel() && event.getPointerId(0) == 0)
 						{
+
+
+                            //TODO 17-10;
+							/*if(clip)
+							{
+								if((v.getTag()) instanceof Linha)
+								{
+									invisible(true,((Linha)v.getTag()).getIndex_poligono());
+									Point p = new Point((int)(v.getX()-xViewAnterior),(int)(v.getY() - yViewAnterior));
+									metodo_move(v,p);
+								}
+							}*/
+                            if(removendo_pontos || clip)
+                            {
+                                return false;
+                                //moveOffset(v,event.getX());
+
+                            }
+
+                            //TODO 17-10 2;
+
+
+
+
 							v.setX(v.getX() + event.getX() - x);
 							v.setY(v.getY() + event.getY() - y);
 							movX = event.getX();
@@ -357,6 +517,31 @@ public abstract class Figura extends AppCompatActivity
 								Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
 								indexLinhas.remove(indexLinhas.size() - 1);
 							}
+							/*for(int i = 0; i < Sketch2D.getFiguras().size(); i++)
+							{
+								if(indexLinhas.indexOf(Sketch2D.getFiguras().get(i)) < 0)
+								{
+									Figura f = Sketch2D.getFiguras().get(i);
+									if(Sketch2D.getFiguras().indexOf(f) != Sketch2D.getFiguras().indexOf(v.getTag()))
+									{
+										ArrayList<Point[]> linhas;
+										linhas = ((Figura) v.getTag()).pontoMaisProximo(f, v.getX() - xViewAnterior, v.getY() - yViewAnterior);
+										for(Point p[] : linhas)
+										{
+											double dist = Figura.distancia2Pontos(p[0], p[1]);
+											float mul = ((Figura) v.getTag()).getConfiguracoes().getEscala() * ((Figura) v.getTag()).getConfiguracoes().getZoom();
+											if(dist < Sketch2D.distanciaParaLinha * mul/*200*//*)
+											{
+												ArrayList<Point> pp = new ArrayList<>();
+												pp.add(new Point(p[0].x - 90, p[0].y - 90));
+												pp.add(new Point(p[1].x - 90, p[1].y - 90));
+												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Sketch2D.corDistancia, 180), true);
+												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
+											}
+										}
+									}
+								}
+							}*/
 							for(int i = 0; i < Sketch2D.getFiguras().size(); i++)
 							{
 								if(indexLinhas.indexOf(Sketch2D.getFiguras().get(i)) < 0)
@@ -369,102 +554,134 @@ public abstract class Figura extends AppCompatActivity
 										for(Point p[] : linhas)
 										{
 											double dist = Figura.distancia2Pontos(p[0], p[1]);
-											float mul = ((Figura) v.getTag()).getConfiguracoes().getEscala()*((Figura) v.getTag()).getConfiguracoes().getZoom();
-											if(dist < Sketch2D.distanciaParaLinha*mul/*200*/)
+											float mul = ((Figura) v.getTag()).getConfiguracoes().getEscala() * ((Figura) v.getTag()).getConfiguracoes().getZoom();
+											if(dist < Sketch2D.distanciaParaLinha * mul/*200*/)
 											{
-												//Log.d("LALALA", "ENTROU " + p[0] + "//" + p[1]);
 												ArrayList<Point> pp = new ArrayList<>();
-												pp.add(p[0]);
-												pp.add(p[1]);
-												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 180), true);
-												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
-											}
-										}
-										/*if(f instanceof Poligono)
-										{
-											Log.d("POLIGONO DISTANCIA", "INICIO");
-											for(int j = 0;j<f.getPontos().size()-1;j++)
-											{
-												ArrayList<Point> pontos = new ArrayList<>();
-												pontos.add(f.getPontos().get(j));
-												pontos.add(f.getPontos().get(j+1));
-												Linha linha = new Linha(f.getActivity(), pontos, false);
-												Log.d("POLIGONO PONTOS", linha.getPontos() + "");
-												Point p[] = ((Figura) v.getTag()).pontoMaisProximo(linha, v.getX() - xViewAnterior, v.getY() - yViewAnterior);
-												double dist = Figura.distancia2Pontos(p[0], p[1]);
-												Log.d("POLIGONO DISTANCIA", "" + dist);
-												if(dist < 200)
+												int tam1 = ((Figura) v.getTag()).getConfiguracoes().getTamLinha();
+												int tam2 = f.getConfiguracoes().getTamLinha();
+
+												int b = 90+tam2;
+												int a = 90-tam1;
+												if(!(f instanceof Circulo))
+													b = 90-tam2/2;
+
+												if(v.getTag() instanceof Circulo)
 												{
-													Log.d("PERTO", "DESENHA");
-													pontos = new ArrayList<>();
-													pontos.add(p[1]);
-													pontos.add(p[0]);
-													Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pontos, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 200));
-													indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
+													a = 90 +tam1;
 												}
+
+												pp.add(new Point(p[0].x - a, p[0].y - a));
+												pp.add(new Point(p[1].x - b, p[1].y - b));
+												Linha l = Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pp, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Sketch2D.corDistancia, 180), true);
+
+												pp = new ArrayList<>(pp);
+												pp.set(0,new Point(p[0].x,p[0].y));
+												pp.set(1,new Point(p[1].x ,p[1].y));
+												float dx = pp.get(1).x - pp.get(0).x;
+												float dy = pp.get(1).y - pp.get(0).y;
+												l.setModulo(Math.sqrt(Math.pow(Math.abs(dx), 2) + Math.pow(Math.abs(dy),2)));
+
+												indexLinhas.add(l);
+
 											}
-											ArrayList<Point> pontos = new ArrayList<>();
-											pontos.add(f.getPontos().get(f.getPontos().size()-1));
-											pontos.add(f.getPontos().get(0));
-											Linha linha = new Linha(f.getActivity(), pontos, false);
-											Point p[] = ((Figura) v.getTag()).pontoMaisProximo(linha, v.getX() - xViewAnterior, v.getY() - yViewAnterior);
-											double dist = Figura.distancia2Pontos(p[0], p[1]);
-											Log.d("POLIGONO DISTANCIA", "" + dist);
-											if(dist < 200)
-											{
-												pontos = new ArrayList<>();
-												pontos.add(p[1]);
-												pontos.add(p[0]);
-												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pontos, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 200));
-												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
-											}
-											Log.d("POLIGONO DISTANCIA", "FIM");
 										}
-										else
-										{
-											Point p[] = ((Figura) v.getTag()).pontoMaisProximo(f, v.getX() - xViewAnterior, v.getY() - yViewAnterior);
-											double dist = Figura.distancia2Pontos(p[0], p[1]);
-											Log.d("DISTANCIA", "" + dist);
-											if(dist < 200)
-											{
-												ArrayList<Point> pontos = new ArrayList<>();
-												pontos.add(p[1]);
-												pontos.add(p[0]);
-												Sketch2D.desenhaLinha(((Figura) v.getTag()).getActivity(), (FrameLayout) v.getParent(), pontos, false, new Configuracoes(true, Configuracoes.LINHA, 3, true, Color.BLACK, 200));
-												indexLinhas.add(Sketch2D.getFiguras().get(Sketch2D.getFiguras().size() - 1));
-											}
-										}*/
 									}
 								}
 							}
 							Log.d("STATUS: ", "MOVENDO - vX: " + v.getX() + "/vY: " + v.getY() + " - X: " + x + "/Y: " + y + " - MOVX: " + event.getX() + "/MOVY: " + event.getY());
 						}
 						break;
+					case MotionEvent.ACTION_CANCEL:
+						Log.d("TESTESTATUS: ", "CANCEL");
 					case MotionEvent.ACTION_UP:
-						Log.d("STATUS: ", "UPPPP");
-						if(timerAtivo)
+
+						if(event.getPointerId(0) == 0)
 						{
-							cancelaTimer();
-						}
-						movX = 0;
-						movY = 0;
-						for(Point p : ((Figura)v.getTag()).getPontos())
-						{
-							p.x += v.getX() - xViewAnterior;
-							p.y += v.getY() - yViewAnterior;
-						}
-						xViewAnterior = 0;
-						yViewAnterior = 0;
-						while(indexLinhas.size() > 0)
-						{
-							Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
-							indexLinhas.remove(indexLinhas.size()-1);
+
+                            if(clip)
+                            {
+                                //TODO 17-10;
+								/*Sketch2D.commandManager.execute(new MoveCommandClip((Figura) v.getTag(),linhas_clip.indexOf((Figura) v.getTag()), xViewAnterior, yViewAnterior));
+								invisible(false, ((Linha) v.getTag()).getIndex_poligono());*/
+                                //TODO 17-10 2;
+                            }
+                            else if(!removendo_pontos)
+                                Sketch2D.commandManager.execute(new MoveCommand((Figura) v.getTag(), xViewAnterior, yViewAnterior));
+
+
+
+                            movX = 0;
+							movY = 0;
+
+							xViewAnterior = 0;
+							yViewAnterior = 0;
+							while(indexLinhas.size() > 0)
+							{
+								Sketch2D.removeDesenho(indexLinhas.get(indexLinhas.size() - 1));
+								indexLinhas.remove(indexLinhas.size() - 1);
+							}
+
+
+							setEditando(false);
+							Log.d("TESTESTATUS: ", "UPPPP");
+							if(timerAtivo)
+							{
+								//cancelaTimer();
+							}
+
+
+
 						}
 						break;
 				}
 				return true;
 			}
 		};
+	}
+
+	//TODO;
+	public static void invisible(boolean hide, int atual)
+	{
+
+		for(int i=0;i<linhas_clip.size();i++)
+		{
+			if(i!=atual)
+			{
+				if(hide)
+					linhas_clip.get(i).getView().setVisibility(View.INVISIBLE);
+				else
+					linhas_clip.get(i).getView().setVisibility(View.VISIBLE);
+			}
+		}
+
+	}
+
+
+	public static Point sum(Point p1,Point p2)
+	{
+		Point c = new Point(p1.x+p2.x,p1.y+p2.y);
+		return c;
+	}
+	public static void metodo_move(View view,Point p)
+	{
+		Linha v = (Linha)(view.getTag());
+		int index_clip = v.getIndex_poligono();
+
+		poligono_editando.getPontos().set(index_clip, sum(v.getPontos().get(0), p));
+		poligono_editando.getPontos().set(index_clip + 1 < poligono_editando.getPontos().size() ? index_clip + 1 : 0, sum(v.getPontos().get(1), p));
+		int  cor = Configuracoes.getConfPadrao().getCor();
+		Configuracoes.setCorPadrao(Color.RED);
+		poligono_editando.getView().invalidate();
+		Configuracoes.setCorPadrao(cor);
+	}
+	//TODO2;
+
+
+	private static void setEditando(boolean editando)
+	{
+		Figura.editando = editando;
+		Log.d("EDITANDO", "Valor = " + (editando?"true":"false"));
 	}
 
 	public void desenha(FrameLayout layout, Figura figura)
@@ -557,7 +774,7 @@ public abstract class Figura extends AppCompatActivity
 
 	public static int[] tamLayout(Figura figura)
 	{
-		boolean old=!false;
+		/*boolean old=!false;
 		Log.i("Scalando", "tamLayout");
 		int tam[] = {0,0};
 		float mul = figura.getConfiguracoes().getEscala();
@@ -569,6 +786,11 @@ public abstract class Figura extends AppCompatActivity
 
 
 			Log.i("Scalando","Nova mul = "+mul+" r = "+((Circulo)figura).getRaio()+" tam[0]="+tam[0]+" tam[1]="+tam[1]);
+		}
+		else if(figura instanceof  Arco)
+		{
+			tam[0] = 2*(int)(((Arco)figura).getRaio()*mul);
+			tam[1] = 2*(int)(((Arco)figura).getRaio()*mul);
 		}
 		else
 		{
@@ -611,25 +833,47 @@ public abstract class Figura extends AppCompatActivity
 
 		}
 
-		tam[0] += 2*figura.getConfiguracoes().getTamLinha();
-		tam[1] += 2*figura.getConfiguracoes().getTamLinha();
-		return tam;
-	}
+		//tam[0] += 2*(figura.getConfiguracoes().getTamLinha()+2);
+		//tam[1] += 2*(figura.getConfiguracoes().getTamLinha()+2);
+		tam[0] += 2*(figura.getConfiguracoes().getTamLinha()+1);
+		tam[1] += 2*(figura.getConfiguracoes().getTamLinha()+1);
 
-	/*private static class DemoView extends View
-	{
-		Figura figura;
-		public DemoView(Activity activity, Figura figura)
+		if(figura instanceof Linha)
 		{
-			super(activity.getBaseContext());
-			this.figura = figura;
+			boolean linha_distancia = false;
+			if(((Linha)figura).isDistancia())
+			{
+				linha_distancia = true;
+			}
+			if(linha_distancia)
+			{
+				tam[1] += 180;
+				tam[0] += 180;
+			}
+
 		}
 
-		@Override
-		protected void onDraw(Canvas canvas)
+		return tam;*/
+		boolean old=!false;
+		Log.i("Scalando", "tamLayout");
+		int tam[] = {0,0};
+		float mul = figura.getConfiguracoes().getEscala();
+		if(figura instanceof  Circulo)
 		{
-			super.onDraw(canvas);
-			Log.d("STATUS: ", "DESENHANDO");
+
+			tam[0] = 2*(int)(((Circulo)figura).getRaio()+2);
+			tam[1] = 2*(int)(((Circulo)figura).getRaio()+2);
+
+
+			Log.i("Scalando","Nova mul = "+mul+" r = "+((Circulo)figura).getRaio()+" tam[0]="+tam[0]+" tam[1]="+tam[1]);
+		}
+		else if(figura instanceof  Arco)
+		{
+			tam[0] = 2*(int)(((Arco)figura).getRaio()+2);
+			tam[1] = 2*(int)(((Arco)figura).getRaio()+2);
+		}
+		else
+		{
 			Point menorX, menorY, maiorX, maiorY;
 			maiorX = maiorY = menorX = menorY = figura.getPontos().get(0);
 			for(Point p : figura.getPontos())
@@ -651,21 +895,44 @@ public abstract class Figura extends AppCompatActivity
 					maiorY = p;
 				}
 			}
-			if(figura.getClass() == Poligono.class)
-			{
-				setX(menorX.x);
-				setY(menorY.y);
+			tam[0] = maiorX.x-menorX.x;
+			tam[1] = maiorY.y-menorY.y;
 
-				canvas.drawPath(((Poligono) figura).getCaminho(getX(), getY()), figura.getPaint());
-			}
-			else if(figura.getClass() == Circulo.class)
+
+			Log.i("Scalano","tam[0]="+tam[0]+" tam[1]="+tam[1]);
+
+
+			if(old)
 			{
-				setX(menorX.x - ((Circulo) figura).getRaio());
-				setY(menorY.y - ((Circulo) figura).getRaio());
-				canvas.drawCircle(figura.getPontos().get(0).x - menorX.x + ((Circulo)figura).getRaio(), figura.getPontos().get(0).y - menorY.y + ((Circulo)figura).getRaio(), ((Circulo)figura).getRaio(), figura.getPaint());
+				tam[0] = (int)(tam[0]*mul);
+
+				tam[1] = (int)(tam[1]*mul);
 			}
+
+			Log.i("Scalano","2tam[0]="+tam[0]+" tam[1]="+tam[1]+" mul = "+mul);
+
 		}
-	}*/
+
+		tam[0] += (figura.getConfiguracoes().getTamLinha());
+		tam[1] += (figura.getConfiguracoes().getTamLinha());
+
+		if(figura instanceof Linha)
+		{
+			boolean linha_distancia = false;
+			if(((Linha)figura).isDistancia())
+			{
+				linha_distancia = true;
+			}
+			if(linha_distancia)
+			{
+				tam[1] += 180;
+				tam[0] += 180;
+			}
+
+		}
+
+		return tam;
+	}
 
 	public void setConfiguracoes(Configuracoes configuracoes)
 	{
@@ -761,5 +1028,32 @@ public abstract class Figura extends AppCompatActivity
 	{
 		Log.d("DOIS PONTOS", "p2: " + p2 + "//p1: " + p1);
 		return Math.sqrt(Math.pow(p2.x-p1.x, 2) + Math.pow(p2.y-p1.y, 2));
+	}
+
+	public boolean isConfPadrao()
+	{
+		return confPadrao;
+	}
+
+	public void setConfPadrao(boolean confPadrao)
+	{
+		this.confPadrao = confPadrao;
+	}
+
+	public Point getDifs()
+	{
+		return difs;
+	}
+
+	public void setDifs(Point difs)
+	{
+		this.difs = difs;
+	}
+
+	public void deslocaFigura(int dx, int dy)
+	{
+		setDifs(new Point(getDifs().x+dx, getDifs().y+dy));
+		setMaior(new Point(getMaior().x + dx, getMaior().y + dy));
+		setMenor(new Point(getMenor().x + dx, getMenor().y + dy));
 	}
 }

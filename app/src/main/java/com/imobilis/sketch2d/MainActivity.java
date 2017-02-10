@@ -6,9 +6,12 @@ package com.imobilis.sketch2d;
 
 	import android.graphics.Color;
 	import android.graphics.Point;
+	import android.util.DisplayMetrics;
 	import android.util.Log;
+	import android.view.Display;
 	import android.view.Menu;
 	import android.view.MenuInflater;
+	import android.view.MenuItem;
 	import android.view.MotionEvent;
 	import android.widget.FrameLayout;
 	import android.widget.SeekBar;
@@ -17,18 +20,71 @@ package com.imobilis.sketch2d;
 	import com.imobilis.sketch2dframework.Figura;
 	import com.imobilis.sketch2dframework.Singleton;
 	import com.imobilis.sketch2dframework.Sketch2D;
+	import com.imobilis.sketch2dframework.SketchParent;
 
 	import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 {
 	ArrayList<Figura> figuras;
+	SketchParent parent;
+
+	double escalaw = 1, escalah = 1;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_main, menu);
+		//inflater.inflate(R.menu.menu_main, menu);
+		inflater.inflate(R.menu.menu_unidades, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case R.id.dp:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_DP);
+				Configuracoes.setCorPadrao(Color.RED);
+				Configuracoes.refresh(parent);
+				Point p = getTamanho();
+				DisplayMetrics dm = getResources().getDisplayMetrics();
+				widthPequeno = poligono.getView().getWidth();
+				heightPequeno = poligono.getView().getHeight();
+
+				widthPequeno = (widthPequeno/dm.densityDpi)*2.5/100;
+				heightPequeno = (heightPequeno/dm.densityDpi)*2.5/100;
+
+				Log.d("ESCALA", "Width Real= " + widthReal + "m//Width pequeno = " + widthPequeno + "m//Escala width = " + widthPequeno/widthReal + " ////// Height real = " + heightReal + "m//Height pequeno = " + heightPequeno + "m//Escala height =  " + heightPequeno / heightReal);
+
+				escalaw = widthReal/widthPequeno;
+				escalah = heightReal/heightPequeno;
+				geraMalha(poligono);
+				break;
+			case R.id.cm:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_CM);
+				Configuracoes.setCorPadrao(Color.GREEN);
+				Configuracoes.refresh(parent);
+				break;
+			case R.id.m:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_M);
+				Configuracoes.setCorPadrao(Color.BLACK);
+				Configuracoes.refresh(parent);
+				break;
+			case R.id.km:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_KM);
+				Configuracoes.setCorPadrao(Color.CYAN);
+				Configuracoes.refresh(parent);
+				break;
+			case R.id.inch:
+				Sketch2D.setUnidade(Sketch2D.UNIDADE_INCH);
+				Configuracoes.setCorPadrao(Color.YELLOW);
+				Configuracoes.refresh(parent);
+				break;
+		}
+		parent.invalidate();
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void desenhaTudo()
@@ -72,7 +128,7 @@ public class MainActivity extends AppCompatActivity
 
 		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), true);
 
-		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
+		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
 				add(new Point(50, 50));
 				add(new Point(150, 200));
@@ -109,7 +165,57 @@ public class MainActivity extends AppCompatActivity
 				add(new Point(200, 450));
 			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.GREEN, 255));
 
-		Sketch2D.desenhaLinha(this, (FrameLayout)findViewById(R.id.lnDesenho), false);*/
+		Sketch2D.desenhaLinha(this, (FrameLayout)findViewById(R.id.lnDesenho), false);
+	}
+
+	public int converteM2P(float metros)
+	{
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		return (int)(dm.densityDpi*0.025*metros);
+	}
+
+	public void geraMalha(Figura f)
+	{
+		Malha malha = new Malha(Malha.QUADRATICA, converteM2P(4.5f), converteM2P(9f), new Point((int)poligono.getView().getX(), (int)poligono.getView().getY()), new Point(100, 100), true, 15, 10);
+
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		int height = size.y;
+
+		int divW, divH;
+
+		width=f.getMaior().x-f.getMenor().x;
+		height=Math.abs(f.getMaior().y - f.getMenor().y);
+		double proporcao = width/tamReal[0];
+		divW = (int)(proporcao*4.5);
+		divH = (int)(proporcao*9);
+
+		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
+
+		ArrayList<Point> furos = new ArrayList<>();
+		furos.add(malha.getInicio());
+		Point point;
+		Log.d("PONTOS", "WidthPequeno: " + widthPequeno + "//Dist Linhas: " + malha.getDistLinha() + "//Dist Colunas: " + malha.getDistColuna());
+		for(int i = 0;i<widthReal/malha.getDistLinha();i++)
+		{
+			for(int j = 0;j<heightReal/malha.getDistColuna();j++)
+			{
+				point = new Point((int)(furos.get(0).x + i*malha.getDistColuna()), (int)(furos.get(0).y + j*malha.getDistLinha()));
+				Point np = new Point((int)(point.x - poligono.getView().getX()), (int)(point.y - poligono.getView().getY()));
+				Log.d("PONTO", np + "");
+				if(poligono.isDentro(np) && poligono.getView().getX() <= point.x && point.x <= poligono.getView().getWidth() + poligono.getView().getX() && poligono.getView().getY() <= point.y && point.y <= poligono.getView().getHeight() + poligono.getView().getY())
+				{
+					furos.add(point);
+				}
+			}
+		}
+
+		for(Point p : furos)
+		{
+			Sketch2D.desenhaCirculo(this, parent, p, 10, true);
+		}
 	}
 
 	@Override
@@ -117,9 +223,11 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		parent = (SketchParent) findViewById(R.id.lnDesenho);
 		figuras = new ArrayList<>();
 		Sketch2D.setClasseConfiguracao(ConfActivity.class);
 
+		//geraFiguras(getTamanho(), parent);
 		/*Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
 				add(new Point(50, 50));
@@ -130,7 +238,13 @@ public class MainActivity extends AppCompatActivity
 		{{
 				add(new Point(250, 250));
 				add(new Point(50, 250));
-			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.BLACK, 255));
+			}}, true);
+
+		ArrayList<Point> p = new ArrayList<>();
+		p.add(new Point(0, 200));
+		p.add(new Point(100, 0));
+		p.add(new Point(200, 200));
+		Sketch2D.desenhaPoligono(this, parent, p, true);
 
 		Sketch2D.desenhaLinha(this, (FrameLayout) findViewById(R.id.lnDesenho), new ArrayList<Point>()
 		{{
@@ -141,10 +255,15 @@ public class MainActivity extends AppCompatActivity
 		{{
 				add(new Point(700, 150));
 				add(new Point(700, 700));
-			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.CYAN, 255));*/
+			}}, true, new Configuracoes(false, Configuracoes.LINHA, 5, true, Color.CYAN, 255));
 
-		desenhaTudo();
-		((SeekBar) findViewById(R.id.skbEscala)).setProgress(10);
+		Sketch2D.setEstiloPadrao(Configuracoes.LINHA);
+		Sketch2D.desenhaCirculo(this, (FrameLayout) findViewById(R.id.lnDesenho), true);
+		Sketch2D.desenhaCirculo(this, (FrameLayout)findViewById(R.id.lnDesenho), true, new Configuracoes());
+		Sketch2D.setEstiloPadrao(Configuracoes.PREENCHIDO);
+		Sketch2D.desenhaCirculo(this, (FrameLayout)findViewById(R.id.lnDesenho), true);
+		desenhaTudo();*/
+		/*((SeekBar) findViewById(R.id.skbEscala)).setProgress(10);
 		((SeekBar)findViewById(R.id.skbEscala)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
 		{
 			@Override
@@ -166,7 +285,7 @@ public class MainActivity extends AppCompatActivity
 			public void onStopTrackingTouch(SeekBar seekBar)
 			{
 			}
-		});
+		});*/
 	}
 
 	/*ArrayList<Figura> figuras;
@@ -504,4 +623,268 @@ public class MainActivity extends AppCompatActivity
 		//pontosF.add(Sketch2D.desenhaCirculo(MainActivity.this,frame,aux,20f,true));
 		return true;
 	}*/
+
+	void desenhaFigura()
+	{
+		ArrayList<Point> pontos = new ArrayList<>();
+		ArrayList<double[]> dpontos = new ArrayList<>();
+		double p[] = new double[2];
+		p[0] = 669871.854121; p[1] = 7803644.542408;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669867.348095; p[1] = 7803642.443725;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669848.343115; p[1] = 7803637.172918;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669849.94308; p[1] = 7803631.536003;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669869.581005; p[1] = 7803635.883796;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669879.77311; p[1] = 7803635.039376;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669884.701155; p[1] = 7803635.38447;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669888.646106; p[1] = 7803636.547694;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669893.358909; p[1] = 7803638.450772;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669895.283493; p[1] = 7803639.31569;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669900.214522; p[1] = 7803641.846586;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669914.637291; p[1] = 7803648.296346;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669930.552878; p[1] = 7803655.491521;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669918.567666; p[1] = 7803688.258446;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669899.413408; p[1] = 7803670.888306;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669886.898728; p[1] = 7803660.675813;
+		dpontos.add(p);
+		p = new double[2];
+		p[0] = 669871.854121; p[1] = 7803644.542408;
+		dpontos.add(p);
+
+		double maiorx = 0, maiory = 0;
+		maiorx = dpontos.get(0)[0]; maiory = dpontos.get(0)[1];
+		for(double[] pt : dpontos)
+		{
+			if(maiorx < pt[0]) maiorx = pt[0];
+			if(maiory < pt[1]) maiory = pt[1];
+		}
+
+		for(double[] pt : dpontos)
+		{
+			pt[0] -= maiorx;
+			pt[1] -= maiory;
+		}
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		Log.d("ON RESUME: ", "QUANTIDADE DE FIGURAS: " + Singleton.getInstance().getFiguras().size());
+		FrameLayout ln = (FrameLayout) findViewById(R.id.lnDesenho);
+		geraFiguras(getTamanho(), ln);
+		//geraMalha(poligono);
+	}
+	public Point getTamanho()
+	{
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int height = displaymetrics.heightPixels;
+		int width = displaymetrics.widthPixels;
+
+		return new Point(width, height);
+	}
+
+	public ArrayList<Point> geraFiguras(Point tamanho,FrameLayout ln)
+	{
+		Point center = new Point(tamanho.x/2,tamanho.y/2);
+		int tela_menor;
+		boolean eixoy = false;
+		tela_menor = tamanho.x;
+		if(tamanho.y < tamanho.x)
+		{
+			tela_menor = tamanho.y;
+			eixoy = true;
+		}
+		ArrayList<ArrayList<float[]>> todosPontos = drawB_GN0930();
+
+		ArrayList<ArrayList<Point>> allPoints = new ArrayList<>();
+		double maiory, maiorx, menorx, menory;
+		maiorx = menorx=todosPontos.get(0).get(0)[0];
+		maiory = menory=todosPontos.get(0).get(0)[1];
+		ArrayList<Point> pontos = new ArrayList<>();
+		for(ArrayList<float[]> ps : todosPontos)
+		{
+			for(float[] p : ps)
+			{
+				if(p[0]<menorx)
+					menorx=p[0];
+				else if(p[0]>maiorx)
+					maiorx=p[0];
+				if(p[1]<menory)
+					menory=p[1];
+				else if(p[1]>maiory)
+					maiory=p[1];
+
+			}
+
+		}
+		widthReal = maiorx - menorx;
+		heightReal = maiory - menory;
+		Log.d("REAL", "WIDTH: " + widthReal + "//HEIGHT: " + heightReal);
+		double mxdif=0,mydif=0;
+		double tamx = maiorx-menorx;
+		double tamy = maiory-menory;
+		Log.d("Main","tamanho x = "+tamx+" tamy = "+tamy+" scale = "+tela_menor/tamy);
+
+		double tam = tamx;
+		tamReal[0] = tamx;
+		if(eixoy)
+			tam = tamy;
+		int d = (int)(tela_menor/tam);
+		int scale = d-1;
+		//TODO: REMOVER SE DER ERRADO
+		double dx = center.x-(tamx*scale/2.0);
+		double dy = center.y -(tamy*scale/2.0);
+
+		for(ArrayList<float[]> ps : todosPontos)
+		{
+			pontos = new ArrayList<>();
+			for(float[] p: ps)
+			{
+				float difx =(float)(p[0]-menorx);
+				float dify = (float)((p[1]-maiory)*(-1.0));
+				float[] difs = new float[2];
+				difs[0]=difx;
+				difs[1]=dify;
+				p=difs;
+
+				difx*=scale;
+				dify*=scale;
+
+				difx+=dx;
+				dify+=dy;
+
+				Log.d("Valores","difx = "+difx+" dify = "+dify);
+
+				if(difx>mxdif)
+					mxdif=difx;
+				if(dify>mydif)
+					mydif = dify;
+
+
+
+				int mult=1;
+				int multx=1;
+				float multy=1f;
+				Point aux = new Point((int)(difx*mult*multx),(int)(dify*mult*multy));
+				pontos.add(aux);
+			}
+
+			allPoints.add(pontos);
+		}
+		ArrayList<Integer> colors = new ArrayList<>();
+		colors.add(Color.RED);
+		colors.add(Color.GRAY);
+		colors.add(Color.GREEN);
+		colors.add(Color.YELLOW);
+		colors.add(Color.BLACK);
+		colors.add(Color.BLUE);
+		colors.add(Color.CYAN);
+
+
+		for(int i=0;i<1;i++)
+		{
+			Log.i("PontosH", "" + allPoints.get(i).size());
+			Configuracoes c = new Configuracoes();
+			c.setEstilo(1);
+			//c.setCor(colors.get(i));
+			poligono = Sketch2D.desenhaPoligono(this, ln, allPoints.get(0), true, c);
+		}
+		return pontos;
+	}
+
+
+	double tamReal[] = new double[2];
+	ArrayList<Integer> indexs;
+	char separator;
+	ArrayList<Integer> colors;
+	Figura poligono;
+	double widthReal = 0, heightReal = 0, widthPequeno = 0, heightPequeno = 0;
+
+	public ArrayList<ArrayList<float[]>> drawB_GN0930()
+	{
+		int sub=0;
+		colors = new ArrayList<>();
+		indexs = new ArrayList<>();
+		separator=';';
+		ArrayList<String> strings = new ArrayList<>();
+		strings.add("a;669871.854121;7803644.542408 ");
+		strings.add("a;669867.348095;7803642.443725 ");
+		strings.add("a;669848.343115;7803637.172918 ");
+		strings.add("a;669849.94308;7803631.536003 ");
+		strings.add("a;669869.581005;7803635.883796 ");
+		strings.add("a;669879.77311;7803635.039376 ");
+		strings.add("a;669884.701155;7803635.38447 ");
+		strings.add("a;669888.646106;7803636.547694 ");
+		strings.add("a;669893.358909;7803638.450772 ");
+		strings.add("a;669895.283493;7803639.31569 ");
+		strings.add("a;669900.214522;7803641.846586 ");
+		strings.add("a;669914.637291;7803648.296346 ");
+		strings.add("a;669930.552878;7803655.491521 ");
+		strings.add("a;669918.567666;7803688.258446 ");
+		strings.add("a;669899.413408;7803670.888306 ");
+		strings.add("a;669886.898728;7803660.675813 ");
+		strings.add("a;669871.854121;7803644.542408 ");
+
+		indexs.add(strings.size()-sub);
+		sub=strings.size();
+		colors.add(Color.RED);
+
+
+		ArrayList<ArrayList<float[]>> todosPontos = new ArrayList<>();
+		ArrayList<float[]> a = new ArrayList<>();
+		for(int i=0;i<strings.size();i++)
+		{
+			a.add(getPontoUTM(strings.get(i)));
+		}
+
+		todosPontos.add(a);
+
+		return todosPontos;
+	}
+
+	public float[] getPontoUTM(String ponto)
+	{
+		String posicoes[] = ponto.split(""+separator);
+
+		ArrayList<float[]> p = new ArrayList<>();
+		float a=Float.parseFloat(posicoes[1]);
+		float b=Float.parseFloat(posicoes[2]);
+		float[] point =new float[2];
+		point[0]=a;
+		point[1]=b;
+		p.add(point);
+
+		return point;
+	}
 }

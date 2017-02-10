@@ -1,13 +1,21 @@
 package com.imobilis.sketch2dframework;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -44,16 +52,17 @@ public class SketchView extends View
 		{
 			((Circulo) f).setRaio(((Circulo) f).getRaio()*mul);
 		}
-		else{
-
-			if(!old)
-				mul=2;
+		else
+		{
 			for(Point p : f.getPontos())
 			{
 				float dx = figura.getMaiorX().x + figura.getMenorX().x;
 				dx/=2;
 				float dy = figura.getMaiorY().y + figura.getMenorY().y;
 				dy/=2;
+
+				dx = figura.getDifs().x;
+				dy = figura.getDifs().y;
 
 				//p.y-=(figura.getMaiorY().y/2);
 
@@ -84,92 +93,27 @@ public class SketchView extends View
 		return oldPoints;
 	}
 
-	/*@Override
-	protected void onDraw(Canvas canvas)
-	{
-		super.onDraw(canvas);
-		Log.d("STATUS: ", "DESENHANDO");
-		Point menorX, menorY, maiorX, maiorY;
-		maiorX = maiorY = menorX = menorY = figura.getPontos().get(0);
-		for(Point p : figura.getPontos())
-		{
-			if(p.x < menorX.x)
-			{
-				menorX = p;
-			}
-			if(p.y < menorY.y)
-			{
-				menorY = p;
-			}
-			if(p.x > maiorX.x)
-			{
-				maiorX = p;
-			}
-			if(p.y > maiorY.y)
-			{
-				maiorY = p;
-			}
-		}
-		if(figura.getClass() == Poligono.class)
-		{
-			setX(menorX.x);
-			setY(menorY.y);
-			for(Point p : figura.getPontos())
-			{
-				/*p.x += (figura.getConfiguracoes().getTamLinha());
-				p.y += (figura.getConfiguracoes().getTamLinha());*//*
-				p.x *= figura.getConfiguracoes().getEscala() * figura.getConfiguracoes().getZoom();
-				p.y *= figura.getConfiguracoes().getEscala() * figura.getConfiguracoes().getZoom();
-			}
-			canvas.drawPath(((Poligono) figura).getCaminho(getX(), getY()), figura.getPaint());
-		}
-		else if(figura.getClass() == Circulo.class)
-		{
-			setX(menorX.x - ((Circulo) figura).getRaio());
-			setY(menorY.y - ((Circulo) figura).getRaio());
-			for(Point p : figura.getPontos())
-			{
-				/*p.x += (figura.getConfiguracoes().getTamLinha());
-				p.y += (figura.getConfiguracoes().getTamLinha());*//*
-				p.x *= figura.getConfiguracoes().getEscala() * figura.getConfiguracoes().getZoom();
-				p.y *= figura.getConfiguracoes().getEscala() * figura.getConfiguracoes().getZoom();
-			}
-			canvas.drawCircle(figura.getX(0) - getX(), figura.getY(0) - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
-		}
-		else if(figura.getClass() == Linha.class)
-		{
-			setX(menorX.x);
-			setY(menorY.y);
-			for(Point p : figura.getPontos())
-			{
-				p.x *= figura.getConfiguracoes().getEscala() * figura.getConfiguracoes().getZoom();
-				p.y *= figura.getConfiguracoes().getEscala() * figura.getConfiguracoes().getZoom();
-			}
-			canvas.drawPath(((Linha) figura).getCaminho(getX(), getY()), figura.getPaint());
-		}
-		figura.setView(this);
-	}*/
-
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
 		super.onDraw(canvas);
-		boolean old = !false;
-		TextView txt = new TextView(activity.getBaseContext());
-		txt.setText("lalalalala");
-		txt.setX(50);
-		txt.setY(50);
+		boolean old = true;
+		float a=figura.getConfiguracoes().getTamLinha()/2;
 
 		Log.d("STATUSE: ", "DESENHANDO");
 		Point menorX, menorY, maiorX, maiorY;
 
+		boolean linha_distancia = false;
+
+		if((figura.getClass() == Linha.class && ((Linha)figura).isDistancia()))
+			linha_distancia=true;
 		float oldRadio=-1f;
 		ArrayList<Point> oldPoints = copyPoints(figura.getPontos());
 		if(figura instanceof Circulo)
 		{
 			oldRadio = ((Circulo) figura).getRaio();
 		}
-		aply_scale(figura,old);
+		aply_scale(figura,true);
 		maiorX = maiorY = menorX = menorY = figura.getPontos().get(0);
 
 
@@ -192,19 +136,25 @@ public class SketchView extends View
 				maiorY = p;
 			}
 		}
-
-
-
-		if (figura.getClass() == Poligono.class) {
-			setX(menorX.x);
-			setY(menorY.y);
+		if (figura instanceof Poligono || (figura instanceof Linha && !linha_distancia))
+		{
+			setX(menorX.x-a);
+			setY(menorY.y-a);
 
 			for(Point p : figura.getPontos())
 			{
-				p.x += (figura.getConfiguracoes().getTamLinha());
-				p.y += (figura.getConfiguracoes().getTamLinha());
+				p.x -=(figura.getConfiguracoes().getTamLinha());
+				p.y -=(figura.getConfiguracoes().getTamLinha());
 			}
-			canvas.drawPath(((Poligono) figura).getCaminho(getX(), getY()), figura.getPaint());
+
+			if(figura instanceof Poligono)
+			{
+				canvas.drawPath(((Poligono) figura).getCaminho(getX(), getY()), figura.getPaint());
+			}
+			else
+			{
+				canvas.drawPath(((Linha) figura).getCaminho(getX(),getY()), figura.getPaint());
+			}
 
 			figura.setPontosEscalados(copyPoints(figura.getPontos()));
 
@@ -212,30 +162,103 @@ public class SketchView extends View
 			figura.setMenor(new Point(menorX.x, menorY.y));
 
 			if(old)
+			{
 				figura.setPontos(oldPoints);
-			else{
+			}
+			else
+			{
 				figura.setMaior(new Point(maiorX.x, maiorY.y));
 				figura.setMenor(new Point(menorX.x, menorY.y));
 			}
 
 		}
-		else if(figura.getClass() == Circulo.class)
+		else if(figura instanceof  Arco)
+		{
+			setX(menorX.x - ((Arco) figura).getRaio());
+			setY(menorY.y - ((Arco) figura).getRaio());
+			float left,top,right,bottom,angleInit,angleEnd;
+			float x = figura.getPonto(0).x- getX();
+			float y = figura.getPonto(0).y-getY();
+			float raio = ((Arco)figura).getRaio();
+			left = x-raio;
+			right = x+raio;
+			top = y-raio;
+			bottom = y+raio;
+			angleInit = ((Arco)figura).getAngleInit();
+			angleEnd = ((Arco)figura).getDegrees();
+			RectF rect = new RectF(left,top,right,bottom);
+			canvas.drawArc(rect, angleInit, angleEnd, true, figura.getPaint());
+		}
+		else if(figura instanceof Circulo)
 		{
 
-			setX(menorX.x - ((Circulo) figura).getRaio());
-			setY(menorY.y - ((Circulo) figura).getRaio());
-			for(Point p : figura.getPontos())
+			if(((Circulo)figura).isCruz())
 			{
-				p.x += (figura.getConfiguracoes().getTamLinha());
-				p.y += (figura.getConfiguracoes().getTamLinha());
+				int dif = (int)(a
+				);
+				setX(menorX.x - ((Circulo) figura).getRaio()-dif-1.5f);
+				setY(menorY.y - ((Circulo) figura).getRaio()-dif-1.5f);
+                /*for(Point p : figura.getPontos())
+                {
+                    p.x += (figura.getConfiguracoes().getTamLinha());
+                    p.y += (figura.getConfiguracoes().getTamLinha());
+                }*/
+
+				dif = (int)(a*2);
+
+				float x,y;
+				x = figura.getPonto(0).x - getX()-dif;
+				y = figura.getPonto(0).y - getY()-dif;
+				int maisUm = 0;
+				maisUm = (((Circulo)figura).getRaio()%2 == 0?0:1);
+				Path caminho;
+				caminho = new Path();
+				caminho.reset();
+				caminho.moveTo(x, (int) (y - (0.50 * oldRadio)));
+				caminho.lineTo(x, (int) (y + (0.50 * oldRadio) + maisUm));
+				canvas.drawPath(caminho, figura.getPaint());
+				caminho = new Path();
+				caminho.reset();
+				caminho.moveTo((int) (x - (0.50 * oldRadio)), y);
+				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
+				canvas.drawPath(caminho, figura.getPaint());
+				//setBackgroundColor(Color.GRAY);
+				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
+
 			}
-			canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
+			else{
+				setX(menorX.x - ((Circulo) figura).getRaio()-a-1.5f);
+				setY(menorY.y - ((Circulo) figura).getRaio()-a-1.5f);
+				canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
+			}
 			((Circulo) figura).setRaio(oldRadio);
-
-
 			figura.setPontos(oldPoints);
 		}
-		else if(figura.getClass() == Linha.class)
+
+
+		if(figura instanceof Arco)
+		{
+			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+			textPaint.setColor(Sketch2D.corTextoDistancia);
+			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,Sketch2D.tamanhoTextoAngulo, getResources().getDisplayMetrics()));
+			textPaint.setTextAlign(Paint.Align.LEFT);
+
+			String text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(Math.abs(((Arco)figura).getDegrees()))+"°";
+			Rect bounds = new Rect();
+			textPaint.getTextBounds(""+text, 0, text.length(), bounds);
+			Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
+
+			float dy = ((Arco)figura).getRaio()-((Arco)figura).getRaio()/4;
+			float dx = ((Arco)figura).getRaio();
+
+			canvas.save();
+			//canvas.translate(90, 90); //Consertando deslocamento da linha para centro do canvas
+			canvas.drawText(" "+text, dx, dy, textPaint);
+
+
+			canvas.restore();
+		}
+		else if(linha_distancia)
 		{
 			setX(menorX.x);
 			setY(menorY.y);
@@ -244,7 +267,78 @@ public class SketchView extends View
 				p.x *= figura.getConfiguracoes().getEscala() * figura.getConfiguracoes().getZoom();
 				p.y *= figura.getConfiguracoes().getEscala() * figura.getConfiguracoes().getZoom();
 			}
+
+			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+			textPaint.setColor(Sketch2D.corTextoDistancia);
+			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, Sketch2D.tamanhoTextoDistancia, getResources().getDisplayMetrics()));
+			textPaint.setTextAlign(Paint.Align.LEFT);
+
+			double tamL = ((Linha) figura).getModulo();
+			//String text = ""+(int)tamL+" dp";
+			//String text = ""+(int)(tamL/Sketch2D.proporcao)+" m";
+			String text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(tamL/Sketch2D.proporcao)+" m";
+			Rect bounds = new Rect();
+			textPaint.getTextBounds(""+text, 0, text.length(), bounds);
+			Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
+
+
+			float angle  = ((Linha) figura).getInclinacao();
+			int dy = -10;
+			int dx = 10;
+
+			Point parado = figura.getPontos().get(1);
+			Point move = figura.getPontos().get(0);
+
+			canvas.save();
+			canvas.translate(90, 90); //Consertando deslocamento da linha para centro do canvas
 			canvas.drawPath(((Linha) figura).getCaminho(getX(), getY()), figura.getPaint());
+
+
+			float rot  = 90 - Math.abs(angle);
+			float radangle = (float)(rot*Math.PI)/180;
+
+			if(move.y <= parado.y)
+			{
+				dx+= tamL * Math.cos(Math.abs(radangle));
+				if(move.x>parado.x)
+				{
+					dx = 0;
+				}
+				dy+= tamL * Math.sin(Math.abs(radangle));
+				canvas.translate(dx, dy);
+				if(angle<0)
+				{
+					rot *= -1;
+				}
+				canvas.rotate(rot);
+				if(angle>=0)
+				{
+					canvas.drawText("" + text, -tamText.x - 10, 0, textPaint);
+				}
+				else
+				{
+					canvas.drawText("" + text, 0, 0, textPaint);
+				}
+			}
+			else if(angle<0)
+			{
+				rot *= -1;
+				dx+= tamL * Math.cos(Math.abs(radangle));
+				canvas.translate(dx,0);
+				canvas.rotate(rot);
+				canvas.drawText("" + text, -tamText.x - 10, -10, textPaint);
+			}
+			else
+			{
+				canvas.rotate(rot);
+				canvas.drawText("" + text, dx, dy, textPaint);
+			}
+
+			canvas.restore();
+		}
+		if(!linha_distancia)
+		{
+			//this.setBackgroundColor(Color.GRAY);
 		}
 		figura.setView(this);
 	}

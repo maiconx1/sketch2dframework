@@ -3,6 +3,7 @@ package com.imobilis.sketch2dframework;
 import android.app.Activity;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,8 @@ import java.util.ArrayList;
  */
 public class Poligono extends Figura
 {
+	public boolean sentidoHorario=true;
+
 
 	public Poligono(Activity activity, ArrayList<Point> pontos, boolean editavel)
 	{
@@ -22,77 +25,64 @@ public class Poligono extends Figura
 		super(activity, pontos, editavel, configuracoes);
 	}
 
-	/*@Override
-	public boolean isDentro(Point ponto)
-	{
-		ponto.x = ponto.x + getMenorX().x;
-		ponto.y = ponto.y + getMenorY().y;
-		int cruzamentos = 0;
-		Point a, b;
-		int r;
-		for(int i = 0;i<getPontos().size() - 1;i++)
-		{
-			a = getPonto(i);
-			b = getPonto(i + 1);
-			r = (b.x - a.x)*(ponto.y - a.y) - (ponto.x - a.x)*(b.y - a.y);
-			if(a.y > b.y)
-			{
-				Point aux = a;
-				a = b;
-				b = aux;
-			}
-			if(r == 0)
-			{
-				double escalar = (ponto.x - a.x)*(ponto.x - b.x) + (ponto.y - a.y)*(ponto.y-b.y);
-				if(escalar <= 0)
-				{
-					return true;
-				}
-			}
-			if(r > 0 && a.y < ponto.y && ponto.y <= b.y)
-			{
-				cruzamentos++;
-			}
-		}
-		a = getPonto(getPontos().size() - 1);
-		b = getPonto(0);
-		r = (b.x - a.x)*(ponto.y - a.y) - (ponto.x - a.x)*(b.y - a.y);
-		if(a.y > b.y)
-		{
-			Point aux = a;
-			a = b;
-			b = aux;
-		}
-		if(r > 0 && a.y < ponto.y && ponto.y <= b.y)
-		{
-			cruzamentos++;
-		}
-		return cruzamentos % 2 == 0;
-	}*/
+	//TODO 17-10
+	public boolean isSentidoHorario() {
+		return sentidoHorario;
+	}
+
+	public void setSentidoHorario(boolean sentidoHorario) {
+		this.sentidoHorario = sentidoHorario;
+	}
+
+	//TODO 17-10 2
+
 
 	@Override
-	public boolean isDentro(Point ponto)
+	public Point getPonto(int index)
 	{
+		//Point p;
+		//float mul = getConfiguracoes().getEscala()*getConfiguracoes().getZoom();
+		//p = new Point((int)(getPontos().get(index).x + getConfiguracoes().getTamLinha()*mul), (int)(getPontos().get(index).y + getConfiguracoes().getTamLinha()*mul));
+		//p = new Point(getPontos().get(index).x + getConfiguracoes().getTamLinha(), getPontos().get(index).y + getConfiguracoes().getTamLinha());
+		//return p;
+		return getPontosEscalados().get(index);
+	}
+
+	@Override
+	public boolean isDentro(Point p)
+	{
+		if( p.y<0 || p.y>getView().getHeight() || p.x>getView().getWidth() || p.x<0)
+		//if( p.y<0 || p.y>(getMaiorY().y - getMenorY().y) || p.x>(getMaiorX().x - getMenorX().x) || p.x<0)
+			return false;
+		int inclinados=0;
 		int cruzamentos = 0;
+		Point ponto = new Point(p);
 		ponto.x = ponto.x + getMenor().x;
 		ponto.y = ponto.y + getMenor().y;
 		Point a, b;
+
 		int r;
 		for(int i = 0;i<getPontosEscalados().size() - 1;i++)
 		{
-			a = getPontosEscalados().get(i);
-			b = getPontosEscalados().get(i + 1);
+			a = getPonto(i);
+			b = getPonto(i+1);
 			r = (b.x - a.x)*(ponto.y - a.y) - (ponto.x - a.x)*(b.y - a.y);
 			if(a.y > b.y)
 			{
-				Point aux = a;
-				a = b;
-				b = aux;
+				Point aux = new Point(a);
+				a = new Point(b);
+				b = new Point(aux);
 			}
-			if(r > 0 && a.y < ponto.y && ponto.y <= b.y)
+
+			if(a.y < ponto.y && ponto.y <= b.y)
 			{
-				cruzamentos++;
+				if(r> 0)
+				{
+					cruzamentos++;
+				}
+				inclinados++;
 			}
+
 		}
 		a = getPontosEscalados().get(getPontosEscalados().size() - 1);
 		b = getPontosEscalados().get(0);
@@ -103,9 +93,23 @@ public class Poligono extends Figura
 			a = b;
 			b = aux;
 		}
-		if(r > 0 && a.y < ponto.y && ponto.y <= b.y)
+		if(a.y < ponto.y && ponto.y <= b.y)
 		{
-			cruzamentos++;
+			if(r > 0)
+			{
+				cruzamentos++;
+			}
+			inclinados++;
+		}
+
+		if(inclinados == 0 && cruzamentos == 0)
+		{
+			return false;
+		}
+
+		if(inclinados >= 3)
+		{
+			return cruzamentos % 2 != 0;
 		}
 		return cruzamentos % 2 == 0;
 	}
@@ -114,20 +118,17 @@ public class Poligono extends Figura
 	public ArrayList<Point[]> pontoMaisProximo(Figura f, float offsetX, float offsetY)
 	{
 		ArrayList<Point[]> retorno = new ArrayList<>();
-		//Point pontos[] = new Point[2];
-		//pontos[0] = new Point(10000000, 10000000);
-		//pontos[1] = new Point(10000000, 10000000);
-		for(int i = 0;i<getPontos().size();i++)
+		for(int i = 0;i<getPontosEscalados().size();i++)
 		{
 			ArrayList<Point> pLinha = new ArrayList<>();
-			pLinha.add(new Point(getPonto(i)));
+			pLinha.add(new Point(getPontosEscalados().get(i)));
 			if(i == getPontos().size()-1)
 			{
-				pLinha.add(new Point(getPonto(0)));
+				pLinha.add(new Point(getPontosEscalados().get(0)));
 			}
 			else
 			{
-				pLinha.add(new Point(getPonto(i+1)));
+				pLinha.add(new Point(getPontosEscalados().get(i+1)));
 			}
 			Linha l = new Linha(getActivity(), pLinha, false);
 			retorno.addAll(l.pontoMaisProximo(f, offsetX, offsetY));
@@ -144,9 +145,29 @@ public class Poligono extends Figura
 		for(int i = 1;i<getPontos().size();i++)
 		{
 			caminho.lineTo(getX(i) - initViewX, getY(i) - initViewY);
+			Log.d("PONTOSOFFSETDESENHADO", getX(i) + "//" + getY(i) + "/////////" + (getX(i) - initViewX) + "//" + (getY(i) - initViewY));
 		}
 		caminho.lineTo(getX(0) - initViewX, getY(0) - initViewY);
 		return caminho;
+	}
+
+	public ArrayList<Linha> explode()
+	{
+		ArrayList<Linha> linhas = new ArrayList<>();
+		for(int i = 0;i<getPontos().size();i++)
+		{
+			Log.d("POLIGONO", "" + getPontos().get(i));
+			int index = i+1;
+			if(i == getPontos().size()-1)
+			{
+				index = 0;
+			}
+			ArrayList<Point> pontos = new ArrayList<>();
+			pontos.add(new Point(getPontos().get(i)));
+			pontos.add(new Point(getPontos().get(index)));
+			linhas.add(new Linha(getActivity(), pontos, false, getConfiguracoes()));
+		}
+		return linhas;
 	}
 
 	public String toString()

@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 
 /**
  * Criado por Maicon em 26/04/2016.
@@ -21,9 +23,10 @@ public class Configuracoes implements Parcelable
 	private float escala;
 	private int zoom;
 	private int estilo;
-	public static int corPadrao = Color.BLACK, alphaPadrao = 255, tamLinhaPadrao = 1, estiloPadrao = Configuracoes.PREENCHIDO;
-	public static float escalaPadrao = 1;
-	public static boolean pontilhadoPadrao = false, antiAliasPadrao = true;
+	protected static int corPadrao = Color.BLACK, alphaPadrao = 255, tamLinhaPadrao = 1, estiloPadrao = Configuracoes.LINHA;
+	protected static float escalaPadrao = 1;
+	protected static boolean pontilhadoPadrao = false, antiAliasPadrao = true;
+	private static Configuracoes confPadrao = new Configuracoes();
 
 	public static final int PREENCHIDO = 0, LINHA = 1;
 
@@ -108,36 +111,48 @@ public class Configuracoes implements Parcelable
 	public static void setAlphaPadrao(int alphaPadrao)
 	{
 		Configuracoes.alphaPadrao = alphaPadrao;
+		confPadrao.setAlpha(alphaPadrao);
 	}
 
 	public static void setTamLinhaPadrao(int tamLinhaPadrao)
 	{
 		Configuracoes.tamLinhaPadrao = tamLinhaPadrao;
+		confPadrao.setTamLinha(tamLinhaPadrao);
 	}
 
 	public static void setEstiloPadrao(int estiloPadrao)
 	{
 		Configuracoes.estiloPadrao = estiloPadrao;
+		confPadrao.setEstilo(estiloPadrao);
 	}
 
 	public static void setEscalaPadrao(float escalaPadrao)
 	{
 		Configuracoes.escalaPadrao = escalaPadrao;
+		confPadrao.setEscala(escalaPadrao);
 	}
 
 	public static void setPontilhadoPadrao(boolean pontilhadoPadrao)
 	{
 		Configuracoes.pontilhadoPadrao = pontilhadoPadrao;
+		confPadrao.setPontilhado(pontilhadoPadrao);
 	}
 
 	public static void setAntiAliasPadrao(boolean antiAliasPadrao)
 	{
 		Configuracoes.antiAliasPadrao = antiAliasPadrao;
+		confPadrao.setAntiAlias(antiAliasPadrao);
 	}
 
 	public static void setCorPadrao(int corPadrao)
 	{
 		Configuracoes.corPadrao = corPadrao;
+		confPadrao.setCor(corPadrao);
+	}
+
+	public static Configuracoes getConfPadrao()
+	{
+		return confPadrao;
 	}
 
 	public static final Creator<Configuracoes> CREATOR = new Creator<Configuracoes>()
@@ -297,6 +312,24 @@ public class Configuracoes implements Parcelable
 	public int getEstilo()
 	{
 		return estilo;
+	}
+
+	public static void refresh(FrameLayout layout)
+	{
+		for(int i = 0;i<layout.getChildCount();i++)
+		{
+			View v = layout.getChildAt(i);
+			if(v instanceof SketchView)
+			{
+				//SketchView view = (SketchView) v;
+				Figura f = ((SketchView)v).figura;
+				if(f.isConfPadrao())
+				{
+					f.setConfiguracoes(confPadrao);
+					v.invalidate();
+				}
+			}
+		}
 	}
 
 	@Override
