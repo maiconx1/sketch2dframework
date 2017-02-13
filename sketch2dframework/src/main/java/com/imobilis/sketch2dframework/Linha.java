@@ -820,11 +820,21 @@ public class Linha extends Figura
 		this.index_poligono = index_poligono;
 	}
 
-	public class Equacao
+	public static class Equacao
 	{
 		double	m, //acompanha o x
 				a, //acompanha o y
 				b; //termo independente
+
+		public Equacao(double m, double x, double y)
+		{
+			//(y - yp) = m(x - xp);
+			//y = mx - mxp + yp;
+			//y = mx - (mxp + yp);
+			this.m = m;
+			this.a = 1;
+			this.b = (m*x) + y;
+		}
 
 		public Equacao(Linha linha)
 		{
@@ -848,7 +858,7 @@ public class Linha extends Figura
 
 		public double getM()
 		{
-			return m;
+			return m/a;
 		}
 
 		public double getA()

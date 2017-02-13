@@ -34,7 +34,18 @@ public class NovaNovaMain extends AppCompatActivity
 
 	public void setup()
 	{
-		figuras = new ArrayList<>();
+		ArrayList<Point> pontos = new ArrayList<>();
+		pontos.add(new Point(100, 100));
+		pontos.add(new Point(400, 400));
+		Linha l = Sketch2D.desenhaLinha(this, parent, pontos, false);
+		Linha.Equacao eq = new Linha.Equacao(-(1/l.getEquacao().getM()), 250, 250);
+		double y1 = eq.getY(400), y2 = eq.getY(100);
+		Log.d("EQUACAO", eq.getM() + "//" + eq.getA() + "//" + eq.getB() + "//" + y1 + "//" + y2);
+		pontos = new ArrayList<>();
+		pontos.add(new Point(100, (int)y2));
+		pontos.add(new Point(400, (int)y1));
+		Sketch2D.desenhaLinha(this, parent, pontos, false);
+		/*figuras = new ArrayList<>();
 		ArrayList<Integer> cores = new ArrayList<>();
 		cores.add(Color.BLACK);
 		cores.add(Color.BLUE);
@@ -62,6 +73,6 @@ public class NovaNovaMain extends AppCompatActivity
 		{
 			if(f instanceof Circulo)
 				Log.d("PONTO INICIAL: ", "(" + f.getView().getX() + ", " + f.getView().getY() + ")");
-		}
+		}*/
 	}
 }

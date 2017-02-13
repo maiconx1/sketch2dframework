@@ -57,6 +57,8 @@ public abstract class Figura extends AppCompatActivity
 	public static Figura poligono_editando =null;
 	public static ArrayList<Linha> linhas_clip=null;
 
+	public static boolean zoomAtivo = false;
+
 
     //TODO 17-10
     public static int[] indexCirculosSelected = new int[]{-1,-1};
@@ -426,6 +428,7 @@ public abstract class Figura extends AppCompatActivity
 			@Override
 			public boolean onTouch(View v, MotionEvent event)
 			{
+				if(zoomAtivo) return false;
 				switch(event.getAction())
 				{
 					case MotionEvent.ACTION_DOWN:
