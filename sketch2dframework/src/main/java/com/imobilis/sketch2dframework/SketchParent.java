@@ -20,7 +20,7 @@ public class SketchParent extends FrameLayout
 {
 	private Configuracoes conf;
 	public static int  corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30, gradeMetros = 10;
-	public static boolean atras = false, mostraEscala = true, pontilhado = false;
+	public static boolean atras = false, mostraEscala = true, pontilhado = false, mostraEscalaText = true;
 
 	public SketchParent(Context context)
 	{
@@ -91,7 +91,8 @@ public class SketchParent extends FrameLayout
 			Rect bounds = new Rect();
 			textPaint.getTextBounds(text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
-			canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
+			if(mostraEscalaText)
+				canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
 		}
 	}
 
@@ -145,7 +146,8 @@ public class SketchParent extends FrameLayout
 			Rect bounds = new Rect();
 			textPaint.getTextBounds(text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
-			canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
+			if(mostraEscalaText)
+				canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
 		}
 	}
 
