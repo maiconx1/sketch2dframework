@@ -19,7 +19,7 @@ import java.text.DecimalFormat;
 public class SketchParent extends FrameLayout
 {
 	private Configuracoes conf;
-	public static int qtdLinhas = 5, qtdColunas = 5, corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30, gradeMetros = 10;
+	public static int  corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30, gradeMetros = 10;
 	public static boolean atras = false, mostraEscala = true, pontilhado = false;
 
 	public SketchParent(Context context)
@@ -57,12 +57,14 @@ public class SketchParent extends FrameLayout
 			{
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
+			canvas.drawLine(0,getHeight(), getWidth(),getHeight(), conf.getPaint());
+			canvas.drawLine(getWidth(),0, getWidth(),getHeight(), conf.getPaint());
 			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
 			textPaint.setColor(SketchParent.corLinhas);
 			textPaint.setAlpha(2*SketchParent.alphaLinhas);
 			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
 			textPaint.setTextAlign(Paint.Align.LEFT);
-			double tamL = getWidth() / SketchParent.qtdLinhas;
+			double tamL = 1;
 			DisplayMetrics dm = getResources().getDisplayMetrics();
 			String text;
 			switch(Sketch2D.unidade)
@@ -109,12 +111,14 @@ public class SketchParent extends FrameLayout
 			{
 				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
 			}
+			canvas.drawLine(0,getHeight(), getWidth(),getHeight(), conf.getPaint());
+			canvas.drawLine(getWidth(),0, getWidth(),getHeight(), conf.getPaint());
 			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
 			textPaint.setColor(SketchParent.corLinhas);
 			textPaint.setAlpha(2*SketchParent.alphaLinhas);
 			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
 			textPaint.setTextAlign(Paint.Align.LEFT);
-			double tamL = getWidth() / SketchParent.qtdLinhas;
+			double tamL = 1;
 			DisplayMetrics dm = getResources().getDisplayMetrics();
 			String text;
 			switch(Sketch2D.unidade)
@@ -159,17 +163,6 @@ public class SketchParent extends FrameLayout
 	{
 		SketchParent.corLinhas = corLinhas;
 	}
-
-	public static void setQtdColunas(int qtdColunas)
-	{
-		SketchParent.qtdColunas = qtdColunas;
-	}
-
-	public static void setQtdLinhas(int qtdLinhas)
-	{
-		SketchParent.qtdLinhas = qtdLinhas;
-	}
-
 	public static void setPontilhado(boolean pontilhado)
 	{
 		SketchParent.pontilhado = pontilhado;

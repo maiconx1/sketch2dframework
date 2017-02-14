@@ -56,6 +56,7 @@ public class NovaNovaMain extends AppCompatActivity
 				//figuras.add(new Circulo(NovaNovaMain.this, p, 30.0f, false));
 			}
 		}
+        Sketch2D.proporcao = 35;
 		Sketch2D.limpaFiguras(Sketch2D.EXCLUI);
 		Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, new Point((100), (100)), 60.0f, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, cores.get(0), 255));
 		for(Figura f : Sketch2D.getFiguras())
@@ -63,5 +64,7 @@ public class NovaNovaMain extends AppCompatActivity
 			if(f instanceof Circulo)
 				Log.d("PONTO INICIAL: ", "(" + f.getView().getX() + ", " + f.getView().getY() + ")");
 		}
+
+        parent.invalidate();
 	}
 }
