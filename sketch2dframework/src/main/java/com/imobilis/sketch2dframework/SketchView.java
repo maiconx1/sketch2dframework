@@ -194,8 +194,8 @@ public class SketchView extends View
 
 			if(((Circulo)figura).isCruz())
 			{
-				int dif = (int)(a
-				);
+				int dif = (int)(a);
+				//dif = 0;
 				setX(menorX.x - ((Circulo) figura).getRaio()-dif-1.5f);
 				setY(menorY.y - ((Circulo) figura).getRaio()-dif-1.5f);
                 /*for(Point p : figura.getPontos())
@@ -210,7 +210,7 @@ public class SketchView extends View
 				x = figura.getPonto(0).x - getX()-dif;
 				y = figura.getPonto(0).y - getY()-dif;
 				int maisUm = 0;
-				maisUm = (((Circulo)figura).getRaio()%2 == 0?0:1);
+				maisUm = (((Circulo)figura).getRaio()%2 != 0?0:1);
 				Path caminho;
 				caminho = new Path();
 				caminho.reset();

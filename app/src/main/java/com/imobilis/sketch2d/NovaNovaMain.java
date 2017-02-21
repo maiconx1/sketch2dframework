@@ -58,7 +58,8 @@ public class NovaNovaMain extends AppCompatActivity
 		}
         Sketch2D.proporcao = 35;
 		Sketch2D.limpaFiguras(Sketch2D.EXCLUI);
-		Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, new Point((100), (100)), 60.0f, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, cores.get(0), 255));
+		Circulo c = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, new Point((100), (100)), 11.0f, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, cores.get(0), 255));
+		c.setCruz(true);
 		for(Figura f : Sketch2D.getFiguras())
 		{
 			if(f instanceof Circulo)
