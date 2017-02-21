@@ -460,12 +460,12 @@ public abstract class Figura extends AppCompatActivity
 						setEditando(true);
 						x = event.getX();
 						y = event.getY();
-						if(!((Figura) v.getTag()).isDentro(new Point((int) x, (int) y)) || !((Figura)v.getTag()).isEditavel())
+						/*if(!((Figura) v.getTag()).isDentro(new Point((int) x, (int) y)) || !((Figura)v.getTag()).isEditavel())
 						{
 							Log.d("STATUS: ", "FORA DA FIGURA");
 							setEditando(false);
 							return false;
-						}
+						}*/
 						Log.d("TESTESTATUS", "PÓS FORA FIGURA");
 						xViewAnterior = v.getX();
 						yViewAnterior = v.getY();
