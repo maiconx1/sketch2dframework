@@ -496,7 +496,7 @@ public abstract class Figura extends AppCompatActivity
 							}*/
                             if(removendo_pontos || clip)
                             {
-                                return false;
+                                //return false;
                                 //moveOffset(v,event.getX());
 
                             }

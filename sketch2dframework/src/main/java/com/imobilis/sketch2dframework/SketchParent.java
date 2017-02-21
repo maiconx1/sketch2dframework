@@ -92,7 +92,7 @@ public class SketchParent extends FrameLayout
 			textPaint.getTextBounds(text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
 			if(mostraEscalaText)
-				canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
+				canvas.drawText("" + text, 10 /*getWidth() - bounds.width() - 10*/, getHeight() - bounds.height(), textPaint);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class SketchParent extends FrameLayout
 			textPaint.getTextBounds(text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
 			if(mostraEscalaText)
-				canvas.drawText("" + text, getWidth() - bounds.width() - 10, getHeight() - bounds.height(), textPaint);
+				canvas.drawText("" + text, 10 /*getWidth() - bounds.width() - 10*/, getHeight() - bounds.height(), textPaint);
 		}
 	}
 
