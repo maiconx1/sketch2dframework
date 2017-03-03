@@ -51,9 +51,16 @@ public class Poligono extends Figura
 	@Override
 	public boolean isDentro(Point p)
 	{
-		if( p.y<0 || p.y>getView().getHeight() || p.x>getView().getWidth() || p.x<0)
-		//if( p.y<0 || p.y>(getMaiorY().y - getMenorY().y) || p.x>(getMaiorX().x - getMenorX().x) || p.x<0)
-			return false;
+		try
+		{
+			if (p.y < 0 || p.y > getView().getHeight() || p.x > getView().getWidth() || p.x < 0)
+				return false;
+		}
+		catch(Exception ex)
+		{
+			if( p.y<0 || p.y>(getMaiorY().y - getMenorY().y) || p.x>(getMaiorX().x - getMenorX().x) || p.x<0)
+				return false;
+		}
 		int inclinados=0;
 		int cruzamentos = 0;
 		Point ponto = new Point(p);
