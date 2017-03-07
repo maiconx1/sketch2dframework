@@ -57,6 +57,49 @@ public class Sketch2D extends AppCompatActivity
 		arco.desenha(layout,arco);
 		return arco;
 	}
+    /**
+     * Desenha um texto no framelayout escolhido. O texto começa do ponto Superior esquerdo.
+     * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+     *
+     * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
+     * @param layout FrameLayout onde o círculo será desenhado.
+     * @param superiorEsquerdo Point com o ponto do inicio do texto.
+     * @param string Texto a ser apresentado.
+     * @param tamTexto O tamanho da fonte do texto.
+     * @param cor Cor do texto.
+     * @return retorna o texto criado.
+     */
+
+    public static Texto desenhaTexto(Activity activity, FrameLayout layout, final Point superiorEsquerdo,String string,float tamTexto,int cor)
+    {
+        ArrayList<Point> p = new ArrayList<>();
+        p.add(new Point(superiorEsquerdo.x, superiorEsquerdo.y));
+        Texto texto = new Texto(activity,p,string,tamTexto,cor);
+        Sketch2D.instance.addFigura(texto);
+        texto.desenha(activity, layout, texto);
+        return texto;
+    }
+    /**
+     * Desenha um texto no framelayout escolhido. O texto começa do ponto Superior esquerdo.
+     * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+     * O texto é desenhado com configurações padrão (cor preta).
+     *
+     * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
+     * @param layout FrameLayout onde o círculo será desenhado.
+     * @param superiorEsquerdo Point com o ponto do inicio do texto.
+     * @param string Texto a ser apresentado.
+     * @param tamTexto O tamanho da fonte do texto.
+     * @return retorna o texto criado.
+     */
+    public static Texto desenhaTexto(Activity activity, FrameLayout layout, final Point superiorEsquerdo,String string,float tamTexto)
+    {
+        ArrayList<Point> p = new ArrayList<>();
+        p.add(new Point(superiorEsquerdo.x, superiorEsquerdo.y));
+        Texto texto = new Texto(activity,p,string,tamTexto);
+        Sketch2D.instance.addFigura(texto);
+        texto.desenha(activity, layout, texto);
+        return texto;
+    }
 
 	/**
 	 * Desenha uma linha padrão no framelayout escolhido. A linha vai do ponto (50, 50) ao ponto (300, 300).
@@ -433,7 +476,9 @@ public class Sketch2D extends AppCompatActivity
 	public static Figura removeDesenho(int index)
 	{
 		Figura f = null;
-		((ViewGroup) instance.getFigura(index).getView().getParent()).removeView(instance.getFigura(index).getView());
+		try{
+            ((ViewGroup) instance.getFigura(index).getView().getParent()).removeView(instance.getFigura(index).getView());
+        }catch (Exception ex){}
 		if (index > -1 && index < instance.getFiguras().size()) {
 			f = instance.getFiguras().get(index);
 			instance.getFiguras().remove(index);
@@ -446,7 +491,9 @@ public class Sketch2D extends AppCompatActivity
 
 	public static void removeDesenho(Figura f)
 	{
-		((ViewGroup) f.getView().getParent()).removeView(f.getView());
+		try{
+            ((ViewGroup) f.getView().getParent()).removeView(f.getView());
+        }catch (Exception ex){}
 		instance.getFiguras().remove(f);
 		for(int i = 0;i<instance.getFiguras().size();i++)
 		{

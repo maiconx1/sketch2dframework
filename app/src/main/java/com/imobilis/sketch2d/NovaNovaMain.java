@@ -28,8 +28,8 @@ public class NovaNovaMain extends AppCompatActivity
 		Sketch2D.context = NovaNovaMain.this;
 		setContentView(R.layout.activity_main);
 		parent = (FrameLayout)findViewById(R.id.lnDesenho);
-
-		setup();
+        setup();
+        Sketch2D.desenhaTexto(this,parent,new Point(100,100),"Meu circulo",30);
 	}
 
 	public void setup()

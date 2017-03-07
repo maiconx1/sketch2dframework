@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -875,6 +877,20 @@ public abstract class Figura extends AppCompatActivity
 			tam[0] = 2*(int)(((Arco)figura).getRaio()+2);
 			tam[1] = 2*(int)(((Arco)figura).getRaio()+2);
 		}
+        else if(figura instanceof Texto)
+        {
+            Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+            textPaint.setColor(((Texto)figura).getCor());
+            textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,Sketch2D.tamanhoTextoAngulo, figura.getView().getResources().getDisplayMetrics()));
+            textPaint.setTextAlign(Paint.Align.LEFT);
+
+            String text = ((Texto)figura).getString();
+            Rect bounds = new Rect();
+            textPaint.getTextBounds(""+text, 0, text.length(), bounds);
+            Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
+            tam[0] = 600;
+            tam[1] = 600;
+        }
 		else
 		{
 			Point menorX, menorY, maiorX, maiorY;
