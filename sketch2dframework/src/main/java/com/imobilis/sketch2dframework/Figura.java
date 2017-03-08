@@ -695,7 +695,8 @@ public abstract class Figura extends AppCompatActivity
 		SketchView sketchView = new SketchView(activity, figura);
 		//Singleton.getInstance().addFigura(figura);
 		figura.setView(sketchView);
-		sketchView.setOnTouchListener(onTouch());
+		if(!(figura instanceof Texto))
+            sketchView.setOnTouchListener(onTouch());
 		int med[] = tamLayout(figura);
 		sketchView.setLayoutParams(new FrameLayout.LayoutParams(med[0], med[1]));
 		Log.d("DESENHA", "TAMANHO = " + med[0] + "-" + med[1]);
@@ -728,7 +729,8 @@ public abstract class Figura extends AppCompatActivity
 		//Singleton.getInstance().addFigura(figura);
 		SketchView sketchView = new SketchView(activity, figura);
 		figura.setView(sketchView);
-		sketchView.setOnTouchListener(onTouch());
+        if(!(figura instanceof Texto))
+            sketchView.setOnTouchListener(onTouch());
 		int med[] = tamLayout(figura);
 		sketchView.setLayoutParams(new FrameLayout.LayoutParams(med[0], med[1]));
 		figura.setIndex(Sketch2D.getFiguras().size() - 1);
@@ -879,17 +881,9 @@ public abstract class Figura extends AppCompatActivity
 		}
         else if(figura instanceof Texto)
         {
-            Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-            textPaint.setColor(((Texto)figura).getCor());
-            textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,Sketch2D.tamanhoTextoAngulo, figura.getView().getResources().getDisplayMetrics()));
-            textPaint.setTextAlign(Paint.Align.LEFT);
-
-            String text = ((Texto)figura).getString();
-            Rect bounds = new Rect();
-            textPaint.getTextBounds(""+text, 0, text.length(), bounds);
-            Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
-            tam[0] = 600;
-            tam[1] = 600;
+			double dif = 0.1*((Texto)figura).getTamTexto();
+			tam[0] = ((Texto)figura).getDimensoes()[0]+(int)dif;
+			tam[1] = ((Texto)figura).getDimensoes()[1]+(int)dif;
         }
 		else
 		{

@@ -1,10 +1,15 @@
 package com.imobilis.sketch2d;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.imobilis.sketch2dframework.*;
@@ -17,19 +22,43 @@ import java.util.ArrayList;
 
 public class NovaNovaMain extends AppCompatActivity
 {
-	private FrameLayout parent;
+	public static FrameLayout parent;
+	public static FrameLayout parent2;
 
 	public static ArrayList<Figura> figuras;
+    public void callPreview(View v)
+    {
+		View view = parent;
 
+		Bitmap bitmap = Bitmap.createBitmap(
+				view.getWidth(),
+				view.getHeight(),
+				Bitmap.Config.ARGB_8888
+		);
+		Canvas canvas = new Canvas(bitmap);
+		view.draw(canvas);
+
+        canvas.drawBitmap(bitmap,0,0,new Paint());
+		parent2.draw(canvas);
+
+
+    }
 	@Override
 	protected void onCreate(Bundle bundle)
 	{
 		super.onCreate(bundle);
+        Sketch2D.commandManager = new CommandManager();
 		Sketch2D.context = NovaNovaMain.this;
 		setContentView(R.layout.activity_main);
 		parent = (FrameLayout)findViewById(R.id.lnDesenho);
+		parent2 = (FrameLayout)findViewById(R.id.lnDesenho2);
         setup();
-        Sketch2D.desenhaTexto(this,parent,new Point(100,100),"Meu circulo",30);
+
+        ArrayList<Point> ps = new ArrayList<>();
+        ps.add(new Point(100,100));
+        Texto t = new Texto(this,ps,"A",20,Color.RED);
+        Sketch2D.desenhaTextoCentrado(t,parent);
+
 	}
 
 	public void setup()
@@ -58,7 +87,7 @@ public class NovaNovaMain extends AppCompatActivity
 		}
         Sketch2D.proporcao = 35;
 		Sketch2D.limpaFiguras(Sketch2D.EXCLUI);
-		Circulo c = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, new Point((100), (100)), 11.0f, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, cores.get(0), 255));
+		Circulo c = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, new Point((100), (100)), 22.0f, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, cores.get(0), 255));
 		c.setCruz(true);
 		for(Figura f : Sketch2D.getFiguras())
 		{

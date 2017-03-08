@@ -57,6 +57,26 @@ public class Sketch2D extends AppCompatActivity
 		arco.desenha(layout,arco);
 		return arco;
 	}
+
+    /**
+     * Desenha um texto no framelayout escolhido. O texto é centrado no ponto escolhido.
+     * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+     * @param textoNormal Objeto do tipo texto que ainda não foi desenhado, apenas instanciado.
+     * @param layout FrameLayout onde o círculo será desenhado.
+     * @return retorna o texto criado.
+     */
+    public static Texto desenhaTextoCentrado(Texto textoNormal,FrameLayout layout)
+    {
+        Point pontoCentrado = textoNormal.getPontos().get(0);
+        pontoCentrado.x-=textoNormal.getDimensoes()[0]/2;
+        pontoCentrado.y-=textoNormal.getDimensoes()[1]/2;
+        ArrayList<Point> ps = new ArrayList<>();
+        ps.add(new Point(pontoCentrado));
+        Texto texto = new Texto(textoNormal.getActivity(),ps,textoNormal.getString(),textoNormal.getTamTexto(),textoNormal.getCor());
+        Sketch2D.instance.addFigura(texto);
+        texto.desenha(textoNormal.getActivity(),layout,texto);
+        return texto;
+    }
     /**
      * Desenha um texto no framelayout escolhido. O texto começa do ponto Superior esquerdo.
      * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()

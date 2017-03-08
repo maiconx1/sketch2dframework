@@ -238,29 +238,8 @@ public class SketchView extends View
         {
             setX(menorX.x);
             setY(menorY.y);
-
-            Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-            textPaint.setColor(((Texto)figura).getCor());
-            textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,((Texto)figura).getTamTexto(), getResources().getDisplayMetrics()));
-            textPaint.setTextAlign(Paint.Align.LEFT);
-
-            String text = ((Texto)figura).getString();
-            Rect bounds = new Rect();
-            textPaint.getTextBounds(""+text, 0, text.length(), bounds);
-            Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
-
-            ((Texto)figura).setDimensoes(new int[]{tamText.x,tamText.y});
-
-            float dy = tamText.y;
-            float dx = 0;
-
-
-            canvas.save();
-            //canvas.translate(90, 90); //Consertando deslocamento da linha para centro do canvas
-            canvas.drawText(" "+text, dx, dy, textPaint);
-
-
-            canvas.restore();
+            Texto texto = ((Texto)figura);
+			canvas.drawText(texto.getString(),0,texto.getDimensoes()[1],texto.getPaint());
         }
 
 
@@ -366,7 +345,7 @@ public class SketchView extends View
 		}
 		if(figura instanceof Texto)
 		{
-			this.setBackgroundColor(Color.argb(120,100,100,100));
+			//this.setBackgroundColor(Color.argb(120,100,100,100));
 		}
 		figura.setView(this);
 	}
