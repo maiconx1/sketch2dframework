@@ -54,11 +54,45 @@ public class NovaNovaMain extends AppCompatActivity
 		parent2 = (FrameLayout)findViewById(R.id.lnDesenho2);
         setup();
 
+
         ArrayList<Point> ps = new ArrayList<>();
         ps.add(new Point(100,100));
         Texto t = new Texto(this,ps,"A",20,Color.RED);
         Sketch2D.desenhaTextoCentrado(t,parent);
 
+		ps = new ArrayList<>();
+        ps.add(new Point(200,200));
+        ps.add(new Point(170,280));
+        ps.add(new Point(160,430));
+        ps.add(new Point(140,500));
+
+		Sketch2D.desenhaPoligonoAberto(this,parent,ps,false);
+		ps = new ArrayList<>();
+        ps.add(new Point(200,200));
+        ps.add(new Point(170,280));
+        ps.add(new Point(160,430));
+        ps.add(new Point(140,500));
+        ps = desloca(ps,300,0);
+        for(int i=0;i<ps.size()-1;i++)
+        {
+            int j = i+1;
+            ArrayList<Point> ps2 = new ArrayList<>();
+            ps2.add(new Point(ps.get(i)));
+            ps2.add(new Point(ps.get(j)));
+            Sketch2D.desenhaLinha(this,parent,ps2,false);
+
+        }
+
+
+
+    }
+	public ArrayList<Point> desloca(ArrayList<Point> ps,int a,int b)
+	{
+		for(Point p:ps)
+		{
+			p.set(p.x+a,p.y+b);
+		}
+		return ps;
 	}
 
 	public void setup()

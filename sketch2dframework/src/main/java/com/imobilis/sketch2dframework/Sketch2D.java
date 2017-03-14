@@ -379,6 +379,8 @@ public class Sketch2D extends AppCompatActivity
 		return poligono;
 	}
 
+
+
 	/**
 	 * Desenha um polígono no framelayout escolhido com os vértices nos pontos escolhidos.
 	 * O polígono é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
@@ -427,6 +429,60 @@ public class Sketch2D extends AppCompatActivity
 		else
 		{
 			poligono = new Poligono(activity, pontos, editavel, configuracoes);
+		}
+		Sketch2D.instance.addFigura(poligono);
+		poligono.desenha(layout, poligono);
+		return poligono;
+	}
+    /**
+     * Desenha um polígono aberto no framelayout escolhido com os vértices nos pontos escolhidos.
+     * O polígono é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+     *
+     * @param activity Activity pai do FrameLayout onde o polígono será desenhado.
+     * @param layout FrameLayout onde o polígono será desenhado.
+     * @param pontos Array com os pontos de vértice do polígono. O último ponto não precisa ser o primeiro.
+     * @param editavel Define se o polígono será editável/excluível ou não.
+     * @return retorna o polígono criado.
+     */
+    public static Figura desenhaPoligonoAberto(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel)
+    {
+        //Poligono poligono = new Poligono(activity, pontos, editavel, configuracoes);
+        Figura poligono;
+        if(pontos.size() == 2)
+        {
+            poligono = new Linha(activity, pontos, editavel);
+        }
+        else
+        {
+            poligono = new Poligono(activity, pontos, editavel,true);
+        }
+        Sketch2D.instance.addFigura(poligono);
+        poligono.desenha(layout, poligono);
+        return poligono;
+    }
+
+	/**
+	 * Desenha um polígono aberto no framelayout escolhido com os vértices nos pontos escolhidos.
+	 * O polígono é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+	 *
+	 * @param activity Activity pai do FrameLayout onde o polígono será desenhado.
+	 * @param layout FrameLayout onde o polígono será desenhado.
+	 * @param pontos Array com os pontos de vértice do polígono. O último ponto não precisa ser o primeiro.
+	 * @param editavel Define se o polígono será editável/excluível ou não.
+	 * @param configuracoes Define as configurações referentes ao polígono.
+	 * @return retorna o polígono criado.
+	 */
+	public static Figura desenhaPoligonoAberto(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
+	{
+		//Poligono poligono = new Poligono(activity, pontos, editavel, configuracoes);
+		Figura poligono;
+		if(pontos.size() == 2)
+		{
+			poligono = new Linha(activity, pontos, editavel, configuracoes);
+		}
+		else
+		{
+			poligono = new Poligono(activity, pontos, editavel, configuracoes,true);
 		}
 		Sketch2D.instance.addFigura(poligono);
 		poligono.desenha(layout, poligono);

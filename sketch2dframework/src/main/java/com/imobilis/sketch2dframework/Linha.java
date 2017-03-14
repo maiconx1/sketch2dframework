@@ -25,7 +25,7 @@ public class Linha extends Figura
 		super(activity, pontos, editavel);
 		Configuracoes conf = new Configuracoes();
 		conf.setEstilo(Configuracoes.LINHA);
-		conf.setTamLinha(5);
+		conf.setTamLinha(1);
 		setConfiguracoes(conf);
 		setDistancia(false);
 		setup();
