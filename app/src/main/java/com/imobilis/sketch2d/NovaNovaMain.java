@@ -52,10 +52,12 @@ public class NovaNovaMain extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 		parent = (FrameLayout)findViewById(R.id.lnDesenho);
 		parent2 = (FrameLayout)findViewById(R.id.lnDesenho2);
-        setup();
+        //setup();
+		Circulo circulo = Sketch2D.desenhaCirculo(this, parent, new Point(400, 300), 110, true, new Configuracoes(true, Configuracoes.LINHA, 1, true, Color.BLUE, 0));
+		circulo.setCruz(true);
+		circulo.getView().invalidate();
 
-
-        ArrayList<Point> ps = new ArrayList<>();
+        /*ArrayList<Point> ps = new ArrayList<>();
         ps.add(new Point(100,100));
         Texto t = new Texto(this,ps,"A",20,Color.RED);
         Sketch2D.desenhaTextoCentrado(t,parent);
@@ -81,7 +83,7 @@ public class NovaNovaMain extends AppCompatActivity
             ps2.add(new Point(ps.get(j)));
             Sketch2D.desenhaLinha(this,parent,ps2,false);
 
-        }
+        }*/
 
 
 

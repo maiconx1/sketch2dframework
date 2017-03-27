@@ -54,6 +54,27 @@ public class Configuracoes implements Parcelable
 		setPaint();
 	}
 
+	public Configuracoes(Configuracoes configuracoes)
+	{
+		//setPontilhado(false);
+		setPontilhado(configuracoes.isPontilhado());
+		//setEstilo(Configuracoes.PREENCHIDO);
+		setEstilo(configuracoes.getEstilo());
+		//setTamLinha(1);
+		setTamLinha(configuracoes.getTamLinha());
+		//setAntiAlias(true);
+		setAntiAlias(configuracoes.isAntiAlias());
+		//setCor(Color.BLACK);
+		setCor(configuracoes.getCor());
+		//setAlpha(255);
+		setAlpha(configuracoes.getAlpha());
+		//setEscala(1);
+		setEscala(configuracoes.getEscala());
+
+		setZoom(1);
+		setPaint();
+	}
+
 	/**
 	 * Cria uma configuração de acordo com os parâmetros passados.
 	 *

@@ -211,24 +211,33 @@ public class SketchView extends View
 				y = figura.getPonto(0).y - getY()-dif;
 				int maisUm = 0;
 				maisUm = (((Circulo)figura).getRaio()%2 != 0?0:1);
+				Paint paint = figura.getPaint();
+				paint.setPathEffect(null);
+				paint.setStyle(Paint.Style.STROKE);
+				Configuracoes conf = new Configuracoes(figura.getConfiguracoes());
+				conf.setAlpha(255);
+
+				paint.setColor(conf.getCor());
+
+
 				Path caminho;
 				caminho = new Path();
 				caminho.reset();
 				caminho.moveTo(x, (int) (y - (0.50 * oldRadio)));
 				caminho.lineTo(x, (int) (y + (0.50 * oldRadio) + maisUm));
-				canvas.drawPath(caminho, figura.getPaint());
+				canvas.drawPath(caminho, paint);
 				caminho = new Path();
 				caminho.reset();
 				caminho.moveTo((int) (x - (0.50 * oldRadio)), y);
 				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
-				canvas.drawPath(caminho, figura.getPaint());
+				canvas.drawPath(caminho, paint);
 				//setBackgroundColor(Color.GRAY);
 				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
 
 			}
 			else{
-				setX(menorX.x - ((Circulo) figura).getRaio()-a-1.5f);
-				setY(menorY.y - ((Circulo) figura).getRaio()-a-1.5f);
+				//setX(menorX.x - ((Circulo) figura).getRaio()-a-1.5f);
+				//setY(menorY.y - ((Circulo) figura).getRaio()-a-1.5f);
 				canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
 			}
 			((Circulo) figura).setRaio(oldRadio);
