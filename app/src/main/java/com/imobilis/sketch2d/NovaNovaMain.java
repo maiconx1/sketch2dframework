@@ -1,6 +1,5 @@
 package com.imobilis.sketch2d;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -53,9 +52,13 @@ public class NovaNovaMain extends AppCompatActivity
 		parent = (FrameLayout)findViewById(R.id.lnDesenho);
 		parent2 = (FrameLayout)findViewById(R.id.lnDesenho2);
         //setup();
-		Circulo circulo = Sketch2D.desenhaCirculo(this, parent, new Point(400, 300), 110, true, new Configuracoes(true, Configuracoes.LINHA, 1, true, Color.BLUE, 0));
-		circulo.setCruz(true);
+		Circulo circulo = Sketch2D.desenhaCirculo(this, parent, new Point(400, 300), 110, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLUE, 255));
+		circulo.setPontoNoCentro(true);
 		circulo.getView().invalidate();
+
+		Circulo circulo2 = Sketch2D.desenhaCirculo(this, parent, new Point(700, 200), 40, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255));
+		circulo2.setPontoNoCentro(true);
+		circulo2.getView().invalidate();
 
         /*ArrayList<Point> ps = new ArrayList<>();
         ps.add(new Point(100,100));
@@ -124,7 +127,7 @@ public class NovaNovaMain extends AppCompatActivity
         Sketch2D.proporcao = 35;
 		Sketch2D.limpaFiguras(Sketch2D.EXCLUI);
 		Circulo c = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, new Point((100), (100)), 22.0f, false, new Configuracoes(false, Configuracoes.LINHA, 1, true, cores.get(0), 255));
-		c.setCruz(true);
+		c.setPontoNoCentro(true);
 		for(Figura f : Sketch2D.getFiguras())
 		{
 			if(f instanceof Circulo)

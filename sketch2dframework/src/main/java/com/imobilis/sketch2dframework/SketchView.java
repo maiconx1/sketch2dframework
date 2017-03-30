@@ -1,9 +1,7 @@
 package com.imobilis.sketch2dframework;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
@@ -12,8 +10,6 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -192,7 +188,7 @@ public class SketchView extends View
 		else if(figura instanceof Circulo)
 		{
 
-			if(((Circulo)figura).isCruz())
+			if(((Circulo)figura).isPontoNoCentro())
 			{
 				int dif = (int)(a);
 				//dif = 0;
@@ -211,16 +207,16 @@ public class SketchView extends View
 				y = figura.getPonto(0).y - getY()-dif;
 				int maisUm = 0;
 				maisUm = (((Circulo)figura).getRaio()%2 != 0?0:1);
-				Paint paint = figura.getPaint();
+				Paint paint = new Paint(figura.getPaint());
 				paint.setPathEffect(null);
-				paint.setStyle(Paint.Style.STROKE);
+				paint.setStyle(Paint.Style.FILL);
 				Configuracoes conf = new Configuracoes(figura.getConfiguracoes());
 				conf.setAlpha(255);
 
 				paint.setColor(conf.getCor());
 
 
-				Path caminho;
+				/*Path caminho;
 				caminho = new Path();
 				caminho.reset();
 				caminho.moveTo(x, (int) (y - (0.50 * oldRadio)));
@@ -230,9 +226,10 @@ public class SketchView extends View
 				caminho.reset();
 				caminho.moveTo((int) (x - (0.50 * oldRadio)), y);
 				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
-				canvas.drawPath(caminho, paint);
+				canvas.drawPath(caminho, paint);*/
 				//setBackgroundColor(Color.GRAY);
 				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
+				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio()*0.1f, paint);
 
 			}
 			else{

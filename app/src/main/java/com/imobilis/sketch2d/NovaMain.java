@@ -9,12 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.imobilis.sketch2dframework.Circulo;
 import com.imobilis.sketch2dframework.Configuracoes;
@@ -127,7 +123,7 @@ public class NovaMain extends AppCompatActivity
 
 
 		Circulo c = Sketch2D.desenhaCirculo(this, parent, new Point(200, 200), 150, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLUE, 255));
-		c.setCruz(true);
+		c.setPontoNoCentro(true);
 		ArrayList<Point> points = new ArrayList<>();
 		points.add(new Point(100, 300));
 		points.add(new Point(300, 100));
