@@ -187,55 +187,22 @@ public class SketchView extends View
 		}
 		else if(figura instanceof Circulo)
 		{
+			int dif = (int)(a);
+			setX(menorX.x - ((Circulo) figura).getRaio()-dif-1.5f);
+			setY(menorY.y - ((Circulo) figura).getRaio()-dif-1.5f);
 
+			dif = (int)(a*2);
+			canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
 			if(((Circulo)figura).isPontoNoCentro())
 			{
-				int dif = (int)(a);
-				//dif = 0;
-				setX(menorX.x - ((Circulo) figura).getRaio()-dif-1.5f);
-				setY(menorY.y - ((Circulo) figura).getRaio()-dif-1.5f);
-                /*for(Point p : figura.getPontos())
-                {
-                    p.x += (figura.getConfiguracoes().getTamLinha());
-                    p.y += (figura.getConfiguracoes().getTamLinha());
-                }*/
-
-				dif = (int)(a*2);
-
-				float x,y;
-				x = figura.getPonto(0).x - getX()-dif;
-				y = figura.getPonto(0).y - getY()-dif;
-				int maisUm = 0;
-				maisUm = (((Circulo)figura).getRaio()%2 != 0?0:1);
 				Paint paint = new Paint(figura.getPaint());
 				paint.setPathEffect(null);
 				paint.setStyle(Paint.Style.FILL);
 				Configuracoes conf = new Configuracoes(figura.getConfiguracoes());
 				conf.setAlpha(255);
-
 				paint.setColor(conf.getCor());
+				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio()*0.15f, paint);
 
-
-				/*Path caminho;
-				caminho = new Path();
-				caminho.reset();
-				caminho.moveTo(x, (int) (y - (0.50 * oldRadio)));
-				caminho.lineTo(x, (int) (y + (0.50 * oldRadio) + maisUm));
-				canvas.drawPath(caminho, paint);
-				caminho = new Path();
-				caminho.reset();
-				caminho.moveTo((int) (x - (0.50 * oldRadio)), y);
-				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
-				canvas.drawPath(caminho, paint);*/
-				//setBackgroundColor(Color.GRAY);
-				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
-				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio()*0.1f, paint);
-
-			}
-			else{
-				//setX(menorX.x - ((Circulo) figura).getRaio()-a-1.5f);
-				//setY(menorY.y - ((Circulo) figura).getRaio()-a-1.5f);
-				canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
 			}
 			((Circulo) figura).setRaio(oldRadio);
 			figura.setPontos(oldPoints);

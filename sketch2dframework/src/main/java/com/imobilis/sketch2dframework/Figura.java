@@ -275,8 +275,9 @@ public abstract class Figura extends AppCompatActivity
 	public Point getPonto(int index)
 	{
 		Point p;
-		float mul = getConfiguracoes().getEscala()*getConfiguracoes().getZoom();
-		p = new Point((int)(getPontos().get(index).x + getConfiguracoes().getTamLinha()*mul), (int)(getPontos().get(index).y + getConfiguracoes().getTamLinha()*mul));
+		//float mul = getConfiguracoes().getEscala()*getConfiguracoes().getZoom();
+		p = new Point(getPontos().get(index));
+		//p = new Point((int)(getPontos().get(index).x + getConfiguracoes().getTamLinha()*mul), (int)(getPontos().get(index).y + getConfiguracoes().getTamLinha()*mul));
 		return p;
 	}
 

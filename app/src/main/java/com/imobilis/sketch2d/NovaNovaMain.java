@@ -56,9 +56,11 @@ public class NovaNovaMain extends AppCompatActivity
 		circulo.setPontoNoCentro(true);
 		circulo.getView().invalidate();
 
-		Circulo circulo2 = Sketch2D.desenhaCirculo(this, parent, new Point(700, 200), 40, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255));
-		circulo2.setPontoNoCentro(true);
-		circulo2.getView().invalidate();
+		//Circulo circulo2 = Sketch2D.desenhaCirculo(this, parent, new Point(700, 200), 40, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255));
+		//circulo2.setPontoNoCentro(true);
+		//circulo2.getView().invalidate();
+
+		Sketch2D.desenhaCirculo(this, parent, new Point(700, 200), 3, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.parseColor("#cccccc"), 150));
 
         /*ArrayList<Point> ps = new ArrayList<>();
         ps.add(new Point(100,100));
