@@ -276,6 +276,8 @@ public class SketchView extends View
 
 			float rot  = 90 - Math.abs(angle);
 			float radangle = (float)(rot*Math.PI)/180;
+			int gap = (int)(Sketch2D.ajustaTextoProporcao*tamL);
+			if(gap<10) gap = 10;
 
 			if(move.y <= parado.y)
 			{
@@ -293,7 +295,7 @@ public class SketchView extends View
 				canvas.rotate(rot);
 				if(angle>=0)
 				{
-					canvas.drawText("" + text, -tamText.x - 10, 0, textPaint);
+					canvas.drawText("" + text, -tamText.x - gap, 0, textPaint);
 				}
 				else
 				{
@@ -306,12 +308,12 @@ public class SketchView extends View
 				dx+= tamL * Math.cos(Math.abs(radangle));
 				canvas.translate(dx,0);
 				canvas.rotate(rot);
-				canvas.drawText("" + text, -tamText.x - 10, -10, textPaint);
+				canvas.drawText("" + text, -tamText.x - gap, -10, textPaint);
 			}
 			else
 			{
 				canvas.rotate(rot);
-				canvas.drawText("" + text, dx, dy, textPaint);
+				canvas.drawText("" + text, dx + gap, dy, textPaint);
 			}
 
 			canvas.restore();
