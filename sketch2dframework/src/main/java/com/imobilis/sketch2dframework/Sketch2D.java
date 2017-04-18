@@ -28,8 +28,8 @@ public class Sketch2D extends AppCompatActivity
 	public static final int EXCLUI = 0, NAO_EXCLUI = 1;
 
 	public static int corTextoDistancia = Color.RED, tamanhoTextoDistancia=40;
-	public static boolean ajustaTextoLinha = false;
-	public static float ajustaTextoProporcao = 0.2f;
+	public static boolean ajustaTextoLinha = !false, showBearingText=!false;
+	public static float ajustaTextoProporcao = 0.2f, bearingValue =0f;
 
 	public static double proporcao=1;
 

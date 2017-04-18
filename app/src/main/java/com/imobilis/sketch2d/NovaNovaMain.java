@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -50,7 +51,6 @@ public class NovaNovaMain extends AppCompatActivity
 		Sketch2D.context = NovaNovaMain.this;
 		setContentView(R.layout.activity_main);
 		parent = (FrameLayout)findViewById(R.id.lnDesenho);
-		parent2 = (FrameLayout)findViewById(R.id.lnDesenho2);
         //setup();
 		Circulo circulo = Sketch2D.desenhaCirculo(this, parent, new Point(400, 300), 110, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLUE, 255));
 		circulo.setPontoNoCentro(true);
@@ -90,8 +90,69 @@ public class NovaNovaMain extends AppCompatActivity
 
         }*/
 
+        touch();
 
 
+
+    }
+    public Point pontoAnterior;
+    public Figura figuraFormada;
+    public Circulo circuloCentro,circuloMovendo;
+    public void touch()
+    {
+        parent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        pontoAnterior = new Point((int)event.getX(),(int)event.getY());
+
+                        Configuracoes c1 = new Configuracoes();
+                        c1.setEstilo(Configuracoes.PREENCHIDO);
+                        circuloCentro = Sketch2D.desenhaCirculo(NovaNovaMain.this,parent,pontoAnterior,4,false,c1);
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        if(figuraFormada!=null)
+                            Sketch2D.removeDesenho(figuraFormada);
+                        if(circuloMovendo!=null)
+                            Sketch2D.removeDesenho(circuloMovendo);
+
+                        Point pontoFuroMag = null;
+                        ArrayList<Point> pontos = new ArrayList<Point>();
+                        pontos.add(new Point(pontoAnterior));
+                        Point finger = new Point((int) event.getX(), (int) event.getY());
+
+
+                        pontos.add(finger);
+
+                        Configuracoes c = new Configuracoes();
+                        c.setTamLinha(1);
+                        float dist =(float) Math.sqrt(Math.pow((pontos.get(1).x-pontos.get(0).x),2)+Math.pow((pontos.get(1).y-pontos.get(0).y),2));
+                        pontos.set(0, new Point(pontos.get(0).x - 90, pontos.get(0).y - 90));
+                        pontos.set(1,new Point(pontos.get(1).x-90,pontos.get(1).y-90));
+                        Point aux = pontos.get(0);
+                        pontos.set(0, pontos.get(1));
+                        pontos.set(1, aux);
+                        figuraFormada = Sketch2D.desenhaLinha(NovaNovaMain.this,parent, pontos, false, new Configuracoes(true, Configuracoes.LINHA, 1, true, Sketch2D.corDistancia, 180), true);
+                        circuloMovendo = Sketch2D.desenhaCirculo(NovaNovaMain.this,parent, new Point(pontoAnterior), dist, false);
+
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        if(figuraFormada!=null)
+                            Sketch2D.removeDesenho(figuraFormada);
+                        if(circuloMovendo!=null)
+                            Sketch2D.removeDesenho(circuloMovendo);
+                        if(circuloCentro!=null)
+                            Sketch2D.removeDesenho(circuloCentro);
+                        circuloMovendo = null;
+                        figuraFormada=null;
+                        circuloCentro = null;
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 	public ArrayList<Point> desloca(ArrayList<Point> ps,int a,int b)
 	{
