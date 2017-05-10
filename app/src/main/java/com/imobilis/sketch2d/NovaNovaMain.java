@@ -42,6 +42,8 @@ public class NovaNovaMain extends AppCompatActivity
 		parent2.draw(canvas);
 
 
+
+
     }
 	@Override
 	protected void onCreate(Bundle bundle)
@@ -62,6 +64,7 @@ public class NovaNovaMain extends AppCompatActivity
 
 		Sketch2D.desenhaCirculo(this, parent, new Point(700, 200), 3, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.parseColor("#cccccc"), 150));
 
+        Sketch2D.desenhaArco(this,parent,new Point(100,100),30,10,20,false);
         /*ArrayList<Point> ps = new ArrayList<>();
         ps.add(new Point(100,100));
         Texto t = new Texto(this,ps,"A",20,Color.RED);
@@ -91,6 +94,7 @@ public class NovaNovaMain extends AppCompatActivity
         }*/
 
         touch();
+
 
 
 

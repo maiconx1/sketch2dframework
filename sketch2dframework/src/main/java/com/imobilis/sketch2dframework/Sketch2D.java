@@ -59,6 +59,30 @@ public class Sketch2D extends AppCompatActivity
 		arco.desenha(layout,arco);
 		return arco;
 	}
+	/**
+	 * Desenha um arco no framelayout escolhido. O arco é centrado no ponto passado.
+	 * O arco é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+	 * O arco é desenhado com configurações padrão (cor preta, preenchido, anti alias ativado).
+	 *
+	 * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
+	 * @param layout FrameLayout onde o círculo será desenhado.
+	 * @param ponto Point com o ponto de centro do círculo.
+	 * @param raio Raio float do círculo.
+	 * @param angleInit Angulo float de começo do arco.
+	 * @param degrees Graus float que o arco possui.
+	 * @param infoAdd Informacao adicional a ser exibida abaixo dos graus.
+	 * @param editavel Define se o círculo será editável/excluível ou não.
+	 * @return retorna o arco criado.
+	 */
+	public static Arco desenhaArco(Activity activity, FrameLayout layout, Point ponto,float raio,float angleInit,float degrees,String infoAdd, boolean editavel)
+	{
+		ArrayList<Point> p = new ArrayList<>();
+		p.add(new Point(ponto.x, ponto.y));
+		Arco arco = new Arco(activity,p,raio,angleInit,degrees,infoAdd, editavel);
+		Sketch2D.instance.addFigura(arco);
+		arco.desenha(layout,arco);
+		return arco;
+	}
 
     /**
      * Desenha um texto no framelayout escolhido. O texto é centrado no ponto escolhido.

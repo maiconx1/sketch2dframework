@@ -233,6 +233,10 @@ public class SketchView extends View
 			canvas.save();
 			//canvas.translate(90, 90); //Consertando deslocamento da linha para centro do canvas
 			canvas.drawText(" "+text, dx, dy, textPaint);
+			if(!((Arco)figura).getInfoAdd().trim().equals(""))
+			{
+				canvas.drawText(" "+((Arco)figura).getInfoAdd(), dx, dy+tamText.y, textPaint);
+			}
 
 
 			canvas.restore();
