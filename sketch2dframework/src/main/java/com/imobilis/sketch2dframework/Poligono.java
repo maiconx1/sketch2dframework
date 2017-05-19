@@ -133,9 +133,17 @@ public class Poligono extends Figura
             return false;
         }
 
+        Log.d("INCLINADOS", " = " + inclinados + " -- cruzamentos = " + cruzamentos);
         if(inclinados >= 3)
         {
-            return cruzamentos % 2 != 0;
+            if(inclinados % 4 == 0)
+            {
+                return cruzamentos % 2 != 0;
+            }
+            else
+            {
+                return cruzamentos % 2 == 0;
+            }
         }
         return cruzamentos % 2 == 0;
     }
