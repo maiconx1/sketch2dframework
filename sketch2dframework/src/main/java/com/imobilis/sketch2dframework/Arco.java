@@ -12,11 +12,27 @@ public class Arco extends Figura {
 
     private float raio;
     private float angleInit, degrees;
+    private String infoAdd="";
     public Arco(Activity activity, ArrayList<Point> pontos, float raio, float angleInit, float degrees, boolean editavel) {
         super(activity, pontos,editavel);
         this.raio = raio;
         this.degrees = degrees;
         this.angleInit = angleInit;
+    }
+    public Arco(Activity activity, ArrayList<Point> pontos, float raio, float angleInit, float degrees,String infoAdd, boolean editavel) {
+        super(activity, pontos,editavel);
+        this.raio = raio;
+        this.degrees = degrees;
+        this.angleInit = angleInit;
+        this.infoAdd=infoAdd;
+    }
+
+    public String getInfoAdd() {
+        return infoAdd;
+    }
+
+    public void setInfoAdd(String infoAdd) {
+        this.infoAdd = infoAdd;
     }
 
     public float getRaio() {

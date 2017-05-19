@@ -3,7 +3,6 @@ package com.imobilis.sketch2dframework;
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -234,6 +233,10 @@ public class SketchView extends View
 			canvas.save();
 			//canvas.translate(90, 90); //Consertando deslocamento da linha para centro do canvas
 			canvas.drawText(" "+text, dx, dy, textPaint);
+			if(!((Arco)figura).getInfoAdd().trim().equals(""))
+			{
+				canvas.drawText(" "+((Arco)figura).getInfoAdd(), dx, dy+tamText.y, textPaint);
+			}
 
 
 			canvas.restore();
@@ -257,7 +260,11 @@ public class SketchView extends View
 			//String text = ""+(int)tamL+" dp";
 			//String text = ""+(int)(tamL/Sketch2D.proporcao)+" m";
 			String text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(tamL/Sketch2D.proporcao)+" m";
-			Rect bounds = new Rect();
+            float bearing = Sketch2D.bearingValue;
+            boolean showBearing = Sketch2D.showBearingText;
+            String text2 = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(bearing)+" °";
+
+            Rect bounds = new Rect();
 			textPaint.getTextBounds(""+text, 0, text.length(), bounds);
 			Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
 
@@ -279,6 +286,8 @@ public class SketchView extends View
 			int gap = (int)(Sketch2D.ajustaTextoProporcao*tamL);
 			if(gap<10 || !Sketch2D.ajustaTextoLinha) gap = 10;
 
+            int ys=tamText.y+20;
+
 			if(move.y <= parado.y)
 			{
 				dx+= tamL * Math.cos(Math.abs(radangle));
@@ -296,10 +305,14 @@ public class SketchView extends View
 				if(angle>=0)
 				{
 					canvas.drawText("" + text, -tamText.x - gap, 0, textPaint);
+                    if(showBearing)
+                        canvas.drawText("" + text2, -tamText.x - gap, ys, textPaint);
 				}
 				else
 				{
 					canvas.drawText("" + text, gap, 0, textPaint);
+                    if(showBearing)
+                        canvas.drawText("" + text2, gap, ys, textPaint);
 				}
 			}
 			else if(angle<0)
@@ -308,12 +321,16 @@ public class SketchView extends View
 				dx+= tamL * Math.cos(Math.abs(radangle));
 				canvas.translate(dx,0);
 				canvas.rotate(rot);
-				canvas.drawText("" + text, -tamText.x - gap, -10, textPaint);
+				canvas.drawText("" + text, -tamText.x - gap, dy, textPaint);
+                if(showBearing)
+                    canvas.drawText("" + text2, -tamText.x - gap,2*dy+ys, textPaint);
 			}
 			else
 			{
 				canvas.rotate(rot);
 				canvas.drawText("" + text, dx + gap, dy, textPaint);
+                if(showBearing)
+                    canvas.drawText("" + text2, dx + gap, dy+ys, textPaint);
 			}
 
 			canvas.restore();

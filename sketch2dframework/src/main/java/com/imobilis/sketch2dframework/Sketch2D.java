@@ -28,8 +28,8 @@ public class Sketch2D extends AppCompatActivity
 	public static final int EXCLUI = 0, NAO_EXCLUI = 1;
 
 	public static int corTextoDistancia = Color.RED, tamanhoTextoDistancia=40;
-	public static boolean ajustaTextoLinha = false;
-	public static float ajustaTextoProporcao = 0.2f;
+	public static boolean ajustaTextoLinha = false, showBearingText=false;
+	public static float ajustaTextoProporcao = 0.2f, bearingValue =0f;
 
 	public static double proporcao=1;
 
@@ -55,6 +55,30 @@ public class Sketch2D extends AppCompatActivity
 		ArrayList<Point> p = new ArrayList<>();
 		p.add(new Point(ponto.x, ponto.y));
 		Arco arco = new Arco(activity,p,raio,angleInit,degrees, editavel);
+		Sketch2D.instance.addFigura(arco);
+		arco.desenha(layout,arco);
+		return arco;
+	}
+	/**
+	 * Desenha um arco no framelayout escolhido. O arco é centrado no ponto passado.
+	 * O arco é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+	 * O arco é desenhado com configurações padrão (cor preta, preenchido, anti alias ativado).
+	 *
+	 * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
+	 * @param layout FrameLayout onde o círculo será desenhado.
+	 * @param ponto Point com o ponto de centro do círculo.
+	 * @param raio Raio float do círculo.
+	 * @param angleInit Angulo float de começo do arco.
+	 * @param degrees Graus float que o arco possui.
+	 * @param infoAdd Informacao adicional a ser exibida abaixo dos graus.
+	 * @param editavel Define se o círculo será editável/excluível ou não.
+	 * @return retorna o arco criado.
+	 */
+	public static Arco desenhaArco(Activity activity, FrameLayout layout, Point ponto,float raio,float angleInit,float degrees,String infoAdd, boolean editavel)
+	{
+		ArrayList<Point> p = new ArrayList<>();
+		p.add(new Point(ponto.x, ponto.y));
+		Arco arco = new Arco(activity,p,raio,angleInit,degrees,infoAdd, editavel);
 		Sketch2D.instance.addFigura(arco);
 		arco.desenha(layout,arco);
 		return arco;
