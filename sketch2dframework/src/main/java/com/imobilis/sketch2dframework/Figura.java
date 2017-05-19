@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -56,6 +58,8 @@ public abstract class Figura extends AppCompatActivity
 	public static boolean clip,removendo_pontos;
 	public static Figura poligono_editando =null;
 	public static ArrayList<Linha> linhas_clip=null;
+
+	public static boolean zoomAtivo = false;
 
 
     //TODO 17-10
@@ -271,8 +275,9 @@ public abstract class Figura extends AppCompatActivity
 	public Point getPonto(int index)
 	{
 		Point p;
-		float mul = getConfiguracoes().getEscala()*getConfiguracoes().getZoom();
-		p = new Point((int)(getPontos().get(index).x + getConfiguracoes().getTamLinha()*mul), (int)(getPontos().get(index).y + getConfiguracoes().getTamLinha()*mul));
+		//float mul = getConfiguracoes().getEscala()*getConfiguracoes().getZoom();
+		p = new Point(getPontos().get(index));
+		//p = new Point((int)(getPontos().get(index).x + getConfiguracoes().getTamLinha()*mul), (int)(getPontos().get(index).y + getConfiguracoes().getTamLinha()*mul));
 		return p;
 	}
 
@@ -426,6 +431,7 @@ public abstract class Figura extends AppCompatActivity
 			@Override
 			public boolean onTouch(View v, MotionEvent event)
 			{
+				if(zoomAtivo) return false;
 				switch(event.getAction())
 				{
 					case MotionEvent.ACTION_DOWN:
@@ -690,7 +696,8 @@ public abstract class Figura extends AppCompatActivity
 		SketchView sketchView = new SketchView(activity, figura);
 		//Singleton.getInstance().addFigura(figura);
 		figura.setView(sketchView);
-		sketchView.setOnTouchListener(onTouch());
+		if(!(figura instanceof Texto))
+            sketchView.setOnTouchListener(onTouch());
 		int med[] = tamLayout(figura);
 		sketchView.setLayoutParams(new FrameLayout.LayoutParams(med[0], med[1]));
 		Log.d("DESENHA", "TAMANHO = " + med[0] + "-" + med[1]);
@@ -723,7 +730,8 @@ public abstract class Figura extends AppCompatActivity
 		//Singleton.getInstance().addFigura(figura);
 		SketchView sketchView = new SketchView(activity, figura);
 		figura.setView(sketchView);
-		sketchView.setOnTouchListener(onTouch());
+        if(!(figura instanceof Texto))
+            sketchView.setOnTouchListener(onTouch());
 		int med[] = tamLayout(figura);
 		sketchView.setLayoutParams(new FrameLayout.LayoutParams(med[0], med[1]));
 		figura.setIndex(Sketch2D.getFiguras().size() - 1);
@@ -872,6 +880,12 @@ public abstract class Figura extends AppCompatActivity
 			tam[0] = 2*(int)(((Arco)figura).getRaio()+2);
 			tam[1] = 2*(int)(((Arco)figura).getRaio()+2);
 		}
+        else if(figura instanceof Texto)
+        {
+			double dif = 0.1*((Texto)figura).getTamTexto();
+			tam[0] = ((Texto)figura).getDimensoes()[0]+(int)dif;
+			tam[1] = ((Texto)figura).getDimensoes()[1]+(int)dif;
+        }
 		else
 		{
 			Point menorX, menorY, maiorX, maiorY;

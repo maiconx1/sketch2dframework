@@ -1,9 +1,7 @@
 package com.imobilis.sketch2dframework;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
@@ -12,8 +10,6 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -191,49 +187,33 @@ public class SketchView extends View
 		}
 		else if(figura instanceof Circulo)
 		{
+			int dif = (int)(a);
+			setX(menorX.x - ((Circulo) figura).getRaio()-dif-1.5f);
+			setY(menorY.y - ((Circulo) figura).getRaio()-dif-1.5f);
 
-			if(((Circulo)figura).isCruz())
+			dif = (int)(a*2);
+			canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
+			if(((Circulo)figura).isPontoNoCentro())
 			{
-				int dif = (int)(a
-				);
-				setX(menorX.x - ((Circulo) figura).getRaio()-dif-1.5f);
-				setY(menorY.y - ((Circulo) figura).getRaio()-dif-1.5f);
-                /*for(Point p : figura.getPontos())
-                {
-                    p.x += (figura.getConfiguracoes().getTamLinha());
-                    p.y += (figura.getConfiguracoes().getTamLinha());
-                }*/
+				Paint paint = new Paint(figura.getPaint());
+				paint.setPathEffect(null);
+				paint.setStyle(Paint.Style.FILL);
+				Configuracoes conf = new Configuracoes(figura.getConfiguracoes());
+				conf.setAlpha(255);
+				paint.setColor(conf.getCor());
+				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio()*0.15f, paint);
 
-				dif = (int)(a*2);
-
-				float x,y;
-				x = figura.getPonto(0).x - getX()-dif;
-				y = figura.getPonto(0).y - getY()-dif;
-				int maisUm = 0;
-				maisUm = (((Circulo)figura).getRaio()%2 == 0?0:1);
-				Path caminho;
-				caminho = new Path();
-				caminho.reset();
-				caminho.moveTo(x, (int) (y - (0.50 * oldRadio)));
-				caminho.lineTo(x, (int) (y + (0.50 * oldRadio) + maisUm));
-				canvas.drawPath(caminho, figura.getPaint());
-				caminho = new Path();
-				caminho.reset();
-				caminho.moveTo((int) (x - (0.50 * oldRadio)), y);
-				caminho.lineTo((int) (x + (0.50 * oldRadio) + maisUm), y);
-				canvas.drawPath(caminho, figura.getPaint());
-				//setBackgroundColor(Color.GRAY);
-				canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
-
-			}
-			else{
-				setX(menorX.x - ((Circulo) figura).getRaio()-a-1.5f);
-				setY(menorY.y - ((Circulo) figura).getRaio()-a-1.5f);
-				canvas.drawCircle(figura.getPontos().get(0).x - getX(), figura.getPontos().get(0).y - getY(), ((Circulo)figura).getRaio(), figura.getPaint());
 			}
 			((Circulo) figura).setRaio(oldRadio);
 			figura.setPontos(oldPoints);
 		}
+        else if(figura instanceof Texto)
+        {
+            setX(menorX.x);
+            setY(menorY.y);
+            Texto texto = ((Texto)figura);
+			canvas.drawText(texto.getString(),0,texto.getDimensoes()[1],texto.getPaint());
+        }
 
 
 		if(figura instanceof Arco)
@@ -296,6 +276,8 @@ public class SketchView extends View
 
 			float rot  = 90 - Math.abs(angle);
 			float radangle = (float)(rot*Math.PI)/180;
+			int gap = (int)(Sketch2D.ajustaTextoProporcao*tamL);
+			if(gap<10 || !Sketch2D.ajustaTextoLinha) gap = 10;
 
 			if(move.y <= parado.y)
 			{
@@ -313,11 +295,11 @@ public class SketchView extends View
 				canvas.rotate(rot);
 				if(angle>=0)
 				{
-					canvas.drawText("" + text, -tamText.x - 10, 0, textPaint);
+					canvas.drawText("" + text, -tamText.x - gap, 0, textPaint);
 				}
 				else
 				{
-					canvas.drawText("" + text, 0, 0, textPaint);
+					canvas.drawText("" + text, gap, 0, textPaint);
 				}
 			}
 			else if(angle<0)
@@ -326,19 +308,19 @@ public class SketchView extends View
 				dx+= tamL * Math.cos(Math.abs(radangle));
 				canvas.translate(dx,0);
 				canvas.rotate(rot);
-				canvas.drawText("" + text, -tamText.x - 10, -10, textPaint);
+				canvas.drawText("" + text, -tamText.x - gap, -10, textPaint);
 			}
 			else
 			{
 				canvas.rotate(rot);
-				canvas.drawText("" + text, dx, dy, textPaint);
+				canvas.drawText("" + text, dx + gap, dy, textPaint);
 			}
 
 			canvas.restore();
 		}
-		if(!linha_distancia)
+		if(figura instanceof Texto)
 		{
-			//this.setBackgroundColor(Color.GRAY);
+			//this.setBackgroundColor(Color.argb(120,100,100,100));
 		}
 		figura.setView(this);
 	}

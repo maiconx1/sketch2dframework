@@ -17,7 +17,7 @@ public class Circulo extends Figura
 	private int index_poligono=-1;
 	private boolean tipoExcluir=false;
 	private boolean tipoClip=false;
-	private boolean cruz=false;
+	private boolean pontoNoCentro =false;
 
 
 
@@ -403,13 +403,13 @@ public class Circulo extends Figura
 		return retorno;
 	}
 
-	public boolean isCruz()
+	public boolean isPontoNoCentro()
 	{
-		return cruz;
+		return pontoNoCentro;
 	}
 
-	public void setCruz(boolean cruz)
+	public void setPontoNoCentro(boolean pontoNoCentro)
 	{
-		this.cruz = cruz;
+		this.pontoNoCentro = pontoNoCentro;
 	}
 }

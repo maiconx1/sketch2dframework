@@ -28,6 +28,8 @@ public class Sketch2D extends AppCompatActivity
 	public static final int EXCLUI = 0, NAO_EXCLUI = 1;
 
 	public static int corTextoDistancia = Color.RED, tamanhoTextoDistancia=40;
+	public static boolean ajustaTextoLinha = false;
+	public static float ajustaTextoProporcao = 0.2f;
 
 	public static double proporcao=1;
 
@@ -57,6 +59,69 @@ public class Sketch2D extends AppCompatActivity
 		arco.desenha(layout,arco);
 		return arco;
 	}
+
+    /**
+     * Desenha um texto no framelayout escolhido. O texto é centrado no ponto escolhido.
+     * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+     * @param textoNormal Objeto do tipo texto que ainda não foi desenhado, apenas instanciado.
+     * @param layout FrameLayout onde o círculo será desenhado.
+     * @return retorna o texto criado.
+     */
+    public static Texto desenhaTextoCentrado(Texto textoNormal,FrameLayout layout)
+    {
+        Point pontoCentrado = textoNormal.getPontos().get(0);
+        pontoCentrado.x-=textoNormal.getDimensoes()[0]/2;
+        pontoCentrado.y-=textoNormal.getDimensoes()[1]/2;
+        ArrayList<Point> ps = new ArrayList<>();
+        ps.add(new Point(pontoCentrado));
+        Texto texto = new Texto(textoNormal.getActivity(),ps,textoNormal.getString(),textoNormal.getTamTexto(),textoNormal.getCor());
+        Sketch2D.instance.addFigura(texto);
+        texto.desenha(textoNormal.getActivity(),layout,texto);
+        return texto;
+    }
+    /**
+     * Desenha um texto no framelayout escolhido. O texto começa do ponto Superior esquerdo.
+     * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+     *
+     * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
+     * @param layout FrameLayout onde o círculo será desenhado.
+     * @param superiorEsquerdo Point com o ponto do inicio do texto.
+     * @param string Texto a ser apresentado.
+     * @param tamTexto O tamanho da fonte do texto.
+     * @param cor Cor do texto.
+     * @return retorna o texto criado.
+     */
+
+    public static Texto desenhaTexto(Activity activity, FrameLayout layout, final Point superiorEsquerdo,String string,float tamTexto,int cor)
+    {
+        ArrayList<Point> p = new ArrayList<>();
+        p.add(new Point(superiorEsquerdo.x, superiorEsquerdo.y));
+        Texto texto = new Texto(activity,p,string,tamTexto,cor);
+        Sketch2D.instance.addFigura(texto);
+        texto.desenha(activity, layout, texto);
+        return texto;
+    }
+    /**
+     * Desenha um texto no framelayout escolhido. O texto começa do ponto Superior esquerdo.
+     * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+     * O texto é desenhado com configurações padrão (cor preta).
+     *
+     * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
+     * @param layout FrameLayout onde o círculo será desenhado.
+     * @param superiorEsquerdo Point com o ponto do inicio do texto.
+     * @param string Texto a ser apresentado.
+     * @param tamTexto O tamanho da fonte do texto.
+     * @return retorna o texto criado.
+     */
+    public static Texto desenhaTexto(Activity activity, FrameLayout layout, final Point superiorEsquerdo,String string,float tamTexto)
+    {
+        ArrayList<Point> p = new ArrayList<>();
+        p.add(new Point(superiorEsquerdo.x, superiorEsquerdo.y));
+        Texto texto = new Texto(activity,p,string,tamTexto);
+        Sketch2D.instance.addFigura(texto);
+        texto.desenha(activity, layout, texto);
+        return texto;
+    }
 
 	/**
 	 * Desenha uma linha padrão no framelayout escolhido. A linha vai do ponto (50, 50) ao ponto (300, 300).
@@ -316,6 +381,8 @@ public class Sketch2D extends AppCompatActivity
 		return poligono;
 	}
 
+
+
 	/**
 	 * Desenha um polígono no framelayout escolhido com os vértices nos pontos escolhidos.
 	 * O polígono é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
@@ -364,6 +431,60 @@ public class Sketch2D extends AppCompatActivity
 		else
 		{
 			poligono = new Poligono(activity, pontos, editavel, configuracoes);
+		}
+		Sketch2D.instance.addFigura(poligono);
+		poligono.desenha(layout, poligono);
+		return poligono;
+	}
+    /**
+     * Desenha um polígono aberto no framelayout escolhido com os vértices nos pontos escolhidos.
+     * O polígono é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+     *
+     * @param activity Activity pai do FrameLayout onde o polígono será desenhado.
+     * @param layout FrameLayout onde o polígono será desenhado.
+     * @param pontos Array com os pontos de vértice do polígono. O último ponto não precisa ser o primeiro.
+     * @param editavel Define se o polígono será editável/excluível ou não.
+     * @return retorna o polígono criado.
+     */
+    public static Figura desenhaPoligonoAberto(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel)
+    {
+        //Poligono poligono = new Poligono(activity, pontos, editavel, configuracoes);
+        Figura poligono;
+        if(pontos.size() == 2)
+        {
+            poligono = new Linha(activity, pontos, editavel);
+        }
+        else
+        {
+            poligono = new Poligono(activity, pontos, editavel,true);
+        }
+        Sketch2D.instance.addFigura(poligono);
+        poligono.desenha(layout, poligono);
+        return poligono;
+    }
+
+	/**
+	 * Desenha um polígono aberto no framelayout escolhido com os vértices nos pontos escolhidos.
+	 * O polígono é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+	 *
+	 * @param activity Activity pai do FrameLayout onde o polígono será desenhado.
+	 * @param layout FrameLayout onde o polígono será desenhado.
+	 * @param pontos Array com os pontos de vértice do polígono. O último ponto não precisa ser o primeiro.
+	 * @param editavel Define se o polígono será editável/excluível ou não.
+	 * @param configuracoes Define as configurações referentes ao polígono.
+	 * @return retorna o polígono criado.
+	 */
+	public static Figura desenhaPoligonoAberto(Activity activity, FrameLayout layout, ArrayList<Point> pontos, boolean editavel, Configuracoes configuracoes)
+	{
+		//Poligono poligono = new Poligono(activity, pontos, editavel, configuracoes);
+		Figura poligono;
+		if(pontos.size() == 2)
+		{
+			poligono = new Linha(activity, pontos, editavel, configuracoes);
+		}
+		else
+		{
+			poligono = new Poligono(activity, pontos, editavel, configuracoes,true);
 		}
 		Sketch2D.instance.addFigura(poligono);
 		poligono.desenha(layout, poligono);
@@ -433,7 +554,9 @@ public class Sketch2D extends AppCompatActivity
 	public static Figura removeDesenho(int index)
 	{
 		Figura f = null;
-		((ViewGroup) instance.getFigura(index).getView().getParent()).removeView(instance.getFigura(index).getView());
+		try{
+            ((ViewGroup) instance.getFigura(index).getView().getParent()).removeView(instance.getFigura(index).getView());
+        }catch (Exception ex){}
 		if (index > -1 && index < instance.getFiguras().size()) {
 			f = instance.getFiguras().get(index);
 			instance.getFiguras().remove(index);
@@ -446,7 +569,9 @@ public class Sketch2D extends AppCompatActivity
 
 	public static void removeDesenho(Figura f)
 	{
-		((ViewGroup) f.getView().getParent()).removeView(f.getView());
+		try{
+            ((ViewGroup) f.getView().getParent()).removeView(f.getView());
+        }catch (Exception ex){}
 		instance.getFiguras().remove(f);
 		for(int i = 0;i<instance.getFiguras().size();i++)
 		{
