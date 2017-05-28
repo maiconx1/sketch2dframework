@@ -54,48 +54,10 @@ public class NovaNovaMain extends AppCompatActivity
 		Sketch2D.context = NovaNovaMain.this;
 		setContentView(R.layout.activity_main);
 		parent = (FrameLayout)findViewById(R.id.lnDesenho);
-        //setup();
-		//Circulo circulo = Sketch2D.desenhaCirculo(this, parent, new Point(400, 300), 110, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLUE, 255));
-		//circulo.setPontoNoCentro(true);
-		//circulo.getView().invalidate();
 
-		//Circulo circulo2 = Sketch2D.desenhaCirculo(this, parent, new Point(700, 200), 40, true, new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 255));
-		//circulo2.setPontoNoCentro(true);
-		//circulo2.getView().invalidate();
 
-		//Sketch2D.desenhaCirculo(this, parent, new Point(700, 200), 3, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.parseColor("#cccccc"), 150));
-
-        //Sketch2D.desenhaArco(this,parent,new Point(100,100),30,10,20,false);
-        /*ArrayList<Point> ps = new ArrayList<>();
-        ps.add(new Point(100,100));
-        Texto t = new Texto(this,ps,"A",20,Color.RED);
-        Sketch2D.desenhaTextoCentrado(t,parent);
-
-		ps = new ArrayList<>();
-        ps.add(new Point(200,200));
-        ps.add(new Point(170,280));
-        ps.add(new Point(160,430));
-        ps.add(new Point(140,500));
-
-		Sketch2D.desenhaPoligonoAberto(this,parent,ps,false);
-		ps = new ArrayList<>();
-        ps.add(new Point(200,200));
-        ps.add(new Point(170,280));
-        ps.add(new Point(160,430));
-        ps.add(new Point(140,500));
-        ps = desloca(ps,300,0);
-        for(int i=0;i<ps.size()-1;i++)
-        {
-            int j = i+1;
-            ArrayList<Point> ps2 = new ArrayList<>();
-            ps2.add(new Point(ps.get(i)));
-            ps2.add(new Point(ps.get(j)));
-            Sketch2D.desenhaLinha(this,parent,ps2,false);
-
-        }*/
-
-        //touch();
-        desenhosMaicon();
+        desenhoAlexsander();
+        //desenhosMaicon();
     }
 
     public void desenhosMaicon()
@@ -131,6 +93,58 @@ public class NovaNovaMain extends AppCompatActivity
                 return false;
             }
         });
+    }
+    public void desenhoAlexsander()
+    {
+
+/*
+        Sketch2D.desenhaCirculo(this, parent, new Point(100, 100),60, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.WHITE, 250));
+
+        ArrayList<Point> ps = new ArrayList<>();
+        ps.add(new Point(100,100));
+        Texto t = new Texto(this,ps,"A",40,Color.BLACK,false);
+        Sketch2D.desenhaTextoCentrado(t,parent);
+
+
+        Sketch2D.desenhaCirculo(this, parent, new Point(300, 300),60, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.WHITE, 250));
+
+        ps = new ArrayList<>();
+        ps.add(new Point(300,300));
+        t = new Texto(this,ps,"A",40,Color.BLACK,true);
+        Sketch2D.desenhaTextoCentrado(t,parent);*/
+
+
+        /*Sketch2D.desenhaTexto(this,parent,new Point(300,300),"AAA",30, Color.BLACK);
+        Sketch2D.desenhaTexto(this,parent,new Point(550,300),"AAA",30, Color.BLACK,true,true,true);
+        Sketch2D.desenhaTexto(this,parent,new Point(550,450),"AAA",30, Color.BLACK,true,true,!true);
+        Sketch2D.desenhaTexto(this,parent,new Point(650,300),"AAA",30, Color.BLACK,true,!true,true);
+        Sketch2D.desenhaTexto(this,parent,new Point(750,300),"AAA",30, Color.BLACK,!true,true,true);*/
+
+        ArrayList<Point> ps = new ArrayList<>();
+        ps.add( new Point(300,300));
+        Texto t = new Texto(this,ps,"AAA",30, Color.BLACK,true,true,true);
+        Sketch2D.desenhaTextoCentrado(t,parent);
+
+        ps = new ArrayList<>();
+        ps.add( new Point(400,300));
+        Texto t2 = new Texto(this,ps,"AAA",30, Color.BLACK,true,true,!true);
+        Sketch2D.desenhaTextoCentrado(t2,parent);
+		/*Sketch2D.desenhaPoligonoAberto(this,parent,ps,false);
+		ps = new ArrayList<>();
+        ps.add(new Point(200,200));
+        ps.add(new Point(170,280));
+        ps.add(new Point(160,430));
+        ps.add(new Point(140,500));
+        ps = desloca(ps,300,0);
+        for(int i=0;i<ps.size()-1;i++)
+        {
+            int j = i+1;
+            ArrayList<Point> ps2 = new ArrayList<>();
+            ps2.add(new Point(ps.get(i)));
+            ps2.add(new Point(ps.get(j)));
+            Sketch2D.desenhaLinha(this,parent,ps2,false);
+
+        }*/
     }
 
 

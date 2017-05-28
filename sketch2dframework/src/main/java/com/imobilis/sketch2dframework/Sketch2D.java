@@ -98,7 +98,7 @@ public class Sketch2D extends AppCompatActivity
         pontoCentrado.y-=textoNormal.getDimensoes()[1]/2;
         ArrayList<Point> ps = new ArrayList<>();
         ps.add(new Point(pontoCentrado));
-        Texto texto = new Texto(textoNormal.getActivity(),ps,textoNormal.getString(),textoNormal.getTamTexto(),textoNormal.getCor());
+        Texto texto = new Texto(textoNormal.getActivity(),ps,textoNormal.getString(),textoNormal.getTamTexto(),textoNormal.getCor(),textoNormal.isBold(),textoNormal.isItalic(),textoNormal.isUnderlined());
         Sketch2D.instance.addFigura(texto);
         texto.desenha(textoNormal.getActivity(),layout,texto);
         return texto;
@@ -125,6 +125,33 @@ public class Sketch2D extends AppCompatActivity
         texto.desenha(activity, layout, texto);
         return texto;
     }
+
+	/**
+	 * Desenha um texto no framelayout escolhido. O texto começa do ponto Superior esquerdo.
+	 * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()
+	 *
+	 * @param activity Activity pai do FrameLayout onde o círculo será desenhado.
+	 * @param layout FrameLayout onde o círculo será desenhado.
+	 * @param superiorEsquerdo Point com o ponto do inicio do texto.
+	 * @param string Texto a ser apresentado.
+	 * @param tamTexto O tamanho da fonte do texto.
+	 * @param cor Cor do texto.
+	 * @param bold Texto em negrito.
+	 * @param italic Texto em italico.
+	 * @param underlined Texto sublinhado.
+	 * @return retorna o texto criado.
+	 */
+
+	public static Texto desenhaTexto(Activity activity, FrameLayout layout, final Point superiorEsquerdo,String string,float tamTexto,int cor,boolean bold,boolean italic,boolean underlined)
+	{
+		ArrayList<Point> p = new ArrayList<>();
+		p.add(new Point(superiorEsquerdo.x, superiorEsquerdo.y));
+		Texto texto = new Texto(activity,p,string,tamTexto,cor,bold,italic,underlined);
+		Sketch2D.instance.addFigura(texto);
+		texto.desenha(activity, layout, texto);
+		return texto;
+	}
+
     /**
      * Desenha um texto no framelayout escolhido. O texto começa do ponto Superior esquerdo.
      * O texto é adicionado a um array de figuras do framework, acessível pelo método Sketch2D.getFiguras()

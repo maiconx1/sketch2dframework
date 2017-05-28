@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.widget.FrameLayout;
 
@@ -20,6 +21,7 @@ public class Texto extends Figura {
     private int cor;
     private int dimensoes[] = new int[]{0,0};
     private Paint paint;
+    private boolean bold=false,italic=false,underlined=false;
     public Texto(Activity activity,ArrayList<Point> pontos,String string, float tamTexto) {
         super(activity,pontos,false);
         this.tamTexto = tamTexto;
@@ -34,12 +36,42 @@ public class Texto extends Figura {
         this.cor = cor;
         calculaDimensoes();
     }
+    public Texto(Activity activity,ArrayList<Point> pontos,String string, float tamTexto,int cor,boolean bold,boolean italic,boolean underlined) {
+        super(activity,pontos,false);
+        this.tamTexto = tamTexto;
+        this.string = string;
+        this.cor = cor;
+        this.bold=bold;
+        this.italic = italic;
+        this.underlined = underlined;
+        calculaDimensoes();
+    }
     public void calculaDimensoes()
     {
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         textPaint.setColor(getCor());
         textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,getTamTexto(), getActivity().getResources().getDisplayMetrics()));
         textPaint.setTextAlign(Paint.Align.LEFT);
+
+        if(bold && italic)
+        {
+            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD_ITALIC));
+        }
+        else if(bold)
+        {
+            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+        }
+        else if(italic)
+        {
+            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.ITALIC));
+        }
+        else{
+            textPaint.setTypeface(Typeface.DEFAULT);
+        }
+        if(underlined)
+            textPaint.setFlags(Paint.UNDERLINE_TEXT_FLAG);
+
+
         String text = getString();
         Rect bounds = new Rect();
         textPaint.getTextBounds(text, 0, text.length(), bounds);
@@ -102,6 +134,17 @@ public class Texto extends Figura {
         this.dimensoes = dimensoes;
     }
 
+    public boolean isBold() {
+        return bold;
+    }
+    public boolean isItalic() {
+        return italic;
+    }
+
+    public boolean isUnderlined() {
+        return underlined;
+    }
+
     @Override
     public Paint getPaint() {
         return paint;
@@ -111,5 +154,8 @@ public class Texto extends Figura {
     public void setPaint(Paint paint) {
         this.paint = paint;
     }
+
+
+
 }
 

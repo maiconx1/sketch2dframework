@@ -56,9 +56,10 @@ public abstract class Figura extends AppCompatActivity
 	public static ArrayList<Circulo> indexCirculos = new ArrayList<>();
 	public static int indexCirculosSize0=-1;
 	public static boolean clip,removendo_pontos;
+	public static int clip_tam_linha=1;
 	public static Figura poligono_editando =null;
 	public static ArrayList<Linha> linhas_clip=null;
-
+    private static Figura gambsCircle;
 	public static boolean zoomAtivo = false;
 
 
@@ -690,6 +691,7 @@ public abstract class Figura extends AppCompatActivity
 		Log.d("EDITANDO", "Valor = " + (editando?"true":"false"));
 	}
 
+	public static FrameLayout parent;
 	public void desenha(FrameLayout layout, Figura figura)
 	{
 		Log.d("DESENHA", "" + figura.getClass());
@@ -706,6 +708,7 @@ public abstract class Figura extends AppCompatActivity
 		sketchView.setTag(R.string.id_activity, activity);
 		sketchView.setTag(R.string.id_numero, figura);
 		layout.addView(sketchView);
+        parent = layout;
 	}
 
 	public static void desenha(Activity activity, ArrayList<Figura> figuras, FrameLayout layout)
@@ -723,6 +726,7 @@ public abstract class Figura extends AppCompatActivity
 			sketchView.setTag(R.string.id_activity, activity);
 			layout.addView(sketchView);
 		}
+		parent=layout;
 	}
 
 	public static void desenha(Activity activity, FrameLayout layout, Figura figura)
@@ -739,6 +743,7 @@ public abstract class Figura extends AppCompatActivity
 		sketchView.setTag(R.string.id_activity, activity);
 		activity.registerForContextMenu(sketchView);
 		layout.addView(sketchView);
+        parent=layout;
 	}
 
 	/*public static int[] tamLayout(Figura figura)
@@ -1070,4 +1075,17 @@ public abstract class Figura extends AppCompatActivity
 		setMaior(new Point(getMaior().x + dx, getMaior().y + dy));
 		setMenor(new Point(getMenor().x + dx, getMenor().y + dy));
 	}
+    public static void gambsCircleFix()
+    {
+        //Se tirar esse desenho do circulo, o offset move pra fora do lugar e fica errado ate a tela receber um toque.
+        Configuracoes config = new Configuracoes();
+        config.setCor(Color.argb(0,0,0,0));
+        if(gambsCircle!=null)
+            Sketch2D.removeDesenho(gambsCircle);
+        if(parent!=null && activity!=null)
+        {
+            gambsCircle = Sketch2D.desenhaCirculo(activity,parent,new Point(100,100),20,false,config);
+
+        }
+    }
 }

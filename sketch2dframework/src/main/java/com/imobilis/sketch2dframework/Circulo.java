@@ -147,7 +147,9 @@ public class Circulo extends Figura
 		        {
 			        Log.d("MeuLog","PEE = "+indexs.get(i)+" ponto = "+Figura.poligono_editando.getPontos().get(i).toString());
 		        }
-
+				Configuracoes cc = new Configuracoes();
+				cc.setTamLinha(Figura.clip_tam_linha);
+				cc.setCor(Color.BLUE);
 		        for(int i=0;i<indexs.size()-1;i++)
 		        {
 			        Point a = Figura.poligono_editando.getPontos().get(indexs.get(i));
@@ -155,10 +157,7 @@ public class Circulo extends Figura
 			        ArrayList<Point> pontos = new ArrayList<>();
 			        pontos.add(a);
 			        pontos.add(b);
-			        Configuracoes cc = new Configuracoes();
-			        cc.setCor(Color.BLUE);
 			        Figura.linhas_clip.add(Sketch2D.desenhaLinha(Figura.indexCirculos.get(0).getActivity(),(FrameLayout)Figura.indexCirculos.get(0).getView().getParent(), pontos, true, cc));
-
 			        ((Linha)Sketch2D.getFiguras().get(Sketch2D.getFiguras().size()-1)).setIndex_poligono(indexs.get(i+1));
 
 		        }
