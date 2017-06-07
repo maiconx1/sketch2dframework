@@ -56,43 +56,18 @@ public class NovaNovaMain extends AppCompatActivity
 		parent = (FrameLayout)findViewById(R.id.lnDesenho);
 
 
-        desenhoAlexsander();
-        //desenhosMaicon();
+        //desenhoAlexsander();
+        desenhosMaicon();
     }
 
     public void desenhosMaicon()
     {
-        ArrayList<Point> pontos = new ArrayList<>();
-        pontos.add(new Point(100, 100));
-        pontos.add(new Point(300, 100));
-        pontos.add(new Point(200, 200));
-        pontos.add(new Point(300, 300));
-        pontos.add(new Point(200, 400));
-        pontos.add(new Point(300, 500));
-        pontos.add(new Point(200, 600));
-        pontos.add(new Point(300, 700));
-        pontos.add(new Point(200, 800));
-        pontos.add(new Point(300, 900));
-        pontos.add(new Point(200, 1000));
-        pontos.add(new Point(100, 1000));
-        poligono = (Poligono) Sketch2D.desenhaPoligono(NovaNovaMain.this, parent, pontos, false);
-        parent.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                for(int i = 0;i<(poligono.getMaiorX().x - poligono.getMenorX().x);i+=10)
-                {
-                    for(int j = 0;j<(poligono.getMaiorY().y - poligono.getMenorY().y);j+=10)
-                    {
-                        Point ponto = new Point(poligono.getMenorX().x + i, poligono.getMenorY().y + j);
-                        Point pv = new Point(ponto.x - poligono.getMenorX().x, ponto.y - poligono.getMenorY().y);
-                        if(poligono.isDentro(pv)) {
-                            Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, ponto, 5, false);
-                        }
-                    }
-                }
-                return false;
-            }
-        });
+        Point pontoCirculo = new Point(500, 400);
+        Circulo circulo = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, pontoCirculo, 10, true);
+        circulo.setMostraTexto(true);
+        circulo.setTexto("15");
+        circulo.setConfTexto(circulo.getConfiguracoes());
+        circulo.getView().invalidate();
     }
     public void desenhoAlexsander()
     {

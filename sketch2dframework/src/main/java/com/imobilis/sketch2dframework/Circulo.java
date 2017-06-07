@@ -18,6 +18,10 @@ public class Circulo extends Figura
 	private boolean tipoExcluir=false;
 	private boolean tipoClip=false;
 	private boolean pontoNoCentro =false;
+    private boolean mostraTexto = false;
+    private String texto;
+    private Configuracoes confTexto;
+    private float tamTexto = 12;
 
 
 
@@ -411,4 +415,36 @@ public class Circulo extends Figura
 	{
 		this.pontoNoCentro = pontoNoCentro;
 	}
+
+    public boolean isMostraTexto() {
+        return mostraTexto;
+    }
+
+    public void setMostraTexto(boolean mostraTexto) {
+        this.mostraTexto = mostraTexto;
+    }
+
+    public String getTexto() {
+        return texto;
+    }
+
+    public void setTexto(String texto) {
+        this.texto = texto;
+    }
+
+    public Configuracoes getConfTexto() {
+        return confTexto;
+    }
+
+    public void setConfTexto(Configuracoes confTexto) {
+        this.confTexto = confTexto;
+    }
+
+    public float getTamTexto() {
+        return tamTexto;
+    }
+
+    public void setTamTexto(float tamTexto) {
+        this.tamTexto = tamTexto;
+    }
 }
