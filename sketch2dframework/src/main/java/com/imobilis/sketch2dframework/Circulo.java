@@ -20,7 +20,7 @@ public class Circulo extends Figura
 	private boolean pontoNoCentro =false;
     private boolean mostraTexto = false;
     private String texto;
-    private Configuracoes confTexto;
+    private Configuracoes confTexto = new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 140);
     private float tamTexto = 12;
 
 

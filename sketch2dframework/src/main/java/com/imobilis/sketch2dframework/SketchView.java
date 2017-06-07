@@ -210,12 +210,12 @@ public class SketchView extends View
                 canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, circulo.getRaio()*0.15f, paint);
                 String text = circulo.getTexto();
                 Rect bounds = new Rect();
-                paint.getTextBounds(text, 0, text.length(), bounds);
-                Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
-                int dimensoes[] = (new int[]{tamText.x,tamText.y});
                 paint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, ((Circulo)figura).getTamTexto(), getActivity().getResources().getDisplayMetrics()));
                 paint.setTextAlign(Paint.Align.LEFT);
                 paint.setTypeface(Typeface.DEFAULT);
+                paint.getTextBounds(text, 0, text.length(), bounds);
+                Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
+                int dimensoes[] = (new int[]{tamText.x,tamText.y});
 
                 canvas.drawText(text, circulo.getRaio() - dimensoes[0]/2, circulo.getRaio() + dimensoes[1]/2,paint);
             }
