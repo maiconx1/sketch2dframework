@@ -206,14 +206,19 @@ public class SketchView extends View
             if(((Circulo)figura).isMostraTexto())
             {
                 Circulo circulo = (Circulo)figura;
-                Paint paint = (circulo).getConfTexto().getPaint();
-                canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, circulo.getRaio()*0.15f, paint);
+                if(((Circulo)figura).getTexto() == null) ((Circulo)figura).setTexto("");
+                //Paint paint = (circulo).getConfTexto().getPaint();
+                Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+                paint.setColor(circulo.getConfTexto().getCor());
+                paint.setAlpha(circulo.getConfTexto().getAlpha());
+                paint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
                 String text = circulo.getTexto();
                 Rect bounds = new Rect();
                 paint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, ((Circulo)figura).getTamTexto(), getActivity().getResources().getDisplayMetrics()));
                 paint.setTextAlign(Paint.Align.LEFT);
                 paint.setTypeface(Typeface.DEFAULT);
                 paint.getTextBounds(text, 0, text.length(), bounds);
+
                 Point tamText = new Point(Math.abs(bounds.left-bounds.right),Math.abs(bounds.top-bounds.bottom));
                 int dimensoes[] = (new int[]{tamText.x,tamText.y});
 

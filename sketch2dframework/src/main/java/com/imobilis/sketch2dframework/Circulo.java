@@ -19,7 +19,7 @@ public class Circulo extends Figura
 	private boolean tipoClip=false;
 	private boolean pontoNoCentro =false;
     private boolean mostraTexto = false;
-    private String texto;
+    private String texto = "";
     private Configuracoes confTexto = new Configuracoes(false, Configuracoes.LINHA, 1, true, Color.BLACK, 140);
     private float tamTexto = 12;
 
@@ -446,5 +446,11 @@ public class Circulo extends Figura
 
     public void setTamTexto(float tamTexto) {
         this.tamTexto = tamTexto;
+    }
+
+    @Override
+    public double getArea()
+    {
+        return Math.PI*Math.pow(getRaio(), 2);
     }
 }

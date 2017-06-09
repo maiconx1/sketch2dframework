@@ -1088,4 +1088,25 @@ public abstract class Figura extends AppCompatActivity
 
         }
     }
+
+    public double getArea()
+    {
+        float area = 0;
+        ArrayList<Point> pontos = getPontos();
+        int size = pontos.size();
+        int j =size - 1;
+        for(int i=0;i<size;i++)
+        {
+            area+=(pontos.get(j).x+pontos.get(i).x)*(pontos.get(j).y-pontos.get(i).y);
+            j = i;
+        }
+
+        return area/2;
+
+    }
+
+    public double getAreaProporcional()
+    {
+        return getArea()/(Math.pow(Sketch2D.proporcao, 2));
+    }
 }

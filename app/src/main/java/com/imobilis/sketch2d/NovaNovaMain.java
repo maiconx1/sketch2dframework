@@ -63,11 +63,21 @@ public class NovaNovaMain extends AppCompatActivity
     public void desenhosMaicon()
     {
         Point pontoCirculo = new Point(500, 400);
-        Circulo circulo = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, pontoCirculo, 10, true);
+        Circulo circulo = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, pontoCirculo, 30, true);
         circulo.setMostraTexto(true);
-        circulo.setTexto("15");
-        circulo.setConfTexto(circulo.getConfiguracoes());
+        //circulo.setPontoNoCentro(true);
+        //circulo.setTexto("15");
+        //circulo.setConfTexto(circulo.getConfiguracoes());
+
+        //int tamanhoLabel = (int) (10 * 1.6 * 18 / 10);
+
+        int tamanhoLabel = 20;
+
+        circulo.setTamTexto(tamanhoLabel);
+        circulo.setConfTexto(new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.RED, 200));
         circulo.getView().invalidate();
+
+        Sketch2D.desenhaTexto(this, parent, new Point(100, 100), "15", 20, Color.RED, true, false, false);
     }
     public void desenhoAlexsander()
     {
