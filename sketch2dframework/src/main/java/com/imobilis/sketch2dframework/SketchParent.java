@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.support.annotation.DimenRes;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -21,7 +22,8 @@ public class SketchParent extends FrameLayout
 	private Configuracoes conf;
 	public static int  corLinhas = Color.rgb(200, 128, 50), alphaLinhas = 30, gradeMetros = 10;
 	public static boolean atras = false, mostraEscala = true, pontilhado = false, mostraEscalaText = true;
-
+    public static Point startFig=new Point(0,0);
+    public static Point endFig=new Point(0,0);
 	public SketchParent(Context context)
 	{
 		super(context);
@@ -49,50 +51,7 @@ public class SketchParent extends FrameLayout
 		conf = new Configuracoes(SketchParent.pontilhado, Configuracoes.LINHA, 3, true, SketchParent.corLinhas, SketchParent.alphaLinhas);
 		if(!SketchParent.atras)
 		{
-			for(int i = 0; i <= getWidth(); i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getWidth() /  SketchParent.qtdLinhas))
-			{
-				canvas.drawLine(i, 0, i, getHeight(), conf.getPaint());
-			}
-			for(int i = 0; i <= getHeight(); i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getHeight() /  SketchParent.qtdColunas))
-			{
-				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
-			}
-			canvas.drawLine(0,getHeight(), getWidth(),getHeight(), conf.getPaint());
-			canvas.drawLine(getWidth(),0, getWidth(),getHeight(), conf.getPaint());
-			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-			textPaint.setColor(SketchParent.corLinhas);
-			textPaint.setAlpha(2*SketchParent.alphaLinhas);
-			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
-			textPaint.setTextAlign(Paint.Align.LEFT);
-			double tamL = 1;
-			DisplayMetrics dm = getResources().getDisplayMetrics();
-			String text;
-			switch(Sketch2D.unidade)
-			{
-				default:
-				case Sketch2D.UNIDADE_DP:
-					text = (tamL) + " dp";
-					break;
-				case Sketch2D.UNIDADE_CM:
-					text = (tamL / dm.densityDpi) * 2.5 + " cm";
-					break;
-				case Sketch2D.UNIDADE_M:
-					//text = (tamL / dm.densityDpi) * 2.5 / 100 + " m";
-					text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(gradeMetros)+" m";
-					break;
-				case Sketch2D.UNIDADE_KM:
-					text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
-					break;
-				case Sketch2D.UNIDADE_INCH:
-					text = (tamL / dm.densityDpi) + " inch";
-					break;
-			}
-			//text = (tamL/dm.densityDpi)*2.5 + " cm";
-			Rect bounds = new Rect();
-			textPaint.getTextBounds(text, 0, text.length(), bounds);
-			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
-			if(mostraEscalaText)
-				canvas.drawText("" + text, 10 /*getWidth() - bounds.width() - 10*/, getHeight() - bounds.height(), textPaint);
+			drawGrid(canvas);
 		}
 	}
 
@@ -104,53 +63,63 @@ public class SketchParent extends FrameLayout
 
 		if(SketchParent.atras)
 		{
-			for(int i = 0; i <= getWidth(); i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getWidth() / SketchParent.qtdLinhas))
-			{
-				canvas.drawLine(i, 0, i, getHeight(), conf.getPaint());
-			}
-			for(int i = 0; i <= getHeight(); i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getHeight() /  SketchParent.qtdColunas))
-			{
-				canvas.drawLine(0, i, getWidth(), i, conf.getPaint());
-			}
-			canvas.drawLine(0,getHeight(), getWidth(),getHeight(), conf.getPaint());
-			canvas.drawLine(getWidth(),0, getWidth(),getHeight(), conf.getPaint());
-			Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-			textPaint.setColor(SketchParent.corLinhas);
-			textPaint.setAlpha(2*SketchParent.alphaLinhas);
-			textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
-			textPaint.setTextAlign(Paint.Align.LEFT);
-			double tamL = 1;
-			DisplayMetrics dm = getResources().getDisplayMetrics();
-			String text;
-			switch(Sketch2D.unidade)
-			{
-				default:
-				case Sketch2D.UNIDADE_DP:
-					text = (tamL) + " dp";
-					break;
-				case Sketch2D.UNIDADE_CM:
-					text = (tamL / dm.densityDpi) * 2.5 + " cm";
-					break;
-				case Sketch2D.UNIDADE_M:
-					//text = (tamL*Sketch2D.proporcao) + " m";
-					text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(gradeMetros)+" m";
-					break;
-				case Sketch2D.UNIDADE_KM:
-					text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
-					break;
-				case Sketch2D.UNIDADE_INCH:
-					text = (tamL / dm.densityDpi) + " inch";
-					break;
-			}
-			//text = (tamL/dm.densityDpi)*2.5 + " cm"
-			Rect bounds = new Rect();
-			textPaint.getTextBounds(text, 0, text.length(), bounds);
-			Point tamText = new Point(Math.abs(bounds.left - bounds.right), Math.abs(bounds.top - bounds.bottom));
-			if(mostraEscalaText)
-				canvas.drawText("" + text, 10 /*getWidth() - bounds.width() - 10*/, getHeight() - bounds.height(), textPaint);
+			drawGrid(canvas);
 		}
 	}
+	private void drawGrid(Canvas canvas)
+	{
+		int width = endFig.x>getWidth()?endFig.x:getWidth();
+		int height =  endFig.y>getHeight()?endFig.y:getHeight();
+        int startx = startFig.x<0?startFig.x:0;
+        int starty=startFig.y<0?startFig.y:0;
 
+		for(int i = startx; i <= width; i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getWidth() /  SketchParent.qtdLinhas))
+		{
+			canvas.drawLine(i,starty, i, height, conf.getPaint());
+		}
+		for(int i = starty; i <= height; i += (int)(gradeMetros*Sketch2D.getProporcao()))//(getHeight() /  SketchParent.qtdColunas))
+		{
+			canvas.drawLine(startx, i, width, i, conf.getPaint());
+		}
+		canvas.drawLine(startx,height, width,height, conf.getPaint());
+		canvas.drawLine(width,starty, width,height, conf.getPaint());
+		setConfigGrid(canvas,startx,height);
+
+	}
+	private void setConfigGrid(Canvas canvas,int startx,int height)
+	{
+		Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+		textPaint.setColor(SketchParent.corLinhas);
+		textPaint.setAlpha(2*SketchParent.alphaLinhas);
+		textPaint.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
+		textPaint.setTextAlign(Paint.Align.LEFT);
+		double tamL = 1;
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		String text;
+		switch(Sketch2D.unidade)
+		{
+			default:
+			case Sketch2D.UNIDADE_DP:
+				text = (tamL) + " dp";
+				break;
+			case Sketch2D.UNIDADE_CM:
+				text = (tamL / dm.densityDpi) * 2.5 + " cm";
+				break;
+			case Sketch2D.UNIDADE_M:
+				text = new DecimalFormat("##."+Sketch2D.casasPosVirgula).format(gradeMetros)+" m";
+				break;
+			case Sketch2D.UNIDADE_KM:
+				text = (tamL / dm.densityDpi) * 2.5 / 100 / 1000 + " km";
+				break;
+			case Sketch2D.UNIDADE_INCH:
+				text = (tamL / dm.densityDpi) + " inch";
+				break;
+		}
+		Rect bounds = new Rect();
+		textPaint.getTextBounds(text, 0, text.length(), bounds);
+		if(mostraEscalaText)
+			canvas.drawText("" + text, startx+10 /*getWidth() - bounds.width() - 10*/,height - bounds.height(), textPaint);
+	}
 	public static void setMostraEscala(boolean mostraEscala)
 	{
 		SketchParent.mostraEscala = mostraEscala;
@@ -179,4 +148,20 @@ public class SketchParent extends FrameLayout
 		int cor = Color.parseColor(hex);
 		setCorLinhas(cor);
 	}
+
+    public static Point getStartFig() {
+        return startFig;
+    }
+
+    public static void setStartFig(Point startFig) {
+        SketchParent.startFig = startFig;
+    }
+
+    public static Point getEndFig() {
+        return endFig;
+    }
+
+    public static void setEndFig(Point endFig) {
+        SketchParent.endFig = endFig;
+    }
 }

@@ -98,7 +98,7 @@ public class Circulo extends Figura
 
 
         //TODO 17-10;
-        if(isTipoClip() && Figura.indexCirculosSelected[1]==-1)
+        /*if(isTipoClip() && Figura.indexCirculosSelected[1]==-1)
         {
 	        if(Figura.indexCirculosSelected[0]==-1)
 	        {
@@ -170,7 +170,7 @@ public class Circulo extends Figura
 	        }
 	        this.getConfiguracoes().setEstilo(Configuracoes.PREENCHIDO);
 	        this.getView().invalidate();
-        }
+        }*/
         //TODO 17-10 2;
 
 

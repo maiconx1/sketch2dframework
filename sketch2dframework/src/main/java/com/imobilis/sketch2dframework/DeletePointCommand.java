@@ -58,7 +58,7 @@ public class DeletePointCommand implements Command{
         Figura.indexCirculos.remove(index);
         Sketch2D.getFiguras().get(indexSketch).getView().setVisibility(View.GONE);
         Figura.reindexaPontos(1, index);
-        Figura.gambsCircleFix();
+        //Figura.gambsCircleFix();
     }
 
     public void undo() {
@@ -110,7 +110,7 @@ public class DeletePointCommand implements Command{
 
 
         Figura.poligono_editando.getView().invalidate();
-        Figura.gambsCircleFix();
+        //Figura.gambsCircleFix();
     }
     public void redo()
     {

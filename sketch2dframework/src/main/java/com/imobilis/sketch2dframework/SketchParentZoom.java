@@ -72,7 +72,7 @@ public class SketchParentZoom extends SketchParent// implements View.OnTouchList
 
 	public boolean onTouchEvent(MotionEvent ev) {
 		SGD.onTouchEvent(ev);
-		RGD.onTouchEvent(ev);
+		//RGD.onTouchEvent(ev);
 		MGD.onTouchEvent(ev);
 		return true;
 	}
