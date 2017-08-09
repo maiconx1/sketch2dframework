@@ -96,10 +96,15 @@ public class NovaNovaMain extends AppCompatActivity
         t1.getView().invalidate();
 
         ArrayList<Point> ps = new ArrayList<>();
-        ps.add(new Point(-600,100));
-        ps.add(new Point(600,600));
-        ps.add(new Point(1800,100));
-        Figura f = Sketch2D.desenhaPoligono(this,parent,ps,false);
+        ps.add(new Point(0,100));
+        ps.add(new Point(300,600));
+        ps.add(new Point(600,100));
+        Configuracoes c = new Configuracoes();
+        c.setCor(Color.BLACK);
+        c.setCorBorda(Color.RED);
+        c.setTamBorda(2);
+        c.setEstilo(Configuracoes.PREENCHIDO);
+        Figura f = Sketch2D.desenhaPoligono(this,parent,ps,false,c);
         SketchParent.setStartFig(new Point(-600,100));
         SketchParent.setEndFig(new Point(1800,600));
     }

@@ -2,6 +2,7 @@ package com.imobilis.sketch2dframework;
 
 import android.app.Activity;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -146,6 +147,14 @@ public class SketchView extends View
 			if(figura instanceof Poligono)
 			{
 				canvas.drawPath(((Poligono) figura).getCaminho(getX(), getY()), figura.getPaint());
+				if(figura.getConfiguracoes().getTamBorda()>0)
+				{
+                    Configuracoes c = new Configuracoes();
+                    c.setCor(figura.getConfiguracoes().getCorBorda());
+                    c.setTamLinha(figura.getConfiguracoes().getTamBorda());
+                    Paint teste = c.getPaint();
+					canvas.drawPath(((Poligono) figura).getCaminho(getX(), getY()), teste);
+				}
 			}
 			else
 			{
