@@ -41,6 +41,7 @@ public abstract class Figura extends AppCompatActivity
 	private SketchView view;
 	private int index;
 	private boolean menuAtivo;
+    private float angulo = 0;
 
 	public static float x = 0, y = 0, movX = 0, movY = 0;
 	private static Timer timerAtual;
@@ -1108,5 +1109,15 @@ public abstract class Figura extends AppCompatActivity
     public double getAreaProporcional()
     {
         return getArea()/(Math.pow(Sketch2D.proporcao, 2));
+    }
+
+    public void setAngulo(float angulo)
+    {
+        this.angulo = angulo;
+    }
+
+    public float getAngulo()
+    {
+        return angulo;
     }
 }

@@ -93,6 +93,7 @@ public class SketchView extends View
 	protected void onDraw(Canvas canvas)
 	{
 		super.onDraw(canvas);
+        Log.d("ANGULO = ", figura.getAngulo() + "");
 		boolean old = true;
 		float a=figura.getConfiguracoes().getTamLinha()/2;
 
@@ -143,6 +144,7 @@ public class SketchView extends View
 				p.y -=(figura.getConfiguracoes().getTamLinha());
 			}
 
+            canvas.rotate(figura.getAngulo(), (figura.getMaiorX().x-figura.getMenorX().x)/2, (figura.getMaiorY().y-figura.getMenorY().y)/2);
 			if(figura instanceof Poligono)
 			{
 				canvas.drawPath(((Poligono) figura).getCaminho(getX(), getY()), figura.getPaint());
@@ -193,6 +195,7 @@ public class SketchView extends View
 
 			dif = (int)(a*2);
 			canvas.drawCircle(figura.getPonto(0).x - getX()-dif,figura.getPonto(0).y - getY()-dif, ((Circulo) figura).getRaio(), figura.getPaint());
+            canvas.rotate(figura.getAngulo(), ((Circulo) figura).getRaio(), ((Circulo) figura).getRaio());
 			if(((Circulo)figura).isPontoNoCentro())
 			{
 				Paint paint = new Paint(figura.getPaint());
@@ -353,7 +356,6 @@ public class SketchView extends View
                 if(showBearing)
                     canvas.drawText("" + text2, dx + gap, dy+ys, textPaint);
 			}
-
 			canvas.restore();
 		}
 		if(figura instanceof Texto)

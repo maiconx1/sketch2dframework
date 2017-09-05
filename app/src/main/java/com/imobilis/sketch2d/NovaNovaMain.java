@@ -54,10 +54,10 @@ public class NovaNovaMain extends AppCompatActivity
 		Sketch2D.context = NovaNovaMain.this;
 		setContentView(R.layout.activity_main);
 		parent = (FrameLayout)findViewById(R.id.lnDesenho);
+        SketchParent.mostraEscala = false;
 
-
-        desenhoAlexsander();
-        //desenhosMaicon();
+        //desenhoAlexsander();
+        desenhosMaicon();
     }
 
     public void desenhosMaicon()
@@ -66,7 +66,7 @@ public class NovaNovaMain extends AppCompatActivity
         Circulo circulo = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, pontoCirculo, 30, true);
         circulo.setMostraTexto(true);
         //circulo.setPontoNoCentro(true);
-        //circulo.setTexto("15");
+        circulo.setTexto("label");
         //circulo.setConfTexto(circulo.getConfiguracoes());
 
         //int tamanhoLabel = (int) (10 * 1.6 * 18 / 10);
@@ -77,7 +77,26 @@ public class NovaNovaMain extends AppCompatActivity
         circulo.setConfTexto(new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.RED, 200));
         circulo.getView().invalidate();
 
-        Sketch2D.desenhaTexto(this, parent, new Point(100, 100), "15", 20, Color.RED, true, false, false);
+        Sketch2D.desenhaPoligono(NovaNovaMain.this, parent, Sketch2D.TIPO_TRIANGULO, false);
+
+        ArrayList<Point> poligonos = new ArrayList<>();
+        poligonos.add(new Point(300, 300));
+        poligonos.add(new Point(300, 200));
+        poligonos.add(new Point(400, 200));
+        poligonos.add(new Point(400, 300));
+        Sketch2D.desenhaPoligono(NovaNovaMain.this, parent, poligonos, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.BLUE, 128));
+
+        poligonos = new ArrayList<>();
+        poligonos.add(new Point(490, 400));
+        poligonos.add(new Point(450, 325));
+        poligonos.add(new Point(525, 250));
+        Figura f = Sketch2D.desenhaPoligono(NovaNovaMain.this, parent, poligonos, false, new Configuracoes(false, Configuracoes.PREENCHIDO, 1, true, Color.GREEN, 128));
+        f = Sketch2D.desenhaCirculo(NovaNovaMain.this, parent, new Point(700, 200), 100, false);
+        f.getView().setBackgroundColor(Color.GRAY);
+        ((Circulo)f).setMostraTexto(true);
+        ((Circulo)f).setTexto("olá");
+        f.setAngulo(45);
+        f.getView().invalidate();
     }
     public void desenhoAlexsander()
     {
