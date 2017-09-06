@@ -23,6 +23,8 @@ public class Configuracoes implements Parcelable
 	private float escala;
 	private int zoom;
 	private int estilo;
+	private int corBorda=Color.GREEN;
+    private int tamBorda=0;
 	protected static int corPadrao = Color.BLACK, alphaPadrao = 255, tamLinhaPadrao = 1, estiloPadrao = Configuracoes.LINHA;
 	protected static float escalaPadrao = 1;
 	protected static boolean pontilhadoPadrao = false, antiAliasPadrao = true;
@@ -204,7 +206,23 @@ public class Configuracoes implements Parcelable
 		}
 	}
 
-	public boolean isPontilhado()
+	public int getCorBorda() {
+		return corBorda;
+	}
+
+	public void setCorBorda(int corBorda) {
+		this.corBorda = corBorda;
+	}
+
+    public int getTamBorda() {
+        return tamBorda;
+    }
+
+    public void setTamBorda(int tamBorda) {
+        this.tamBorda = tamBorda;
+    }
+
+    public boolean isPontilhado()
 	{
 		return pontilhado;
 	}
